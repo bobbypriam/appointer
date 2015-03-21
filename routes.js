@@ -15,6 +15,13 @@ router.post('/register', HomeController.postRegister);
 
 // dashboard routes
 router.get('/dashboard', DashboardController.getIndex);
+router.get('/dashboard/partials/:name', DashboardController.getPartial);
+
+// json api calls
+router.get('/dashboard/calendars', DashboardController.getAllCalendars);
+router.get('/dashboard/user', DashboardController.getUser);
+
+router.get('/dashboard/*', DashboardController.redirectIndex);
 
 // public calendar routes
 router.get('/:name', PublicCalendarController.get);

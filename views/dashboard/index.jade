@@ -1,10 +1,41 @@
 extends layout
 
 block content
-  h1 Dashboard
-  p Hello, #{user.username}! 
-    a(href="/logout") Logout
-  p Welcome to your dashboard!
+  .header
+    .container
+      .row
+        .col-md-12
+          p Appointer 
+            a(href='/logout') Logout
+    
+  .body(ng-app='appointer')
+    .container
+      .row
+        .col-md-2
+          ul(ng-controller='MainCtrl')
+            li
+              a(href='/dashboard') My Calendars
+              ul
+                li(ng-repeat='calendar in calendars')
+                  a(href='/dashboard/{{ calendar.url }}') {{ calendar.title }}
+                li: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create New...
+            li: a(href='/dashboard/settings') Settings
+        .col-md-10
+          div(ng-view)
 
-  p
-    a(href="#") Create New Calendar
+  #new-calendar-modal.modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button(type="button", class="close", data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') &times;
+          h4 Step 1 
+            span(class='text-muted') of 3
+            | Calendar Details
+        .modal-body
+          p Body
+        .modal-footer
+          button(type='button', class='btn btn-default', data-dismiss='modal') Cancel
+          button(type='button', class='btn btn-primary') Next
+
+block js
