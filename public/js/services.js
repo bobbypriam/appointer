@@ -17,5 +17,9 @@ angular.module('appointer.services', [])
         $http.post('/dashboard/calendars/new', calendar).success(callback);
       }
 
+      model.checkUrl = function (url, callback) {
+        $http.post('/dashboard/checkurl', { url: url }).success(callback);
+      }
+
       return model;
     }]);

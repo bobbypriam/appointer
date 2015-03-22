@@ -83,11 +83,12 @@ var DashboardController = {
   },
   checkUrl: function (req, res, next) {
     var url = req.body.url;
-    models.Calendar.find({ where: ['url', url]})
-      .then(function (calendar) {
-        var ok = !calendar ? true : false;
-        res.json({ ok: ok });
-      });
+    models.Calendar.find({
+      where: { url: url }
+    }).then(function (calendar) {
+      var ok = !calendar ? true : false;
+      res.json({ ok: ok });
+    });
   }
 }
 

@@ -54,12 +54,13 @@ block content
               .form-group
                 label.col-sm-2.control-label URL
                 .col-sm-8
-                  input.form-control(placeholder='my-awesome-calendar', ng-model='form.url', ng-keypress='checkUrl()')
-            
+                  input.form-control(placeholder='my-awesome-calendar', ng-model='form.url', ng-change='checkUrl()')
+                .col-sm-2.status(ng-init='status = ""') {{ urlStatus }}
+
             .form-horizontal.step-two
               .form-group
                 label.col-sm-2.control-label Duration
-                .col-sm-6
+                .col-sm-8
                   select.form-control(ng-model='form.duration') Duration
                     option(value='15', selected) 15 Minutes
                     option(value='30') 30 Minutes
@@ -71,12 +72,12 @@ block content
                     option(value='120') 2 Hours
               .form-group
                 label.col-sm-2.control-label Start Date
-                .col-sm-4
-                  input.form-control(type='date', ng-model='form.start')
+                .col-sm-8
+                  input.form-control(type='date', ng-model='form.start', placeholder='YYYY-MM-DD')
               .form-group
                 label.col-sm-2.control-label End Date
-                .col-sm-4
-                  input.form-control(type='date', ng-model='form.end')
+                .col-sm-8
+                  input.form-control(type='date', ng-model='form.end', placeholder='YYYY-MM-DD')
 
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal', ng-click='restartForm()') Cancel

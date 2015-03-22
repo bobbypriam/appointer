@@ -17,6 +17,9 @@ function MainCtrl($scope, $location, CalendarService) {
   var step = $scope.step = 1;
   
   $scope.next = function () {
+    if ($scope.urlStatus !== 'Available')
+      return;
+
     if (step == 1) {
       step++;
       update(step);
@@ -38,12 +41,23 @@ function MainCtrl($scope, $location, CalendarService) {
 
   $scope.restartForm = function () {
     $scope.form = {};
+    $scope.urlStatus = '';
+    $scope.step = step = 1;
     show(step);
   };
 
   $scope.checkUrl = function () {
-    var url = $scope.form.url;
-    console.log(url);
+    if (!$scope.form.url) {
+      $scope.urlStatus = 'URL cannot be empty!';
+      return;
+    }
+    $scope.status = 'Checking...'
+    CalendarService.checkUrl($scope.form.url, function (response) {
+      if (response.ok)
+        $scope.urlStatus = 'Available';
+      else
+        $scope.urlStatus = 'Not available';
+    });
   };
 
   $scope.restartForm();
