@@ -108,6 +108,6 @@ body {
   border-top: 1px solid #e8e8e8;
 }
 
-#calendar td:not(:first-child):hover {
+#calendar td:not(:first-child):not(.selected):hover {
   background: #e8e8e8;
 }

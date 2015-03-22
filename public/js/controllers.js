@@ -99,9 +99,14 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
 
   $scope.selected = [];
 
-  $('.slot').click(function () {
-    $(this).toggleClass('selected');
-  })
+  $scope.toggleSlot = function (day, time, $event) {
+    $($event.target).toggleClass('selected');
+    $scope.selected.push({
+      day: day,
+      time: time
+    });
+    console.log($scope.selected);
+  }
 }
 
 function IndexCtrl($scope, CalendarService) {
