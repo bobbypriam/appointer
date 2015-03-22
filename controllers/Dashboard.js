@@ -11,7 +11,20 @@ var DashboardController = {
 
   },
   postNewCalendar: function (req, res, next) {
-
+    var calendar = {
+      title: req.body.title,
+      description: req.body.description,
+      url: req.body.url,
+      duration: req.body.duration,
+      startDate: req.body.start,
+      endDate: req.body.end,
+      published: false,
+      UserId: req.session.user.id
+    }
+    models.Calendar.create(calendar)
+      .then(function(cal) {
+        res.json({ ok: true });
+      });
   },
   togglePublish: function (req, res, next) {
 
@@ -67,6 +80,14 @@ var DashboardController = {
     user.username = req.session.user.username;
     user.email = req.session.user.email;
     res.json(user);
+  },
+  checkUrl: function (req, res, next) {
+    var url = req.body.url;
+    models.Calendar.find({ where: ['url', url]})
+      .then(function (calendar) {
+        var ok = !calendar ? true : false;
+        res.json({ ok: ok });
+      });
   }
 }
 

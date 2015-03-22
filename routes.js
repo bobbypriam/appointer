@@ -20,6 +20,8 @@ router.get('/dashboard/partials/:name', DashboardController.getPartial);
 // json api calls
 router.get('/dashboard/calendars', DashboardController.getAllCalendars);
 router.get('/dashboard/user', DashboardController.getUser);
+router.post('/dashboard/checkurl', DashboardController.checkUrl);
+router.post('/dashboard/calendars/new', DashboardController.postNewCalendar);
 
 router.get('/dashboard/*', DashboardController.redirectIndex);
 
