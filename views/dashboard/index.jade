@@ -72,11 +72,11 @@ block content
               .form-group
                 label.col-sm-2.control-label Start Date
                 .col-sm-4
-                  input.form-control(type='text', ng-model='form.start')
+                  input.form-control(type='date', ng-model='form.start')
               .form-group
                 label.col-sm-2.control-label End Date
                 .col-sm-4
-                  input.form-control(type='text', ng-model='form.end')
+                  input.form-control(type='date', ng-model='form.end')
 
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal', ng-click='restartForm()') Cancel
@@ -84,3 +84,7 @@ block content
             button.btn.btn-primary(type='button', ng-click='next()') Next
 
 block js
+  script.
+    $("input[type='date']").datepicker({
+      format: 'yyyy-mm-dd'
+    });
