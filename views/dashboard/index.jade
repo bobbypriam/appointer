@@ -37,7 +37,8 @@ block content
           .modal-header
             button.close(type="button", data-dismiss='modal', aria-label='Close')
               span(aria-hidden='true') &times;
-            h4 New Calendar: Step 1 
+            h4 New Calendar: Step 
+              span {{ step }} 
               span.text-muted of 3
           .modal-body
             
@@ -53,13 +54,13 @@ block content
               .form-group
                 label.col-sm-2.control-label URL
                 .col-sm-8
-                  input.form-control(placeholder='my-awesome-calendar', ng-model='form.url')
+                  input.form-control(placeholder='my-awesome-calendar', ng-model='form.url', ng-keypress='checkUrl()')
             
             .form-horizontal.step-two
               .form-group
                 label.col-sm-2.control-label Duration
                 .col-sm-6
-                  select.form-control(ng-model='form.duration', placeholder='Duration')
+                  select.form-control(ng-model='form.duration') Duration
                     option(value='15', selected) 15 Minutes
                     option(value='30') 30 Minutes
                     option(value='45') 45 Minutes
@@ -71,16 +72,15 @@ block content
               .form-group
                 label.col-sm-2.control-label Start Date
                 .col-sm-4
-                  input.form-control(type='date', ng-model='form.start')
+                  input.form-control(type='text', ng-model='form.start')
               .form-group
                 label.col-sm-2.control-label End Date
                 .col-sm-4
-                  input.form-control(type='date', ng-model='form.end')
+                  input.form-control(type='text', ng-model='form.end')
 
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal', ng-click='restartForm()') Cancel
-            button.step-one.btn.btn-primary(type='button', ng-click='sendStepOne()') Next
-            button.step-two.btn.btn-primary(type='button', ng-click='sendStepTwo()') Next
-            button.step-three.btn.btn-primary(type='button', ng-click='save()') Save
+            button.step-two.btn.btn-primary(type='button', ng-click='back()') Back
+            button.btn.btn-primary(type='button', ng-click='next()') Next
 
 block js

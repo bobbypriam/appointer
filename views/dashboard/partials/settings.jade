@@ -3,10 +3,11 @@
     h1 Settings
     
 .row
-  .col-md-2
-    label Email Address
-  .col-md-4
-    input(ng-model='form.email', name='email')
+  .form-horizontal
+    .form-group
+      label.col-sm-2.control-label Email Address
+      .col-sm-4
+        input.form-control(ng-model='form.email', name='email')
 
 .row
   .col-md-6
