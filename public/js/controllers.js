@@ -89,7 +89,19 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
 }
 
 function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
+  $('tbody').css('height', $(window).height() - 200);
 
+  $scope.days = ['1/2','2/2','3/2','4/2','5/2','6/2','7/2'];
+  $scope.times = [];
+  for (var i = 0; i < 24; i++) {
+    $scope.times.push(i);
+  }
+
+  $scope.selected = [];
+
+  $('.slot').click(function () {
+    $(this).toggleClass('selected');
+  })
 }
 
 function IndexCtrl($scope, CalendarService) {
