@@ -100,11 +100,18 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
   $scope.selected = [];
 
   $scope.toggleSlot = function (day, time, $event) {
-    $($event.target).toggleClass('selected');
-    $scope.selected.push({
-      day: day,
-      time: time
-    });
+    var target = $($event.target);
+    target.toggleClass('selected');
+    if (target.hasClass('selected')) {
+      $scope.selected.push({
+        day: day,
+        time: time
+      });
+    } else {
+      $scope.selected = $.grep($scope.selected, function(slot) {
+        return slot.day !== day || slot.time !== time;
+      });
+    }
     console.log($scope.selected);
   }
 }
