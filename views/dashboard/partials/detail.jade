@@ -2,13 +2,13 @@
   .col-md-12
     h1 {{ calendar.title }}
     p {{ calendar.description }}
-    p: a(href='/dashboard/{{ calendar.title }}/slots') Manage slots
+    p: a(href=baseurl+'/dashboard/{{ calendar.title }}/slots') Manage slots
 
 .row
   .col-md-6.details
     .row
       p.col-md-3: strong Public URL
-      p.col-md-9: a(href='/{{ calendar.url }}') {{ calendar.url }}
+      p.col-md-9: a(href=baseurl+'/{{ calendar.url }}') {{ calendar.url }}
 
       p.col-md-3: strong Duration
       p.col-md-9 {{ calendar.duration }}

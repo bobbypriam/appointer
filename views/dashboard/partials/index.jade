@@ -16,7 +16,7 @@
           th Status
       tbody
         tr(ng-repeat='calendar in calendars')
-          td: a(href='/dashboard/{{ calendar.url }}') {{ calendar.title }}
+          td: a(href=baseurl+'/dashboard/{{ calendar.url }}') {{ calendar.title }}
           td {{ calendar.url }}
           td {{ calendar.published }}
         //- tr
