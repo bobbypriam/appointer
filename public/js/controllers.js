@@ -28,7 +28,7 @@ function MainCtrl($scope, $location, CalendarService) {
       CalendarService.postCalendar($scope.form, function (data) {
         CalendarService.getCalendars();
         $('.modal').modal('toggle');
-        $location.path('/dashboard/' + $scope.form.url + '/slots');
+        $location.path(baseurl+'dashboard/' + $scope.form.url + '/slots');
         $scope.restartForm();
       });
     }
@@ -122,7 +122,7 @@ function IndexCtrl($scope, CalendarService) {
 
 function SettingsCtrl($scope, $http) {
   $scope.form = {};
-  $http.get('/dashboard/user').
+  $http.get(baseurl+'dashboard/user').
     success(function(data, status, headers, config) {
       $scope.form.email = data.email;
     });
