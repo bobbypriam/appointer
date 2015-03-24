@@ -9,9 +9,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var routes = require('./routes');
 var session = require('./configs/session');
-
-// base URL
-app.locals.baseUrl = 'http://localhost:3000';
+var baseurl = require('./configs/baseurl');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,6 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session);
+app.use(baseurl);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // route mapping
