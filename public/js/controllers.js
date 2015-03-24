@@ -91,11 +91,20 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
 function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
   $('tbody').css('height', $(window).height() - 200);
 
-  $scope.days = ['1/2','2/2','3/2','4/2','5/2','6/2','7/2'];
-  $scope.times = [];
-  for (var i = 0; i < 24; i++) {
-    $scope.times.push(i);
-  }
+  var calendar = CalendarService.calendars.filter(function(cal) {
+    return cal.url == $routeParams.name;
+  })[0];
+
+  var startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
+  var endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
+  var duration = calendar.duration;
+  var startIdx = 0;
+  var endIdx = 6;
+
+  var daysName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  populateDays();
+  populateTimes();
 
   $scope.selected = [];
 
@@ -113,6 +122,65 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
       });
     }
     console.log($scope.selected);
+  }
+
+  $scope.checkIfSelected = function (day, time) {
+    return $.grep($scope.selected, function(slot) {
+      return slot.day == day && slot.time == time;
+    }).length !== 0;
+  }
+
+  $scope.floatTheadOptions = {
+    scrollContainer: function($table){
+        return $table.closest('#calendar');
+    }
+  }
+
+  $scope.prev = function () {
+    shift(-7);
+  }
+
+  $scope.next = function () {
+    if ($scope.days.length < 7)
+      return;
+    shift(7);
+  }
+
+  function shift(inc) {
+    if (startIdx + inc >= 0) {
+      startIdx += inc;
+      endIdx += inc;
+      populateDays();
+    }
+  }
+
+  function populateDays() {
+    $scope.days = [];
+    for (var i = startIdx; i <= endIdx; i++) {
+      var current = new Date();
+      current.setTime(startDate.getTime());
+      current.setDate(startDate.getDate() + i);
+      if (current.getTime() <= endDate.getTime()) {
+        var day = daysName[current.getDay()];
+        $scope.days.push(day + ', ' + current.getDate() + '/' + (current.getMonth() + 1));
+      }
+    }
+  }
+
+  function populateTimes() {
+    $scope.times = [];
+    var d = new Date();
+    d.setHours(7, 0);
+    var day = d.getDay();
+
+    while (d.getDay() == day) {
+      $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
+      d.setMinutes(d.getMinutes() + duration);
+    }
+  }
+
+  function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
   }
 }
 

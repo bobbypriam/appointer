@@ -2,7 +2,7 @@
 
 var baseurl = '/';
 
-angular.module('appointer', ['ngRoute', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
+angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
       when(baseurl+'dashboard', {

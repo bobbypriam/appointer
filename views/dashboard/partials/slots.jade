@@ -3,18 +3,20 @@
     h1 Manage Slots
     p Choose your available time!
     
-    div#calendar-header
-      table.table
+    p
+      button.btn.btn-primary(ng-click='prev()') Previous
+      button.btn.btn-primary(ng-click='next()') Next
+
+    div#calendar
+      table.table(float-thead='floatTheadOptions', ng-model='time')
         thead
           tr
             th Time
             th(ng-repeat='day in days') {{ day }}
-    div#calendar
-      table.table
         tbody
             tr(ng-repeat='time in times')
-              td {{ time }}:00
-              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='toggleSlot(day, time, $event)')
+              td {{ time }}
+              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='toggleSlot(day, time, $event)', ng-class='checkIfSelected(day, time) ? "selected" : ""')
 
   .row
     .col-md-12.text-right

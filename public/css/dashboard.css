@@ -66,24 +66,19 @@ body {
   margin-top: 0;
 }
 
-#calendar-header {
-  width: 98.8%;
-  margin-bottom: -21px;
-}
-
 #calendar td,
-#calendar-header th {
+#calendar th {
   width: 1.25%;
   border-left: 1px solid #e8e8e8;
   border-right: 1px solid #e8e8e8;
 }
 
-#calendar-header th,
+#calendar th,
 #calendar td {
-  text-align: center;
+  text-align: center !important;
 }
 
-#calendar-header th:first-child {
+#calendar th:first-child {
   width: .16%;
 }
 #calendar td:first-child {
@@ -92,6 +87,7 @@ body {
 
 #calendar {
   height: 350px;
+  overflow-x: hidden;
   overflow-y: scroll;
   border-bottom: 1px solid #e8e8e8;
 }
@@ -110,4 +106,10 @@ body {
 
 #calendar td:not(:first-child):not(.selected):hover {
   background: #e8e8e8;
+}
+
+table.floatThead-table {
+    border-top: none;
+    border-bottom: none;
+    background-color: #f8f8f8;
 }
