@@ -16,9 +16,9 @@ var HomeController = {
   doLogin: function (req, res, next) {
     if (req.session.user) {
       if (req.session.user.email === '')
-        res.redirect('/register');
+        res.redirect(res.locals.baseurl+'/register');
       else
-        res.redirect('/dashboard');
+        res.redirect(res.locals.baseurl+'/dashboard');
     } else {
       var ticket = req.query.ticket;
       if (ticket) {
@@ -34,9 +34,9 @@ var HomeController = {
               console.log('user.username: ' + user.username);
               console.log('user.email: ' + user.email);
               if (created || user.email === '') {
-                res.redirect('/register');
+                res.redirect(res.locals.baseurl+'/register');
               } else {
-                res.redirect('/dashboard');
+                res.redirect(res.locals.baseurl+'/dashboard');
               }
             });
           }
@@ -53,9 +53,9 @@ var HomeController = {
   },
   getRegister: function (req, res, next) {
     if (!req.session.user)
-      res.redirect('/login');
+      res.redirect(res.locals.baseurl+'/login');
     else if (req.session.user.email !== '')
-      res.redirect('/dashboard');
+      res.redirect(res.locals.baseurl+'/dashboard');
     else
       res.render('register', {
         title: 'Thank you for registering! | Appointer'
@@ -70,7 +70,7 @@ var HomeController = {
           email: email
         }).then(function () {
           req.session.user = user;
-          res.redirect('/dashboard');
+          res.redirect(res.locals.baseurl+'/dashboard');
         });
       });
   }

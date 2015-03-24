@@ -72,7 +72,7 @@ var DashboardController = {
     });
   },
   redirectIndex: function (req, res, next) {
-    res.redirect('/dashboard');
+    res.redirect(res.locals.baseurl+'/dashboard');
   },
   getUser: function (req, res, next) {
     var user = {};
