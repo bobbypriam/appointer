@@ -1,3 +1,22 @@
 .row
   .col-md-12
     h1 Manage Slots
+    p Choose your available time!
+    
+    div#calendar-header
+      table.table
+        thead
+          tr
+            th Time
+            th(ng-repeat='day in days') {{ day }}
+    div#calendar
+      table.table
+        tbody
+            tr(ng-repeat='time in times')
+              td {{ time }}:00
+              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='toggleSlot(day, time, $event)')
+
+  .row
+    .col-md-12.text-right
+      button.btn.btn-primary Save
+      button.btn.btn-success Save and Publish

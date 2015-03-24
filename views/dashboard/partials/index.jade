@@ -13,12 +13,12 @@
         tr
           th Title
           th URL
-          th Operations
+          th Status
       tbody
         tr(ng-repeat='calendar in calendars')
-          td {{ calendar.title }}
+          td: a(href='/dashboard/{{ calendar.url }}') {{ calendar.title }}
           td {{ calendar.url }}
-          td: a(href='/dashboard/{{ calendar.url }}') Details
+          td {{ calendar.published }}
         //- tr
         //-   td(colspan='3', class='text-center') No calendars yet. 
         //-     a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create one now.

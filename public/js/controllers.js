@@ -89,7 +89,31 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
 }
 
 function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
+  $('tbody').css('height', $(window).height() - 200);
 
+  $scope.days = ['1/2','2/2','3/2','4/2','5/2','6/2','7/2'];
+  $scope.times = [];
+  for (var i = 0; i < 24; i++) {
+    $scope.times.push(i);
+  }
+
+  $scope.selected = [];
+
+  $scope.toggleSlot = function (day, time, $event) {
+    var target = $($event.target);
+    target.toggleClass('selected');
+    if (target.hasClass('selected')) {
+      $scope.selected.push({
+        day: day,
+        time: time
+      });
+    } else {
+      $scope.selected = $.grep($scope.selected, function(slot) {
+        return slot.day !== day || slot.time !== time;
+      });
+    }
+    console.log($scope.selected);
+  }
 }
 
 function IndexCtrl($scope, CalendarService) {

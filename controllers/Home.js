@@ -31,6 +31,7 @@ var HomeController = {
               defaults: { email: '' }
             }).spread(function (user, created) {
               req.session.user = user;
+              console.log('user.username: ' + user.username);
               console.log('user.email: ' + user.email);
               if (created || user.email === '') {
                 res.redirect('/register');
@@ -62,7 +63,8 @@ var HomeController = {
   },
   postRegister: function (req, res, next) {
     var email = req.body.email;
-    models.User.find({ where: ['id', req.session.user.id] })
+    console.log(req.session.user);
+    models.User.find({ where: { id: req.session.user.id } })
       .then(function (user) {
         user.updateAttributes({
           email: email
