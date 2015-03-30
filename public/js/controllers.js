@@ -117,10 +117,9 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
   var startIdx = 0;
   var endIdx = 6;
 
+  populateSelected();
   populateDays();
   populateTimes();
-
-  $scope.selected = [];
 
   $scope.toggleSlot = function (day, time, $event) {
     var target = $($event.target);
@@ -133,7 +132,7 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
       });
     } else {
       $scope.selected = $.grep($scope.selected, function(slot) {
-        return slot.day !== day || slot.time !== time;
+        return slot.date !== day || slot.time !== time;
       });
     }
     console.log($scope.selected);
@@ -141,7 +140,7 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
 
   $scope.checkIfSelected = function (day, time) {
     return $.grep($scope.selected, function(slot) {
-      return slot.day == day && slot.time == time;
+      return slot.date == day && slot.time == time;
     }).length !== 0;
   }
 
@@ -185,15 +184,32 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
     }
   }
 
+  function populateSelected() {
+    $scope.selected = [];
+    CalendarService.getSlots(calendar.id, function (response) {
+      if (response.ok) {
+        response.slots.forEach(function (slot) {
+          $scope.selected.push({
+            date: slot.date.split('T')[0],
+            time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+            status: slot.status
+          });
+        });
+        console.log(response.slots);
+      }
+    });
+  }
+
   function populateDays() {
     $scope.days = [];
     for (var i = startIdx; i <= endIdx; i++) {
-      var current = new Date();
+      var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
       current.setTime(startDate.getTime());
       current.setDate(startDate.getDate() + i);
+      current = new Date(current.getTime());
       if (current.getTime() <= endDate.getTime()) {
         $scope.days.push(current.getFullYear() + '-' +
-                         (current.getMonth() < 10 ? '0' : '') + current.getMonth() + '-' +
+                         (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
                          (current.getDate() < 10 ? '0' : '') + current.getDate());
       }
     }
@@ -209,13 +225,6 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
       $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
       d.setMinutes(d.getMinutes() + duration);
     }
-  }
-
-  function populateSelected() {
-    $scope.selected = [];
-    CalendarService.getSlots(calendar.id, function (response) {
-      
-    })
   }
 
   function addMinutes(date, minutes) {

@@ -40,11 +40,11 @@ var DashboardController = {
   },
   postManageSlots: function (req, res, next) {
     var calendarID = req.body.calendarID;
-    console.log(calendarID);
     models.Slot.destroy({
       where: { CalendarId: calendarID }
     }).then(function() {
       req.body.slots.forEach(function (slot) {
+        slot.CalendarId = calendarID;
         models.Slot.create(slot);
       });
     });
@@ -97,6 +97,22 @@ var DashboardController = {
     }).then(function (calendar) {
       var ok = !calendar ? true : false;
       res.json({ ok: ok });
+    });
+  },
+  getSlots: function (req, res, next) {
+    var formattedSlots = [];
+    models.Slot.findAll({
+      where: { CalendarId: req.params.id }
+    }).then(function (slots) {
+      slots.forEach(function (slotData) {
+        var slot = slotData.dataValues;
+        formattedSlots.push({
+          date: slot.date,
+          time: slot.time,
+          status: slot.status
+        });
+      });
+      res.json({ ok: true, slots: formattedSlots });
     });
   }
 }

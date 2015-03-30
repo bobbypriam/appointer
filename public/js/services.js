@@ -22,7 +22,7 @@ angular.module('appointer.services', [])
       }
 
       model.getSlots = function (id, callback) {
-        $http.get(baseurl+'dashboard/slots/get', { id: id }).success(callback);
+        $http.get(baseurl+'dashboard/slots/get/'+id).success(callback);
       }
 
       model.postSlots = function (slots, callback) {
