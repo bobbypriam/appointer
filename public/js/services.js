@@ -21,5 +21,13 @@ angular.module('appointer.services', [])
         $http.post(baseurl+'dashboard/checkurl', { url: url }).success(callback);
       }
 
+      model.getSlots = function (id, callback) {
+        $http.get(baseurl+'dashboard/slots/get', { id: id }).success(callback);
+      }
+
+      model.postSlots = function (slots, callback) {
+        $http.post(baseurl+'dashboard/slots/post', slots).success(callback);
+      }
+
       return model;
     }]);

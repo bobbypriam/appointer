@@ -22,6 +22,8 @@ router.get('/dashboard/calendars', DashboardController.getAllCalendars);
 router.get('/dashboard/user', DashboardController.getUser);
 router.post('/dashboard/checkurl', DashboardController.checkUrl);
 router.post('/dashboard/calendars/new', DashboardController.postNewCalendar);
+router.get('/dashboard/slots/get', DashboardController.getSlots);
+router.post('/dashboard/slots/post', DashboardController.postManageSlots);
 
 router.get('/dashboard/*', DashboardController.redirectIndex);
 

@@ -24,7 +24,6 @@ var DashboardController = {
     models.Calendar.create(calendar)
       .then(function(cal) {
         res.json({ ok: true, calendar: cal.dataValues });
-        console.log(cal.dataValues);
       });
   },
   togglePublish: function (req, res, next) {
@@ -40,7 +39,16 @@ var DashboardController = {
 
   },
   postManageSlots: function (req, res, next) {
-
+    var calendarID = req.body.calendarID;
+    console.log(calendarID);
+    models.Slot.destroy({
+      where: { CalendarId: calendarID }
+    }).then(function() {
+      req.body.slots.forEach(function (slot) {
+        models.Slot.create(slot);
+      });
+    });
+    res.json({ ok: true });
   },
   postDeleteCalendar: function (req, res, next) {
 

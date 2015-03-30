@@ -104,7 +104,7 @@ function EditCalendarDetailCtrl($scope, $routeParams, CalendarService) {
   }
 }
 
-function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
+function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
   $('tbody').css('height', $(window).height() - 200);
 
   var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
@@ -127,8 +127,9 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
     target.toggleClass('selected');
     if (target.hasClass('selected')) {
       $scope.selected.push({
-        day: day,
-        time: time
+        date: day,
+        time: time,
+        status: false
       });
     } else {
       $scope.selected = $.grep($scope.selected, function(slot) {
@@ -158,6 +159,22 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
     if ($scope.days.length < 7)
       return;
     shift(7);
+  }
+
+  $scope.save = function () {
+    var slots = {
+      calendarID: calendar.id,
+      slots: $scope.selected
+    }
+    CalendarService.postSlots(slots, function (response) {
+      if (response.ok) {
+        $location.path(baseurl+'dashboard/'+calendar.url);
+      }
+    });
+  }
+
+  $scope.saveAndPublish = function () {
+
   }
 
   function shift(inc) {
@@ -192,6 +209,13 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
       $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
       d.setMinutes(d.getMinutes() + duration);
     }
+  }
+
+  function populateSelected() {
+    $scope.selected = [];
+    CalendarService.getSlots(calendar.id, function (response) {
+      
+    })
   }
 
   function addMinutes(date, minutes) {

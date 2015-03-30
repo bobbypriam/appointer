@@ -1,7 +1,8 @@
 module.exports = function (sequelize, DataTypes) {
   var Slot = sequelize.define('Slot', {
-    start: { type: DataTypes.DATE, allowNull: false },
-    end: { type: DataTypes.DATE, allowNull: false }
+    date: { type: DataTypes.DATE, allowNull: false },
+    time: { type: DataTypes.TIME, allowNull: false },
+    status: { type: DataTypes.BOOLEAN, allowNull: false}
   }, {
     classMethods: {
       associate: function(models) {
