@@ -91,6 +91,19 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
   }
 }
 
+function EditCalendarDetailCtrl($scope, $routeParams, CalendarService) {
+  var result = $.grep(CalendarService.calendars,
+    function (element) {
+      return element.url == $routeParams.name;
+    });
+
+  if (!result) {
+
+  } else {
+    $scope.calendar = result[0];
+  }
+}
+
 function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
   $('tbody').css('height', $(window).height() - 200);
 
@@ -103,8 +116,6 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
   var duration = calendar.duration;
   var startIdx = 0;
   var endIdx = 6;
-
-  var daysName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   populateDays();
   populateTimes();
@@ -164,8 +175,9 @@ function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
       current.setTime(startDate.getTime());
       current.setDate(startDate.getDate() + i);
       if (current.getTime() <= endDate.getTime()) {
-        var day = daysName[current.getDay()];
-        $scope.days.push(day + ', ' + current.getDate() + '/' + (current.getMonth() + 1));
+        $scope.days.push(current.getFullYear() + '-' +
+                         (current.getMonth() < 10 ? '0' : '') + current.getMonth() + '-' +
+                         (current.getDate() < 10 ? '0' : '') + current.getDate());
       }
     }
   }

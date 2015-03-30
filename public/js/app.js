@@ -17,6 +17,10 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
         templateUrl: baseurl+'dashboard/partials/detail',
         controller: CalendarDetailCtrl
       }).
+      when(baseurl+'dashboard/:name/edit', {
+        templateUrl: baseurl+'dashboard/partials/edit',
+        controller: EditCalendarDetailCtrl
+      }).
       when(baseurl+'dashboard/:name/slots', {
         templateUrl: baseurl+'dashboard/partials/slots',
         controller: ManageSlotsCtrl

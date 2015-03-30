@@ -1,0 +1,50 @@
+.row
+  .col-md-12
+    h1 Edit Calendar Details
+    
+.row
+  .form-horizontal
+    .form-group
+      label.col-sm-2.control-label Title
+      .col-sm-4
+        input.form-control(ng-model='calendar.title', name='title')
+    .form-group
+      label.col-sm-2.control-label Description
+      .col-sm-4
+        input.form-control(ng-model='calendar.description', name='description')
+    .form-group
+      label.col-sm-2.control-label Public URL
+      .col-sm-4
+        input.form-control(ng-model='calendar.url', name='url')
+    .form-group
+      label.col-sm-2.control-label Duration
+      .col-sm-4
+        select.form-control(ng-model='calendar.duration') Duration
+          option(value='15', selected) 15 Minutes
+          option(value='30') 30 Minutes
+          option(value='45') 45 Minutes
+          option(value='60') 1 Hour
+          option(value='75') 1 Hour 15 Minutes
+          option(value='90') 1 Hour 30 Minutes
+          option(value='105') 1 Hour 40 Minutes
+          option(value='120') 2 Hours
+    .form-group
+      label.col-sm-2.control-label Start Date
+      .col-sm-4
+        input.form-control(ng-model='calendar.startDate', name='startDate')
+        //- input.form-control(type='date', ng-model='calendar.startDate', placeholder='YYYY-MM-DD')
+    .form-group
+      label.col-sm-2.control-label End Date
+      .col-sm-4
+        input.form-control(type='date', ng-model='calendar.endDate', placeholder='YYYY-MM-DD')
+
+.row
+  .col-md-6
+    p
+      button(ng-click='submitPost()', class='btn btn-primary pull-right') Save
+
+block js
+  script.
+    $("input[type='date']").datepicker({
+      format: 'yyyy-mm-dd'
+    });
