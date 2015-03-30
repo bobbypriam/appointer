@@ -4,7 +4,7 @@ var DashboardController = {
   getIndex: function (req, res, next) {
     res.render('dashboard/index', {
       title: 'Dashboard | Appointer',
-      user: req.session.user //|| { id: 1, username: 'widyanto.bagus', email: 'bobby.priambodo@gmail.com' }
+      user: req.session.user || { id: 1, username: 'widyanto.bagus', email: 'bobby.priambodo@gmail.com' }
     });
   },
   getCalendar: function (req, res, next) {
@@ -72,7 +72,7 @@ var DashboardController = {
     res.render('dashboard/partials/' + req.params.name);
   },
   getAllCalendars: function (req, res, next) {
-    var currentUser = req.session.user;// || ( req.session.user = { id: 1, username: 'widyanto.bagus', email: 'bobby.priambodo@gmail.com' });
+    var currentUser = req.session.user = ( req.session.user = { id: 1, username: 'widyanto.bagus', email: 'bobby.priambodo@gmail.com' });
     models.User.find({
       where: { id: currentUser.id },
       include: [ models.Calendar ]
