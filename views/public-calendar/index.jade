@@ -1,5 +1,8 @@
 extends layout
 
 block content
-  h1 Calendar Name
-  p Calendar Description
+  .body(ng-app='appointer')
+    .container-fluid
+      .row
+        .col-md-10.col-md-offset-1
+          div(ng-view)

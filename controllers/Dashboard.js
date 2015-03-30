@@ -72,7 +72,7 @@ var DashboardController = {
     res.render('dashboard/partials/' + req.params.name);
   },
   getAllCalendars: function (req, res, next) {
-    var currentUser = req.session.user = ( req.session.user = { id: 1, username: 'widyanto.bagus', email: 'bobby.priambodo@gmail.com' });
+    var currentUser = req.session.user || ( req.session.user = { id: 1, username: 'widyanto.bagus', email: 'bobby.priambodo@gmail.com' });
     models.User.find({
       where: { id: currentUser.id },
       include: [ models.Calendar ]
