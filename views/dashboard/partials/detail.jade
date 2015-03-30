@@ -1,23 +1,52 @@
 .row
-  .col-md-12
+  .col-md-8
     h1 {{ calendar.title }}
     p {{ calendar.description }}
-    p
-      a(href=baseurl+'/dashboard/{{ calendar.url }}/edit') Edit details
-      |  |  
-      a(href=baseurl+'/dashboard/{{ calendar.url }}/slots') Manage slots
+    p URL: 
+      code.url #{baseurl}/{{ calendar.url }}
+  .col-md-4
+    .dropdown
+      button.btn.btn-default.dropdown-toggle#calendar-menu(type='button', data-toggle='dropdown', aria-expanded='true') Menu
+        span.caret
+      ul.dropdown-menu(role='menu', aria-labelledby='calendar-menu')
+        li.dropdown-header(role='presentation') Calendar Details
+        li(role='presentation')
+          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/edit') Edit details
+        li(role='presentation')
+          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/slots') Manage slots
+        li(role='presentation')
+          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/toggle') Publish/Unpublish calendar
+        li.divider(role='presentation')
+        li.dropdown-header(role='presentation') Appointments
+        li(role='presentation')
+          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/appointments') See appointments
+        li.divider(role='presentation')
+        li.dropdown-header(role='presentation') Danger Zone
+        li(role='presentation')
+          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/delete') Delete calendar
 
 .row
   .col-md-6.details
+    h3 Details
     .row
-      p.col-md-3: strong Public URL
-      p.col-md-9: a(href=baseurl+'/{{ calendar.url }}') {{ calendar.url }}
+      p.col-xs-3: strong Duration
+      p.col-xs-9 {{ calendar.duration }} Minutes
+    .row
+      p.col-xs-3: strong Start Date
+      p.col-xs-9 {{ calendar.startDate | date: 'd MMM y' }}
+    .row
+      p.col-xs-3: strong End Date
+      p.col-xs-9 {{ calendar.endDate | date: 'd MMM y' }}
 
-      p.col-md-3: strong Duration
-      p.col-md-9 {{ calendar.duration }}
+  .col-md-6.appointments
+    h3 Appointments
+    table(class='table')
+      thead
+        tr
+          th Date
+          th Time
+          th Appointment Maker
+      tbody
 
-      p.col-md-3: strong Start Date
-      p.col-md-9 {{ calendar.startDate }}
-
-      p.col-md-3: strong End Date
-      p.col-md-9 {{ calendar.endDate }}
+        tr(ng-if='!appointments')
+          td.text-center(colspan=3) No appointments yet.
