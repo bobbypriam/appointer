@@ -23,7 +23,8 @@ var DashboardController = {
     }
     models.Calendar.create(calendar)
       .then(function(cal) {
-        res.json({ ok: true });
+        res.json({ ok: true, calendar: cal.dataValues });
+        console.log(cal.dataValues);
       });
   },
   togglePublish: function (req, res, next) {

@@ -26,10 +26,13 @@ function MainCtrl($scope, $location, CalendarService) {
     } else {
       console.log($scope.form);
       CalendarService.postCalendar($scope.form, function (data) {
-        CalendarService.getCalendars();
-        $('.modal').modal('toggle');
-        $location.path(baseurl+'dashboard/' + $scope.form.url + '/slots');
-        $scope.restartForm();
+        if (data.ok) {
+          CalendarService.getCalendars();
+          $scope.calendars.push(data.calendar);
+          $location.path(baseurl+'dashboard/' + $scope.form.url + '/slots');
+          $('.modal').modal('toggle');
+          $scope.restartForm();
+        }
       });
     }
   };
@@ -91,7 +94,7 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
 function ManageSlotsCtrl($scope, $routeParams, CalendarService) {
   $('tbody').css('height', $(window).height() - 200);
 
-  var calendar = CalendarService.calendars.filter(function(cal) {
+  var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
     return cal.url == $routeParams.name;
   })[0];
 
