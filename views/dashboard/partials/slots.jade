@@ -12,7 +12,7 @@
         thead
           tr
             th Time
-            th(ng-repeat='day in days') {{ day }}
+            th(ng-repeat='day in days') {{ day | date: 'EEE, d/M' }}
         tbody
             tr(ng-repeat='time in times')
               td {{ time }}
