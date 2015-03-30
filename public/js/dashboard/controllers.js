@@ -226,10 +226,6 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
       d.setMinutes(d.getMinutes() + duration);
     }
   }
-
-  function addMinutes(date, minutes) {
-    return new Date(date.getTime() + minutes*60000);
-  }
 }
 
 function IndexCtrl($scope, CalendarService) {
