@@ -51,5 +51,5 @@
           td {{ appointment.date | date: 'd MMM y' }}
           td {{ appointment.time }}
           td {{ appointment.name }}
-        tr(ng-if='!appointments')
+        tr(ng-if='!appointments.length')
           td.text-center(colspan=3) No appointments yet.
