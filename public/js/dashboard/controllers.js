@@ -93,8 +93,15 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
 
   CalendarService.getAppointments(calendar.id, function (response) {
     if (response.ok) {
-      console.log(response.slots);
-      $scope.appointments = response.slots;
+      var slots = response.slots;
+      $scope.appointments = [];
+      slots.forEach(function (slot) {
+        $scope.appointments.push({
+          date: slot.date.split('T')[0],
+          time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+          name: slot.Appointment.name
+        });
+      });
     }
   });
 }

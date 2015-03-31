@@ -39,7 +39,7 @@
       p.col-xs-9 {{ calendar.endDate | date: 'd MMM y' }}
 
   .col-md-6.appointments
-    h3 Appointments
+    h3 Upcoming Appointments
     table(class='table')
       thead
         tr
@@ -50,6 +50,6 @@
         tr(ng-repeat='appointment in appointments')
           td {{ appointment.date | date: 'd MMM y' }}
           td {{ appointment.time }}
-          td {{ appointment.Appointment.name }}
+          td {{ appointment.name }}
         tr(ng-if='!appointments')
           td.text-center(colspan=3) No appointments yet.
