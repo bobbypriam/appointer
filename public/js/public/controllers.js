@@ -9,9 +9,10 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
   var startIdx = 0;
   var endIdx = 6;
   var startDate, endDate, duration;
+  var cal;
 
   CalendarService.getCalendar($routeParams.name, function (calendar) {
-    $scope.calendar = calendar;
+    $scope.calendar = cal = calendar;
     $scope.slots = calendar.Slots;
 
     startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
@@ -30,8 +31,11 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
       return false;
 
     $scope.form = {};
-    $scope.form.date = day;
-    $scope.form.time = time;
+    $scope.form.slot = {
+      date: day,
+      time: time,
+      CalendarId: cal.id
+    }
     $('.modal').modal('show');
   }
 
@@ -55,6 +59,14 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
     if ($scope.days.length < 7)
       return;
     shift(7);
+  }
+
+  $scope.submit = function () {
+    CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
+      if (response.ok) {
+        console.log(response.appointment);
+      }
+    });
   }
 
   function shift(inc) {

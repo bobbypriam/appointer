@@ -25,21 +25,21 @@
         button.close(type="button", data-dismiss='modal', aria-label='Close')
           span(aria-hidden='true') &times;
         h4 Make an Appointment
-        p You are making an appointment for <strong>{{ form.date | date: 'EEE, d/M' }}</strong> at <strong>{{ form.time }}</strong>. Please fill in the details below.
+        p You are making an appointment for <strong>{{ form.slot.date | date: 'EEE, d/M' }}</strong> at <strong>{{ form.slot.time }}</strong>. Please fill in the details below.
       .modal-body
         .form-horizontal.step-one
           .form-group
             label.col-sm-2.control-label Name
             .col-sm-8
-              input.form-control(ng-model='form.name')
+              input.form-control(ng-model='form.appointment.name')
           .form-group
             label.col-sm-2.control-label Email
             .col-sm-8
-              input.form-control(type='email', ng-model='form.email')
+              input.form-control(type='email', ng-model='form.appointment.email')
           .form-group
             label.col-sm-2.control-label Phone
             .col-sm-8
-              input.form-control(ng-model='form.phone')
+              input.form-control(ng-model='form.appointment.phone')
 
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel

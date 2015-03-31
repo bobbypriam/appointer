@@ -28,8 +28,9 @@ router.post('/dashboard/slots/post', DashboardController.postManageSlots);
 router.get('/dashboard/*', DashboardController.redirectIndex);
 
 // public calendar routes
-router.get('/:name', PublicCalendarController.get);
 router.get('/partials/:name', PublicCalendarController.getPartial);
 router.get('/calendar/:name', PublicCalendarController.getCalendar);
+router.post('/create-appointment', PublicCalendarController.postBooking);
+router.get('/:name', PublicCalendarController.get);
 
 module.exports = router;

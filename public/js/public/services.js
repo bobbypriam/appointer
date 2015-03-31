@@ -10,5 +10,9 @@ angular.module('appointer.services', [])
         $http.get(baseurl+'calendar/'+id).success(callback);
       }
 
+      model.createAppointment = function (appointment, callback) {
+        $http.post(baseurl+'create-appointment', appointment).success(callback);
+      }
+
       return model;
     }]);

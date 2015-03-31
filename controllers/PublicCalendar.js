@@ -8,7 +8,19 @@ var PublicCalendarController = {
     });
   },
   postBooking: function (req, res, next) {
-
+    var appointment = req.body.appointment;
+    models.Slot.find({ where: appointment.slot })
+      .then(function(slot) {
+        slot.update({
+          status: true
+        }).then(function (s) {
+          appointment.appointment.SlotId = s.id;
+          models.Appointment.create(appointment.appointment)
+            .then(function(app) {
+              res.json({ ok: true, appointment: appointment });
+            });
+        });
+      });
   },
   postCancel: function (req, res, next) {
 
