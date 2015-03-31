@@ -16,7 +16,7 @@
         tbody
             tr(ng-repeat='time in times')
               td {{ time }}
-              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='clickSlot(day, time, $event)', ng-class='checkIfSelected(day, time) ? "selected" : ""')
+              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='clickSlot(day, time, $event)', ng-class='{ "selected": checkIfSelected(day, time) }')
 
 #make-appointment-modal.modal.fade
   .modal-dialog
