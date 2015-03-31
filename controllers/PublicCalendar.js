@@ -2,9 +2,13 @@ var models = require('../models');
 
 var PublicCalendarController = {
   get: function (req, res, next) {
-    var name = req.params.name;
-    res.render('public-calendar/index', {
-      title: name + ' | Appointer'
+    models.Calendar.find({
+      where: { url: req.params.name }
+    }).then(function (calendar) {
+      res.render('public-calendar/index', {
+        title: calendar.title + ' | Appointer',
+        calendar: calendar
+      });
     });
   },
   postBooking: function (req, res, next) {
