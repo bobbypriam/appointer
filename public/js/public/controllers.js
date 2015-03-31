@@ -27,7 +27,7 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
 
   $scope.clickSlot = function (day, time, $event) {
     var target = $($event.target);
-    if (!target.hasClass('selected'))
+    if (!$scope.checkIfSelected(day, time))
       return false;
 
     $scope.form = {};
@@ -80,11 +80,11 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
   function populateSelected() {
     $scope.selected = [];
     $scope.slots.forEach(function (slot) {
-      $scope.selected.push({
-        date: slot.date.split('T')[0],
-        time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
-        status: slot.status
-      });
+      if (!slot.status)
+        $scope.selected.push({
+          date: slot.date.split('T')[0],
+          time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1]
+        });
     });
   }
 
