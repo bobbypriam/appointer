@@ -62,7 +62,16 @@ var DashboardController = {
 
   },
   getAppointmentList: function (req, res, next) {
-
+    models.Slot.findAll({
+      where: {
+        CalendarId: req.params.id,
+        status: true
+      },
+      order: 'date',
+      include: [ models.Appointment ]
+    }).then(function (slots) {
+      res.json({ ok: true, slots: slots });
+    });
   },
   postAskForReschedule: function (req, res, next) {
 
@@ -130,17 +139,6 @@ var DashboardController = {
         });
       });
       res.json({ ok: true, slots: formattedSlots });
-    });
-  },
-  getAppointments: function (req, res, next) {
-    models.Slot.findAll({
-      where: {
-        CalendarId: req.params.id,
-        status: true
-      },
-      include: [ models.Appointment ]
-    }).then(function (slots) {
-      res.json({ ok: true, slots: slots });
     });
   }
 }

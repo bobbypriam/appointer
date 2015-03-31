@@ -18,7 +18,7 @@
         tr(ng-repeat='calendar in calendars')
           td: a(href=baseurl+'/dashboard/{{ calendar.url }}') {{ calendar.title }}
           td {{ calendar.url }}
-          td {{ calendar.published }}
+          td {{ calendar.published ? 'Published' : 'Not published' }}
         tr(ng-if='!calendars.length')
           td(colspan='3', class='text-center') No calendars yet. 
             a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create one now.
