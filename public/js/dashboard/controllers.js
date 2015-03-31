@@ -79,16 +79,24 @@ function MainCtrl($scope, $location, CalendarService) {
 }
 
 function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
-  var result = $.grep(CalendarService.calendars,
+  var calendar;
+  var calendars = $.grep(CalendarService.calendars,
     function (element) {
       return element.url == $routeParams.name;
     });
 
-  if (!result) {
+  if (!calendars) {
 
   } else {
-    $scope.calendar = result[0];
+    $scope.calendar = calendar = calendars[0];
   }
+
+  CalendarService.getAppointments(calendar.id, function (response) {
+    if (response.ok) {
+      console.log(response.slots);
+      $scope.appointments = response.slots;
+    }
+  });
 }
 
 function EditCalendarDetailCtrl($scope, $routeParams, CalendarService) {

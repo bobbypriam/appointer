@@ -47,6 +47,9 @@
           th Time
           th Appointment Maker
       tbody
-
+        tr(ng-repeat='appointment in appointments')
+          td {{ appointment.date | date: 'd MMM y' }}
+          td {{ appointment.time }}
+          td {{ appointment.Appointment.name }}
         tr(ng-if='!appointments')
           td.text-center(colspan=3) No appointments yet.
