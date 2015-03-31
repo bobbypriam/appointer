@@ -38,4 +38,18 @@ angular.module('appointer.services', [])
       }
 
       return model;
+    }])
+  .factory('UserService', ['$http',
+    function ($http) {
+      var model = {};
+
+      model.getUserDetails = function (callback) {
+        $http.get(baseurl+'dashboard/user').success(callback);
+      }
+
+      model.editUserDetails = function (details, callback) {
+        $http.post(baseurl+'dashboard/user', { details: details }).success(callback);
+      }
+
+      return model;
     }]);

@@ -74,7 +74,16 @@ var DashboardController = {
 
   },
   postSettings: function (req, res, next) {
-
+    var email = req.body.details.email;
+    models.User.find({ where: { id: req.session.user.id } })
+      .then(function (user) {
+        user.update({
+          email: email
+        }).then(function (usr) {
+          req.session.user = usr;
+          res.json({ ok: true });
+        });
+      });
   },
   getPartial: function (req, res, next) {
     res.render('dashboard/partials/' + req.params.name);

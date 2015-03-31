@@ -282,14 +282,18 @@ function IndexCtrl($scope, CalendarService) {
   $scope.calendars = CalendarService.calendars;
 }
 
-function SettingsCtrl($scope, $http) {
+function SettingsCtrl($scope, UserService) {
   $scope.form = {};
-  $http.get(baseurl+'dashboard/user').
-    success(function(data, status, headers, config) {
-      $scope.form.email = data.email;
-    });
-  $scope.saveSettings = function () {
+  
+  UserService.getUserDetails(function(response) {
+    $scope.form.email = response.email;
+  });
 
+  $scope.submitPost = function () {
+    UserService.editUserDetails($scope.form, function(response) {
+      if (response.ok)
+        alert('Success!');
+    });
   }
 }
 
