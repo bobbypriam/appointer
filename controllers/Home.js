@@ -63,10 +63,9 @@ var HomeController = {
   },
   postRegister: function (req, res, next) {
     var email = req.body.email;
-    console.log(req.session.user);
     models.User.find({ where: { id: req.session.user.id } })
       .then(function (user) {
-        user.updateAttributes({
+        user.update({
           email: email
         }).then(function () {
           req.session.user = user;

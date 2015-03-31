@@ -15,7 +15,7 @@
         li(role='presentation')
           a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/slots') Manage slots
         li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/toggle') Publish/Unpublish calendar
+          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}', ng-click='togglePublish($event)') Publish/Unpublish calendar
         li.divider(role='presentation')
         li.dropdown-header(role='presentation') Appointments
         li(role='presentation')
@@ -37,6 +37,9 @@
     .row
       p.col-xs-3.col-sm-4: strong End Date
       p.col-xs-9.col-sm-8 {{ calendar.endDate | date: 'd MMM y' }}
+    .row
+      p.col-xs-3.col-sm-4: strong Status
+      p.col-xs-9.col-sm-8 {{ calendar.published ? 'Published' : 'Not published' }}
 
   .col-md-8.appointments
     h3 Upcoming Appointments

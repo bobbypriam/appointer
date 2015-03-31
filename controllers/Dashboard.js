@@ -33,7 +33,13 @@ var DashboardController = {
 
   },
   postEditCalendar: function (req, res, next) {
-
+    var newCal = req.body.calendar;
+    models.Calendar.find({ where: { id: newCal.id } })
+      .then(function (oldCal) {
+        oldCal.update(newCal).then(function () {
+          res.json({ ok: true });
+        });
+      });
   },
   getManageSlots: function (req, res, next) {
 

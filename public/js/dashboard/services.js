@@ -17,6 +17,10 @@ angular.module('appointer.services', [])
         $http.post(baseurl+'dashboard/calendars/new', calendar).success(callback);
       }
 
+      model.updateCalendar = function (calendar, callback) {
+        $http.post(baseurl+'dashboard/calendars/edit', { calendar: calendar }).success(callback);
+      }
+
       model.checkUrl = function (url, callback) {
         $http.post(baseurl+'dashboard/checkurl', { url: url }).success(callback);
       }

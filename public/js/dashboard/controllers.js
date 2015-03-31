@@ -107,6 +107,20 @@ function CalendarDetailCtrl($scope, $window, $routeParams, CalendarService) {
   $scope.redirectToCalendar = function (url) {
     $window.open(baseurl+url, '_blank');
   }
+
+  $scope.togglePublish = function ($event) {
+    $event.preventDefault();
+    var newCal = {
+      id: calendar.id,
+      published: !calendar.published
+    };
+    CalendarService.updateCalendar(newCal, function (response) {
+      if (response.ok) {
+        CalendarService.getCalendars();
+        calendar.published = !calendar.published;
+      }
+    });
+  }
 }
 
 function EditCalendarDetailCtrl($scope, $routeParams, CalendarService) {
