@@ -36,6 +36,9 @@ var PublicCalendarController = {
       res.json(calendar);
     });
   },
+  redirectIndex: function (req, res, next) {
+    res.redirect(res.locals.baseurl+'/'+req.params.name);
+  },
   getPartial: function (req, res, next) {
     res.render('public-calendar/partials/' + req.params.name);
   }

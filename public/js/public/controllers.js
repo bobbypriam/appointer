@@ -5,7 +5,7 @@
 angular.module('appointer.controllers', [])
   .controller('IndexCtrl', IndexCtrl);
 
-function IndexCtrl($scope, $routeParams, CalendarService) {
+function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
   var startIdx = 0;
   var endIdx = 6;
   var startDate, endDate, duration;
@@ -64,7 +64,8 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
   $scope.submit = function () {
     CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
       if (response.ok) {
-        console.log(response.appointment);
+        $('.modal').modal('hide');
+        $timeout(redirectSuccess, 800);
       }
     });
   }
@@ -113,5 +114,9 @@ function IndexCtrl($scope, $routeParams, CalendarService) {
       $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
       d.setMinutes(d.getMinutes() + duration);
     }
+  }
+
+  function redirectSuccess() {
+    $location.path(baseurl + cal.url + '/success');
   }
 }

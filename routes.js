@@ -34,4 +34,6 @@ router.get('/calendar/:name', PublicCalendarController.getCalendar);
 router.post('/create-appointment', PublicCalendarController.postBooking);
 router.get('/:name', PublicCalendarController.get);
 
+router.get('/:name/*', PublicCalendarController.redirectIndex);
+
 module.exports = router;
