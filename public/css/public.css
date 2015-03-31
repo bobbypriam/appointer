@@ -1,0 +1,17 @@
+#calendar { height: 440px }
+
+.selected:hover { cursor: pointer }
+
+#calendar td:not(:first-child):not(.selected):hover {
+  background: inherit;
+}
+
+footer { margin-top: 20px }
+
+.panel {
+  margin-top: 40px;
+}
+
+.panel-body {
+  padding: 30px 40px 40px;
+}
