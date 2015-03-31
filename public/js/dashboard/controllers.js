@@ -78,7 +78,7 @@ function MainCtrl($scope, $location, CalendarService) {
   }
 }
 
-function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
+function CalendarDetailCtrl($scope, $window, $routeParams, CalendarService) {
   var calendar;
   var calendars = $.grep(CalendarService.calendars,
     function (element) {
@@ -89,21 +89,24 @@ function CalendarDetailCtrl($scope, $routeParams, CalendarService) {
 
   } else {
     $scope.calendar = calendar = calendars[0];
+    CalendarService.getAppointments(calendar.id, function (response) {
+      if (response.ok) {
+        var slots = response.slots;
+        $scope.appointments = [];
+        slots.forEach(function (slot) {
+          $scope.appointments.push({
+            date: slot.date.split('T')[0],
+            time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+            name: slot.Appointment.name
+          });
+        });
+      }
+    });
   }
 
-  CalendarService.getAppointments(calendar.id, function (response) {
-    if (response.ok) {
-      var slots = response.slots;
-      $scope.appointments = [];
-      slots.forEach(function (slot) {
-        $scope.appointments.push({
-          date: slot.date.split('T')[0],
-          time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
-          name: slot.Appointment.name
-        });
-      });
-    }
-  });
+  $scope.redirectToCalendar = function (url) {
+    $window.open(baseurl+url, '_blank');
+  }
 }
 
 function EditCalendarDetailCtrl($scope, $routeParams, CalendarService) {
