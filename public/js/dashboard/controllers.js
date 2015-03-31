@@ -79,16 +79,14 @@ function MainCtrl($scope, $location, CalendarService) {
 }
 
 function CalendarDetailCtrl($scope, $window, $routeParams, CalendarService) {
-  var calendar;
-  var calendars = $.grep(CalendarService.calendars,
+  var calendar = $scope.calendar = $.grep(CalendarService.calendars,
     function (element) {
       return element.url == $routeParams.name;
-    });
+    })[0];
 
-  if (!calendars) {
+  fetchAppointments();
 
-  } else {
-    $scope.calendar = calendar = calendars[0];
+  function fetchAppointments() {
     CalendarService.getAppointments(calendar.id, function (response) {
       if (response.ok) {
         var slots = response.slots;
@@ -123,16 +121,37 @@ function CalendarDetailCtrl($scope, $window, $routeParams, CalendarService) {
   }
 }
 
-function EditCalendarDetailCtrl($scope, $routeParams, CalendarService) {
-  var result = $.grep(CalendarService.calendars,
+function EditCalendarDetailCtrl($scope, $location, $routeParams, CalendarService) {
+  var calendar = $.grep(CalendarService.calendars,
     function (element) {
       return element.url == $routeParams.name;
+    })[0];
+
+  $scope.calendar = {
+    title: calendar.title,
+    description: calendar.description,
+    url: calendar.url,
+    duration: calendar.duration,
+    startDate: calendar.startDate.split('T')[0],
+    endDate: calendar.endDate.split('T')[0]
+  }
+
+  $scope.submitPost = function () {
+    var newCal = {
+      id: calendar.id,
+      title: $scope.calendar.title,
+      description: $scope.calendar.description,
+      url: $scope.calendar.url,
+      duration: $scope.calendar.duration,
+      startDate: $scope.calendar.startDate,
+      endDate: $scope.calendar.endDate
+    };
+    CalendarService.updateCalendar(newCal, function (response) {
+      if (response.ok) {
+        CalendarService.getCalendars();
+        alert('Success!');
+      }
     });
-
-  if (!result) {
-
-  } else {
-    $scope.calendar = result[0];
   }
 }
 

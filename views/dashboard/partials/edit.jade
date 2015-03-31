@@ -31,12 +31,12 @@
     .form-group
       label.col-sm-2.control-label Start Date
       .col-sm-4
-        input.form-control(ng-model='calendar.startDate', name='startDate')
+        input.form-control.date(ng-model='calendar.startDate', name='startDate')
         //- input.form-control(type='date', ng-model='calendar.startDate', placeholder='YYYY-MM-DD')
     .form-group
       label.col-sm-2.control-label End Date
       .col-sm-4
-        input.form-control(type='date', ng-model='calendar.endDate', placeholder='YYYY-MM-DD')
+        input.form-control.date(ng-model='calendar.endDate', placeholder='YYYY-MM-DD')
 
 .row
   .col-md-6
@@ -45,6 +45,6 @@
 
 block js
   script.
-    $("input[type='date']").datepicker({
+    $("input.date").datepicker({
       format: 'yyyy-mm-dd'
     });
