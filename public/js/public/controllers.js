@@ -105,12 +105,11 @@ function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
   }
 
   function populateTimes() {
-    $scope.times = [];
     var d = new Date();
     d.setHours(7, 0);
-    var day = d.getDay();
 
-    while (d.getDay() == day) {
+    $scope.times = [];
+    while (d.getHours() < 21) {
       $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
       d.setMinutes(d.getMinutes() + duration);
     }
