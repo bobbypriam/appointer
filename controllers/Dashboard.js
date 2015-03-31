@@ -41,11 +41,13 @@ var DashboardController = {
   postManageSlots: function (req, res, next) {
     var calendarID = req.body.calendarID;
     models.Slot.destroy({
-      where: { CalendarId: calendarID }
+      where: { CalendarId: calendarID, status: false }
     }).then(function() {
       req.body.slots.forEach(function (slot) {
-        slot.CalendarId = calendarID;
-        models.Slot.create(slot);
+        if (!slot.status) {
+          slot.CalendarId = calendarID;
+          models.Slot.create(slot);
+        }
       });
     });
     res.json({ ok: true });
