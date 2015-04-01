@@ -6,10 +6,11 @@ angular.module('appointer.services', [])
     function ($http) {
       var model = { calendars: [] };
 
-      model.getCalendars = function () {
+      model.getCalendars = function (callback) {
         $http.get(baseurl+'dashboard/calendars').
           success(function(data, status, headers, config) {
             angular.copy(data.calendars, model.calendars);
+            callback(model.calendars);
           });
       }
 

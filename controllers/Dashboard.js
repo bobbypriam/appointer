@@ -56,7 +56,14 @@ var DashboardController = {
         }
       });
     });
-    res.json({ ok: true });
+    models.Calendar.find(calendarID)
+      .then(function (calendar) {
+        calendar.update({
+          published: req.body.published
+        }).then(function (cal) {
+          res.json({ ok: true });
+        });
+      });
   },
   postDeleteCalendar: function (req, res, next) {
     models.Calendar.find({

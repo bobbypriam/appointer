@@ -10,7 +10,7 @@ angular.module('appointer.controllers', [])
   .controller('SettingsCtrl', SettingsCtrl);
 
 function MainCtrl($scope, $location, CalendarService) {
-  CalendarService.getCalendars();
+  CalendarService.getCalendars(function (calendars) {});
   $scope.calendars = CalendarService.calendars;
 
   $scope.form = {};
@@ -237,19 +237,26 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
   }
 
   $scope.save = function () {
-    var slots = {
-      calendarID: calendar.id,
-      slots: $scope.selected
-    }
-    CalendarService.postSlots(slots, function (response) {
-      if (response.ok) {
-        $location.path(baseurl+'dashboard/'+calendar.url);
-      }
-    });
+    submitSlots(calendar.published);
   }
 
   $scope.saveAndPublish = function () {
+    submitSlots(true);
+  }
 
+  function submitSlots(published) {
+    var slots = {
+      calendarID: calendar.id,
+      slots: $scope.selected,
+      published: published
+    }
+    CalendarService.postSlots(slots, function (response) {
+      if (response.ok) {
+        CalendarService.getCalendars(function (calendars) {
+          $location.path(baseurl+'dashboard/'+calendar.url);
+        });
+      }
+    });
   }
 
   function shift(inc) {
