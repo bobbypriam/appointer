@@ -78,7 +78,7 @@ function MainCtrl($scope, $location, CalendarService) {
   }
 }
 
-function CalendarDetailCtrl($scope, $window, $routeParams, CalendarService) {
+function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarService) {
   var calendar = $scope.calendar = $.grep(CalendarService.calendars,
     function (element) {
       return element.url == $routeParams.name;
@@ -116,6 +116,31 @@ function CalendarDetailCtrl($scope, $window, $routeParams, CalendarService) {
       if (response.ok) {
         CalendarService.getCalendars();
         calendar.published = !calendar.published;
+      }
+    });
+  }
+
+  $scope.checkTitle = function () {
+    if ($scope.form.title == $scope.calendar.title)
+      $('.delete-button').attr('disabled', false);
+    else
+      $('.delete-button').attr('disabled', true);
+  }
+
+  $scope.cancelDelete = function () {
+    $scope.form.title = '';
+  }
+
+  $scope.delete = function () {
+    var calendar = {
+      id: $scope.calendar.id,
+      title: $scope.form.title
+    }
+    CalendarService.deleteCalendar(calendar, function (response) {
+      if (response.ok) {
+        CalendarService.getCalendars();
+        $('.modal-backdrop').remove();
+        $location.path(baseurl+'dashboard');
       }
     });
   }

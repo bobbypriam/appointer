@@ -23,7 +23,7 @@
         li.divider(role='presentation')
         li.dropdown-header(role='presentation') Danger Zone
         li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/delete') Delete calendar
+          a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#delete-calendar-modal') Delete calendar
 
 .row
   .col-md-4.details
@@ -56,3 +56,22 @@
           td {{ appointment.name }}
         tr(ng-if='!appointments.length')
           td.text-center(colspan=3) No appointments yet.
+
+#delete-calendar-modal.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4 Delete Calendar
+        p You are about to delete this calendar.
+      .modal-body
+        .form
+          .row
+            .form-group.col-md-8
+              label.control-label Please type the calendar title to make sure.
+              input.form-control(ng-model='form.title', ng-change='checkTitle()')
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal', ng-click='cancelDelete()') Cancel
+        button.btn.btn-primary.delete-button(type='button', ng-click='delete()', disabled) Delete

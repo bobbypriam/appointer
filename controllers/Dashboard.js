@@ -62,9 +62,10 @@ var DashboardController = {
     models.Calendar.find({
       where: { id: req.body.id }
     }).then(function (calendar) {
-      calendar.destroy().then(function () {
-        res.json({ ok: true });
-      })
+      if (calendar && calendar.title === req.body.title)
+        calendar.destroy().then(function () {
+          res.json({ ok: true });
+        });
     });
   },
   getAppointmentList: function (req, res, next) {
