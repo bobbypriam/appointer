@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('appointer.controllers', [])
-  .controller('IndexCtrl', IndexCtrl);
+  .controller('IndexCtrl', ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService', IndexCtrl]);
 
 function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
   var startIdx = 0;

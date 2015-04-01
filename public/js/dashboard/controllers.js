@@ -3,11 +3,12 @@
 /* Controllers */
 
 angular.module('appointer.controllers', [])
-  .controller('MainCtrl', MainCtrl)
-  .controller('IndexCtrl', IndexCtrl)
-  .controller('CalendarDetailCtrl', CalendarDetailCtrl)
-  .controller('ManageSlotsCtrl', ManageSlotsCtrl)
-  .controller('SettingsCtrl', SettingsCtrl);
+  .controller('MainCtrl', ['$scope', '$location', 'CalendarService', MainCtrl])
+  .controller('IndexCtrl', ['$scope', 'CalendarService', IndexCtrl])
+  .controller('CalendarDetailCtrl', ['$scope', '$window', '$location', '$routeParams', 'CalendarService', CalendarDetailCtrl])
+  .controller('EditCalendarDetailCtrl', ['$scope', '$location', '$routeParams', 'CalendarService', EditCalendarDetailCtrl])
+  .controller('ManageSlotsCtrl', ['$scope', '$location', '$routeParams', 'CalendarService', ManageSlotsCtrl])
+  .controller('SettingsCtrl', ['$scope', 'UserService', SettingsCtrl]);
 
 function MainCtrl($scope, $location, CalendarService) {
   CalendarService.getCalendars(function (calendars) {});
@@ -24,14 +25,14 @@ function MainCtrl($scope, $location, CalendarService) {
       step++;
       update(step);
     } else {
-      console.log($scope.form);
       CalendarService.postCalendar($scope.form, function (data) {
         if (data.ok) {
-          CalendarService.getCalendars();
-          $scope.calendars.push(data.calendar);
-          $location.path(baseurl+'dashboard/' + $scope.form.url + '/slots');
-          $('.modal').modal('toggle');
-          $scope.restartForm();
+          CalendarService.getCalendars(function (calendar) {
+            $scope.restartForm();
+            $location.path(baseurl+'dashboard/' + data.calendar.url + '/slots');
+            $('.modal').modal('toggle');
+            $('.modal-backdrop').remove();
+          });
         }
       });
     }
@@ -114,7 +115,7 @@ function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarSe
     };
     CalendarService.updateCalendar(newCal, function (response) {
       if (response.ok) {
-        CalendarService.getCalendars();
+        CalendarService.getCalendars(function (calendar) {});
         calendar.published = !calendar.published;
       }
     });
@@ -138,9 +139,10 @@ function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarSe
     }
     CalendarService.deleteCalendar(calendar, function (response) {
       if (response.ok) {
-        CalendarService.getCalendars();
-        $('.modal-backdrop').remove();
-        $location.path(baseurl+'dashboard');
+        CalendarService.getCalendars(function (calendar) {
+          $('.modal-backdrop').remove();
+          $location.path(baseurl+'dashboard');
+        });
       }
     });
   }
@@ -173,7 +175,7 @@ function EditCalendarDetailCtrl($scope, $location, $routeParams, CalendarService
     };
     CalendarService.updateCalendar(newCal, function (response) {
       if (response.ok) {
-        CalendarService.getCalendars();
+        CalendarService.getCalendars(function (calendar) {});
         alert('Success!');
       }
     });
@@ -211,7 +213,6 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
         return slot.date !== day || slot.time !== time;
       });
     }
-    console.log($scope.selected);
   }
 
   $scope.checkIfSelected = function (day, time) {
@@ -278,7 +279,6 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
             status: slot.status
           });
         });
-        console.log(response.slots);
       }
     });
   }
@@ -327,9 +327,4 @@ function SettingsCtrl($scope, UserService) {
         alert('Success!');
     });
   }
-}
-
-function LogoutCtrl($scope, $http) {
-  console.log('hehe');
-  window.location.href = '/logout';
 }

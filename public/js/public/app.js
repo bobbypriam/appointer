@@ -7,7 +7,7 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
     $routeProvider.
       when(baseurl+':name', {
         templateUrl: baseurl+'partials/index',
-        controller: IndexCtrl
+        controller: 'IndexCtrl'
       }).
       when(baseurl+':name/success', {
         templateUrl: baseurl+'partials/success'

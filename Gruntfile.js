@@ -36,6 +36,9 @@ module.exports = function (grunt) {
       }
     },
     uglify: {
+      options: {
+        beautify: true
+      },
       js: {
         files: {
           'public/js/dashboard.min.js': ['public/js/dashboard.js'],

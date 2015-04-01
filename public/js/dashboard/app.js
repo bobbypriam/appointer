@@ -7,23 +7,23 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
     $routeProvider.
       when(baseurl+'dashboard', {
         templateUrl: baseurl+'dashboard/partials/index',
-        controller: IndexCtrl
+        controller: 'IndexCtrl'
       }).
       when(baseurl+'dashboard/settings', {
         templateUrl: baseurl+'dashboard/partials/settings',
-        controller: SettingsCtrl
+        controller: 'SettingsCtrl'
       }).
       when(baseurl+'dashboard/:name', {
         templateUrl: baseurl+'dashboard/partials/detail',
-        controller: CalendarDetailCtrl
+        controller: 'CalendarDetailCtrl'
       }).
       when(baseurl+'dashboard/:name/edit', {
         templateUrl: baseurl+'dashboard/partials/edit',
-        controller: EditCalendarDetailCtrl
+        controller: 'EditCalendarDetailCtrl'
       }).
       when(baseurl+'dashboard/:name/slots', {
         templateUrl: baseurl+'dashboard/partials/slots',
-        controller: ManageSlotsCtrl
+        controller: 'ManageSlotsCtrl'
       }).
       otherwise({
         redirectTo: baseurl+'dashboard'
