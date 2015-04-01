@@ -5,10 +5,11 @@ var PublicCalendarController = {
     models.Calendar.find({
       where: { url: req.params.name }
     }).then(function (calendar) {
-      res.render('public-calendar/index', {
-        title: calendar.title + ' | Appointer',
-        calendar: calendar
-      });
+      if (calendar)
+        res.render('public-calendar/index', {
+          title: calendar.title + ' | Appointer',
+          calendar: calendar
+        });
     });
   },
   postBooking: function (req, res, next) {
