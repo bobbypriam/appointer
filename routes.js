@@ -24,6 +24,7 @@ router.post('/dashboard/user', DashboardController.postSettings);
 router.post('/dashboard/checkurl', DashboardController.checkUrl);
 router.post('/dashboard/calendars/new', DashboardController.postNewCalendar);
 router.post('/dashboard/calendars/edit', DashboardController.postEditCalendar);
+router.post('/dashboard/calendars/delete', DashboardController.postDeleteCalendar);
 router.get('/dashboard/slots/get/:id', DashboardController.getSlots);
 router.post('/dashboard/slots/post', DashboardController.postManageSlots);
 router.get('/dashboard/appointments/get/:id', DashboardController.getAppointmentList);

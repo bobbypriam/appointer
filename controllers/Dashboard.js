@@ -59,7 +59,13 @@ var DashboardController = {
     res.json({ ok: true });
   },
   postDeleteCalendar: function (req, res, next) {
-
+    models.Calendar.find({
+      where: { id: req.body.id }
+    }).then(function (calendar) {
+      calendar.destroy().then(function () {
+        res.json({ ok: true });
+      })
+    });
   },
   getAppointmentList: function (req, res, next) {
     models.Slot.findAll({
