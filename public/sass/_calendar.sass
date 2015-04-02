@@ -11,22 +11,38 @@
     border-right: 1px solid #e8e8e8
     text-align: center !important
 
-  th:first-child
-    width: .16%
-
-  td:first-child
-    width: .1%
-
   table
     margin-bottom: 0
   
   .slot.selected
     background: green
 
-  td:not(:first-child):not(.selected):hover
-    background: #e8e8e8
-
 table.floatThead-table
   border-top: none
   border-bottom: none
   background-color: #f8f8f8
+
+.dashboard
+  #calendar
+    th:first-child
+      width: .16%
+    td:first-child
+      width: .1%
+    td:not(:first-child):not(.selected):hover
+      background: #e8e8e8
+
+.public-calendar
+  #calendar
+    .slot
+      &.selected
+        color: #fff
+        &:hover
+          opacity: .8
+
+      &:not(.selected)
+        background: #f8f8f8
+        color: #888
+        text-decoration: line-through
+
+        &:not(:first-child):hover
+          background: #f8f8f8

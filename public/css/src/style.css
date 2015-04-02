@@ -5646,21 +5646,34 @@ button.close {
     border-left: 1px solid #e8e8e8;
     border-right: 1px solid #e8e8e8;
     text-align: center !important; }
-  #calendar th:first-child {
-    width: 0.16%; }
-  #calendar td:first-child {
-    width: 0.1%; }
   #calendar table {
     margin-bottom: 0; }
   #calendar .slot.selected {
     background: green; }
-  #calendar td:not(:first-child):not(.selected):hover {
-    background: #e8e8e8; }
 
 table.floatThead-table {
   border-top: none;
   border-bottom: none;
   background-color: #f8f8f8; }
+
+.dashboard #calendar th:first-child {
+  width: 0.16%; }
+.dashboard #calendar td:first-child {
+  width: 0.1%; }
+.dashboard #calendar td:not(:first-child):not(.selected):hover {
+  background: #e8e8e8; }
+
+.public-calendar #calendar .slot.selected {
+  background: green;
+  color: #fff; }
+  .public-calendar #calendar .slot.selected:hover {
+    opacity: 0.8; }
+.public-calendar #calendar .slot:not(.selected) {
+  background: #f8f8f8;
+  color: #888;
+  text-decoration: line-through; }
+  .public-calendar #calendar .slot:not(.selected):not(:first-child):hover {
+    background: #f8f8f8; }
 
 body.dashboard {
   padding-top: 50px; }
