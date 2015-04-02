@@ -3,7 +3,7 @@
     h1 {{ calendar.title }}
     p {{ calendar.description }}
     p URL: 
-      code.url(ng-click="redirectToCalendar(calendar.url)") #{baseurl}/{{ calendar.url }}
+      code.url(ng-click="redirectToCalendar(calendar.url)") #{baseurl}{{ calendar.url }}
   .col-md-4
     .dropdown
       button.btn.btn-default.dropdown-toggle#calendar-menu(type='button', data-toggle='dropdown', aria-expanded='true') Menu 
@@ -11,15 +11,15 @@
       ul.dropdown-menu(role='menu', aria-labelledby='calendar-menu')
         li.dropdown-header(role='presentation') Calendar Details
         li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/edit') Edit details
+          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/edit') Edit details
         li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/slots') Manage slots
+          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/slots') Manage slots
         li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}', ng-click='togglePublish($event)') Publish/Unpublish calendar
+          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}', ng-click='togglePublish($event)') Publish/Unpublish calendar
         li.divider(role='presentation')
         li.dropdown-header(role='presentation') Appointments
         li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'/dashboard/{{ calendar.url }}/appointments') See appointments
+          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/appointments') See appointments
         li.divider(role='presentation')
         li.dropdown-header(role='presentation') Danger Zone
         li(role='presentation')

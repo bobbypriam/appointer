@@ -17,7 +17,7 @@ h2.sub-header My Calendars
           th Status
       tbody
         tr(ng-repeat='calendar in calendars')
-          td: a(href=baseurl+'/dashboard/{{ calendar.url }}') {{ calendar.title }}
+          td: a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
           td {{ calendar.url }}
           td {{ calendar.published ? 'Published' : 'Not published' }}
         tr(ng-if='!calendars.length')

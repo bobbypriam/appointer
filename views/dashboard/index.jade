@@ -14,7 +14,7 @@ block content
       #navbar.navbar-collapse.collapse
         p.nav.navbar-text Hello, #{user.username}!
         ul.nav.navbar-nav.navbar-right
-          li: a(href=baseurl+'/logout') Logout
+          li: a(href=baseurl+'logout') Logout
   
   .body(ng-app='appointer', ng-controller='MainCtrl')
     .container-fluid
@@ -22,12 +22,12 @@ block content
         .col-sm-3.col-md-2.sidebar
           ul.nav.nav-sidebar
             li
-              a(href=baseurl+'/dashboard') My Calendars
+              a(href=baseurl+'dashboard') My Calendars
               ul
                 li(ng-repeat='calendar in calendars')
-                  a(href=baseurl+'/dashboard/{{ calendar.url }}') {{ calendar.title }}
+                  a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
                 li: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') + New...
-            li: a(href=baseurl+'/dashboard/settings') Settings
+            li: a(href=baseurl+'dashboard/settings') Settings
         
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           div(ng-view)
