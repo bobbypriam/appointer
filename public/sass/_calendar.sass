@@ -1,0 +1,32 @@
+#calendar
+  height: 350px
+  overflow-x: hidden
+  overflow-y: scroll
+  border-bottom: 1px solid #e8e8e8
+  border-top: 1px solid #e8e8e8
+
+  td, th
+    width: 1.25%
+    border-left: 1px solid #e8e8e8
+    border-right: 1px solid #e8e8e8
+    text-align: center !important
+
+  th:first-child
+    width: .16%
+
+  td:first-child
+    width: .1%
+
+  table
+    margin-bottom: 0
+  
+  .slot.selected
+    background: green
+
+  td:not(:first-child):not(.selected):hover
+    background: #e8e8e8
+
+table.floatThead-table
+  border-top: none
+  border-bottom: none
+  background-color: #f8f8f8

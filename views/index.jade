@@ -1,10 +1,14 @@
 extends layout
 
 block content
-  h1= title
-  p Appointment management app that simplifies your day. Putting the focus back to where it belongs: your appointment.
-  p
-    a(href=baseurl+"/login") Login
-    |  or 
-    a(href="#how-it-works") See how it works
+  .jumbotron.home-banner
+    .container
+      .row
+        .col-md-6
+          h1= title
+          p Appointment management app that simplifies your day. Putting the focus back to where it belongs: your appointment.
+          p
+            a.btn.btn-default(href=baseurl+"/login") Login
+            |  or 
+            a.btn.btn-primary(href="#how-it-works") See how it works
 

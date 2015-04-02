@@ -1,14 +1,15 @@
+h1.page-header Dashboard
+
 .row
   .col-md-12
-    h1 Dashboard
     p Welcome to your Appointer dashboard!
 
+h2.sub-header My Calendars 
+  button(type='button', class='btn btn-primary btn-xs', data-toggle='modal', data-target='#new-calendar-modal') Create New
+
 .row
   .col-md-12
-    h3 My Calendars 
-      button(type='button', class='btn btn-primary btn-xs', data-toggle='modal', data-target='#new-calendar-modal') Create New
-
-    table(class='table')
+    table.table.table-bordered
       thead
         tr
           th Title
