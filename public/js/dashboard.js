@@ -27373,33 +27373,31 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 'use strict';
 
-var baseurl = '/';
-
 angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
-      when(baseurl+'dashboard', {
-        templateUrl: baseurl+'dashboard/partials/index',
+      when('/dashboard', {
+        templateUrl: 'dashboard/partials/index',
         controller: 'IndexCtrl'
       }).
-      when(baseurl+'dashboard/settings', {
-        templateUrl: baseurl+'dashboard/partials/settings',
+      when('/dashboard/settings', {
+        templateUrl: 'dashboard/partials/settings',
         controller: 'SettingsCtrl'
       }).
-      when(baseurl+'dashboard/:name', {
-        templateUrl: baseurl+'dashboard/partials/detail',
+      when('/dashboard/:name', {
+        templateUrl: 'dashboard/partials/detail',
         controller: 'CalendarDetailCtrl'
       }).
-      when(baseurl+'dashboard/:name/edit', {
-        templateUrl: baseurl+'dashboard/partials/edit',
+      when('/dashboard/:name/edit', {
+        templateUrl: 'dashboard/partials/edit',
         controller: 'EditCalendarDetailCtrl'
       }).
-      when(baseurl+'dashboard/:name/slots', {
-        templateUrl: baseurl+'dashboard/partials/slots',
+      when('/dashboard/:name/slots', {
+        templateUrl: 'dashboard/partials/slots',
         controller: 'ManageSlotsCtrl'
       }).
       otherwise({
-        redirectTo: baseurl+'dashboard'
+        redirectTo: '/dashboard'
       });
     $locationProvider.html5Mode(true);
   }]);
@@ -27434,7 +27432,7 @@ function MainCtrl($scope, $location, CalendarService) {
         if (data.ok) {
           CalendarService.getCalendars(function (calendar) {
             $scope.restartForm();
-            $location.path(baseurl+'dashboard/' + data.calendar.url + '/slots');
+            $location.path('dashboard/' + data.calendar.url + '/slots');
             $('.modal').modal('toggle');
             $('.modal-backdrop').remove();
           });
@@ -27509,7 +27507,7 @@ function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarSe
   }
 
   $scope.redirectToCalendar = function (url) {
-    $window.open(baseurl+url, '_blank');
+    $window.open(url, '_blank');
   }
 
   $scope.togglePublish = function ($event) {
@@ -27546,7 +27544,7 @@ function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarSe
       if (response.ok) {
         CalendarService.getCalendars(function (calendar) {
           $('.modal-backdrop').remove();
-          $location.path(baseurl+'dashboard');
+          $location.path('dashboard');
         });
       }
     });
@@ -27659,7 +27657,7 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
     CalendarService.postSlots(slots, function (response) {
       if (response.ok) {
         CalendarService.getCalendars(function (calendars) {
-          $location.path(baseurl+'dashboard/'+calendar.url);
+          $location.path('dashboard/'+calendar.url);
         });
       }
     });
@@ -27754,7 +27752,7 @@ angular.module('appointer.services', [])
       var model = { calendars: [] };
 
       model.getCalendars = function (callback) {
-        $http.get(baseurl+'dashboard/calendars').
+        $http.get('dashboard/calendars').
           success(function(data, status, headers, config) {
             angular.copy(data.calendars, model.calendars);
             callback(model.calendars);
@@ -27762,31 +27760,31 @@ angular.module('appointer.services', [])
       }
 
       model.postCalendar = function (calendar, callback) {
-        $http.post(baseurl+'dashboard/calendars/new', calendar).success(callback);
+        $http.post('dashboard/calendars/new', calendar).success(callback);
       }
 
       model.updateCalendar = function (calendar, callback) {
-        $http.post(baseurl+'dashboard/calendars/edit', { calendar: calendar }).success(callback);
+        $http.post('dashboard/calendars/edit', { calendar: calendar }).success(callback);
       }
 
       model.deleteCalendar = function (calendar, callback) {
-        $http.post(baseurl+'dashboard/calendars/delete', { id: calendar.id, title: calendar.title }).success(callback);
+        $http.post('dashboard/calendars/delete', { id: calendar.id, title: calendar.title }).success(callback);
       }
 
       model.checkUrl = function (url, callback) {
-        $http.post(baseurl+'dashboard/checkurl', { url: url }).success(callback);
+        $http.post('dashboard/checkurl', { url: url }).success(callback);
       }
 
       model.getSlots = function (id, callback) {
-        $http.get(baseurl+'dashboard/slots/get/'+id).success(callback);
+        $http.get('dashboard/slots/get/'+id).success(callback);
       }
 
       model.postSlots = function (slots, callback) {
-        $http.post(baseurl+'dashboard/slots/post', slots).success(callback);
+        $http.post('dashboard/slots/post', slots).success(callback);
       }
 
       model.getAppointments = function (id, callback) {
-        $http.get(baseurl+'dashboard/appointments/get/'+id).success(callback);
+        $http.get('dashboard/appointments/get/'+id).success(callback);
       }
 
       return model;
@@ -27796,11 +27794,11 @@ angular.module('appointer.services', [])
       var model = {};
 
       model.getUserDetails = function (callback) {
-        $http.get(baseurl+'dashboard/user').success(callback);
+        $http.get('dashboard/user').success(callback);
       }
 
       model.editUserDetails = function (details, callback) {
-        $http.post(baseurl+'dashboard/user', { details: details }).success(callback);
+        $http.post('dashboard/user', { details: details }).success(callback);
       }
 
       return model;

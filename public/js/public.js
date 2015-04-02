@@ -27365,22 +27365,20 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
 'use strict';
 
-var baseurl = '/';
-
 angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
-      when(baseurl+':name', {
-        templateUrl: baseurl+'partials/index',
+      when('/:name', {
+        templateUrl: 'partials/index',
         controller: 'IndexCtrl'
       }).
-      when(baseurl+':name/success', {
-        templateUrl: baseurl+'partials/success'
+      when('/:name/success', {
+        templateUrl: 'partials/success'
       }).
       otherwise({
         redirectTo: function (routeParams) {
           console.log(routeParams);
-          return baseurl+routeParams.name;
+          return '/'+routeParams.name;
         }
       });
     $locationProvider.html5Mode(true);
@@ -27503,7 +27501,7 @@ function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
   }
 
   function redirectSuccess() {
-    $location.path(baseurl + cal.url + '/success');
+    $location.path(cal.url + '/success');
   }
 }
 'use strict';
@@ -27527,11 +27525,11 @@ angular.module('appointer.services', [])
       var model = {};
 
       model.getCalendar = function (id, callback) {
-        $http.get(baseurl+'calendar/'+id).success(callback);
+        $http.get('calendar/'+id).success(callback);
       }
 
       model.createAppointment = function (appointment, callback) {
-        $http.post(baseurl+'create-appointment', appointment).success(callback);
+        $http.post('create-appointment', appointment).success(callback);
       }
 
       return model;

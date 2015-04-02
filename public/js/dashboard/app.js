@@ -1,32 +1,30 @@
 'use strict';
 
-var baseurl = '/';
-
 angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
-      when(baseurl+'dashboard', {
-        templateUrl: baseurl+'dashboard/partials/index',
+      when('/dashboard', {
+        templateUrl: 'dashboard/partials/index',
         controller: 'IndexCtrl'
       }).
-      when(baseurl+'dashboard/settings', {
-        templateUrl: baseurl+'dashboard/partials/settings',
+      when('/dashboard/settings', {
+        templateUrl: 'dashboard/partials/settings',
         controller: 'SettingsCtrl'
       }).
-      when(baseurl+'dashboard/:name', {
-        templateUrl: baseurl+'dashboard/partials/detail',
+      when('/dashboard/:name', {
+        templateUrl: 'dashboard/partials/detail',
         controller: 'CalendarDetailCtrl'
       }).
-      when(baseurl+'dashboard/:name/edit', {
-        templateUrl: baseurl+'dashboard/partials/edit',
+      when('/dashboard/:name/edit', {
+        templateUrl: 'dashboard/partials/edit',
         controller: 'EditCalendarDetailCtrl'
       }).
-      when(baseurl+'dashboard/:name/slots', {
-        templateUrl: baseurl+'dashboard/partials/slots',
+      when('/dashboard/:name/slots', {
+        templateUrl: 'dashboard/partials/slots',
         controller: 'ManageSlotsCtrl'
       }).
       otherwise({
-        redirectTo: baseurl+'dashboard'
+        redirectTo: '/dashboard'
       });
     $locationProvider.html5Mode(true);
   }]);

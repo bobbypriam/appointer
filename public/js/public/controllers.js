@@ -116,6 +116,6 @@ function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
   }
 
   function redirectSuccess() {
-    $location.path(baseurl + cal.url + '/success');
+    $location.path(cal.url + '/success');
   }
 }

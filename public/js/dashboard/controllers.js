@@ -29,7 +29,7 @@ function MainCtrl($scope, $location, CalendarService) {
         if (data.ok) {
           CalendarService.getCalendars(function (calendar) {
             $scope.restartForm();
-            $location.path(baseurl+'dashboard/' + data.calendar.url + '/slots');
+            $location.path('dashboard/' + data.calendar.url + '/slots');
             $('.modal').modal('toggle');
             $('.modal-backdrop').remove();
           });
@@ -104,7 +104,7 @@ function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarSe
   }
 
   $scope.redirectToCalendar = function (url) {
-    $window.open(baseurl+url, '_blank');
+    $window.open(url, '_blank');
   }
 
   $scope.togglePublish = function ($event) {
@@ -141,7 +141,7 @@ function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarSe
       if (response.ok) {
         CalendarService.getCalendars(function (calendar) {
           $('.modal-backdrop').remove();
-          $location.path(baseurl+'dashboard');
+          $location.path('dashboard');
         });
       }
     });
@@ -254,7 +254,7 @@ function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
     CalendarService.postSlots(slots, function (response) {
       if (response.ok) {
         CalendarService.getCalendars(function (calendars) {
-          $location.path(baseurl+'dashboard/'+calendar.url);
+          $location.path('dashboard/'+calendar.url);
         });
       }
     });
