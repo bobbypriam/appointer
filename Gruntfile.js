@@ -63,4 +63,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.registerTask('default', ['sass:dist', 'concat:css', 'cssmin:css', 'concat:js', 'uglify:js']);
+  grunt.registerTask('css', ['sass:dist', 'concat:css', 'cssmin:css']);
+  grunt.registerTask('js', ['concat:js', 'uglify:js']);
 };
