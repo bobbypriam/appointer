@@ -5661,4 +5661,8 @@ button.close {
     border-bottom: none;
     background-color: #f8f8f8; }
 
+body.home {
+  padding-top: 50px;
+  padding-bottom: 20px; }
+
 /*# sourceMappingURL=style.css.map */
