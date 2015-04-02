@@ -27450,7 +27450,8 @@ function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
     CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
       if (response.ok) {
         $('.modal').modal('hide');
-        $timeout(redirectSuccess, 800);
+        $('.modal-backdrop').remove();
+        $timeout(redirectSuccess, 0);
       }
     });
   }
