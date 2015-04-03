@@ -1,4 +1,5 @@
-h1.page-header {{ calendar.title }}: Edit Details
+h1.page-header {{ calendar.title }} 
+  small Edit Details
     
 .row
   .form-horizontal
@@ -9,7 +10,7 @@ h1.page-header {{ calendar.title }}: Edit Details
     .form-group
       label.col-sm-2.control-label Description
       .col-sm-4
-        input.form-control(ng-model='calendar.description', name='description')
+        textarea.form-control(ng-model='calendar.description', name='description')
     .form-group
       label.col-sm-2.control-label Public URL
       .col-sm-4
