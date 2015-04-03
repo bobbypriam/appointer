@@ -4,13 +4,12 @@ block content
   .container
     .row
       .col-md-6.col-md-offset-3.text-center
-        .panel
-          .panel-default
-            .panel-body
-              h1 Login
-              p We will be redirecting you to SSO-UI for logging in.
-              a.btn.btn-primary.btn-lg(href=baseurl+"sso-login") SSO Login
-              p First time? All you need to do is log in &mdash; you will be registered automatically!
+        .panel.panel-default
+          .panel-body
+            h1 Login
+            p We will be redirecting you to SSO-UI for logging in. Push this button when you are ready!
+            p: a.btn.btn-primary.btn-lg(href=baseurl+"sso-login") SSO Login
+            p.text-muted First time? All you need to do is log in &mdash; you will be registered automatically!
 
 block js
   script(type="text/javascript").
