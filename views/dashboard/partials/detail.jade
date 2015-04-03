@@ -1,33 +1,35 @@
+h1.page-header {{ calendar.title }} 
+  .dropdown.calendar-menu
+    button.btn.btn-default.dropdown-toggle#calendar-menu(type='button', data-toggle='dropdown', aria-expanded='true') Menu 
+      span.caret
+    ul.dropdown-menu(role='menu', aria-labelledby='calendar-menu')
+      li.dropdown-header(role='presentation') Calendar Details
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/edit') Edit details
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/slots') Manage slots
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}', ng-click='togglePublish($event)') Publish/Unpublish calendar
+      li.divider(role='presentation')
+      li.dropdown-header(role='presentation') Appointments
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/appointments') See appointments
+      li.divider(role='presentation')
+      li.dropdown-header(role='presentation') Danger Zone
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#delete-calendar-modal') Delete calendar
+
 .row
-  .col-md-8
-    h1 {{ calendar.title }}
-    p {{ calendar.description }}
-    p URL: 
-      code.url(ng-click="redirectToCalendar(calendar.url)") #{baseurl}{{ calendar.url }}
   .col-md-4
-    .dropdown
-      button.btn.btn-default.dropdown-toggle#calendar-menu(type='button', data-toggle='dropdown', aria-expanded='true') Menu 
-        span.caret
-      ul.dropdown-menu(role='menu', aria-labelledby='calendar-menu')
-        li.dropdown-header(role='presentation') Calendar Details
-        li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/edit') Edit details
-        li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/slots') Manage slots
-        li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}', ng-click='togglePublish($event)') Publish/Unpublish calendar
-        li.divider(role='presentation')
-        li.dropdown-header(role='presentation') Appointments
-        li(role='presentation')
-          a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/appointments') See appointments
-        li.divider(role='presentation')
-        li.dropdown-header(role='presentation') Danger Zone
-        li(role='presentation')
-          a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#delete-calendar-modal') Delete calendar
+    h3.sub-header Description
+    p {{ calendar.description }}
+  .col-md-8
+    h3.sub-header Public URL
+    p: code.url(ng-click="redirectToCalendar(calendar.url)") #{baseurl}{{ calendar.url }}
 
 .row
   .col-md-4.details
-    h3 Details
+    h3.sub-header Details
     .row
       p.col-xs-3.col-sm-4: strong Duration
       p.col-xs-9.col-sm-8 {{ calendar.duration }} Minutes
@@ -42,7 +44,7 @@
       p.col-xs-9.col-sm-8 {{ calendar.published ? 'Published' : 'Not published' }}
 
   .col-md-8.appointments
-    h3 Upcoming Appointments
+    h3.sub-header Upcoming Appointments
     table(class='table')
       thead
         tr
