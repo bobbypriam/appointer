@@ -2,7 +2,7 @@ extends layout
 
 block content
   //- Navbar
-  nav.navbar.navbar-inverse.navbar-fixed-top
+  nav.navbar.navbar-default.navbar-fixed-top
     .container-fluid
       .navbar-header
         button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar' aria-expanded='false', aria-controls='navbar')
@@ -74,11 +74,15 @@ block content
               .form-group
                 label.col-sm-2.control-label Start Date
                 .col-sm-8
-                  input.form-control(type='date', ng-model='form.start', placeholder='YYYY-MM-DD')
+                  .input-group.date
+                    input.form-control(ng-model='form.start', placeholder='YYYY-MM-DD')
+                    .input-group-addon: i.glyphicon.glyphicon-calendar
               .form-group
                 label.col-sm-2.control-label End Date
                 .col-sm-8
-                  input.form-control(type='date', ng-model='form.end', placeholder='YYYY-MM-DD')
+                  .input-group.date
+                    input.form-control(ng-model='form.end', placeholder='YYYY-MM-DD')
+                    .input-group-addon: i.glyphicon.glyphicon-calendar
 
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal', ng-click='restartForm()') Cancel
@@ -87,6 +91,6 @@ block content
 
 block js
   script.
-    $("input[type='date']").datepicker({
+    $(".date").datepicker({
       format: 'yyyy-mm-dd'
     });

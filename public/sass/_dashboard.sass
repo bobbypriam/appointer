@@ -1,15 +1,15 @@
+$sidebar-bg: $navbar-default-bg
+$sidebar-border: $navbar-default-border
+
 body.dashboard
   padding-top: 50px
 
+// .navbar-fixed-top
+//   border: 0
 
 .sub-header
   padding-bottom: 10px
   border-bottom: 1px solid #eee
-
-
-.navbar-fixed-top
-  border: 0
-
 
 .sidebar
   display: none
@@ -26,8 +26,8 @@ body.dashboard
     padding: 20px
     overflow-x: hidden
     overflow-y: auto /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5
-    border-right: 1px solid #eee
+    background-color: $sidebar-bg
+    border-right: 1px solid $sidebar-border
   
 
 

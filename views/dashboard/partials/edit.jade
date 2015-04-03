@@ -29,11 +29,15 @@ h1.page-header {{ calendar.title }}: Edit Details
     .form-group
       label.col-sm-2.control-label Start Date
       .col-sm-4
-        input.form-control.date(ng-model='calendar.startDate', name='startDate')
+        .input-group.date
+          input.form-control(ng-model='calendar.startDate', name='startDate')
+          .input-group-addon: i.glyphicon.glyphicon-calendar
     .form-group
       label.col-sm-2.control-label End Date
       .col-sm-4
-        input.form-control.date(ng-model='calendar.endDate', placeholder='YYYY-MM-DD')
+        .input-group.date
+          input.form-control(ng-model='calendar.endDate', placeholder='YYYY-MM-DD')
+          .input-group-addon: i.glyphicon.glyphicon-calendar
 
 .row
   .col-md-6
@@ -42,6 +46,6 @@ h1.page-header {{ calendar.title }}: Edit Details
 
 block js
   script.
-    $("input.date").datepicker({
+    $(".date").datepicker({
       format: 'yyyy-mm-dd'
     });
