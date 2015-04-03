@@ -1,0 +1,51 @@
+.row
+  .col-md-12
+    h1 {{ calendar.title }}: Appointments
+
+    table(class='table')
+      thead
+        tr
+          th Date
+          th Time
+          th Appointment Maker
+          th 
+      tbody
+        tr(ng-repeat='appointment in appointments')
+          td {{ appointment.date | date: 'd MMM y' }}
+          td {{ appointment.time }}
+          td {{ appointment.name }}
+          td
+            a(href="#", ng-click="seeDetail(appointment, $event)") See Details
+        tr(ng-if='!appointments.length')
+          td.text-center(colspan=3) No appointments yet.
+
+#appointment-detail-modal.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h3 Appointment Detail
+        p Appointment for {{ appointment.date }} at {{ appointment.time }}.
+      .modal-body
+        .container-fluid
+          .row
+            .col-md-6
+              h4 Details
+              .row
+                .col-md-2: p: strong Name
+                .col-md-8: p {{ appointment.name }}
+              .row
+                .col-md-2: p: strong Email
+                .col-md-8: p {{ appointment.email }}
+              .row
+                .col-md-2: p: strong Phone
+                .col-md-8: p {{ appointment.phone }}
+            .col-md-6
+              h4 Actions
+              p: a.btn.btn-primary(href='#') Ask for reschedule
+              p: a.btn.btn-danger(href='#') Delete
+
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') OK

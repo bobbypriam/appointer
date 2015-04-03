@@ -27396,6 +27396,10 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
         templateUrl: 'dashboard/partials/slots',
         controller: 'ManageSlotsCtrl'
       }).
+      when('/dashboard/:name/appointments', {
+        templateUrl: 'dashboard/partials/appointments',
+        controller: 'AppointmentsListCtrl'
+      }).
       otherwise({
         redirectTo: '/dashboard'
       });
@@ -27729,6 +27733,42 @@ angular.module('appointer.controllers', [])
           if (response.ok)
             alert('Success!');
         });
+      }
+    }])
+
+  .controller('AppointmentsListCtrl', ['$scope', '$routeParams', 'CalendarService',
+    function AppointmentsListCtrl($scope, $routeParams, CalendarService) {
+      var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
+        return cal.url == $routeParams.name;
+      })[0];
+
+      fetchAppointments();
+
+      function fetchAppointments() {
+        CalendarService.getAppointments(calendar.id, function (response) {
+          if (response.ok) {
+            var slots = response.slots;
+            $scope.appointments = [];
+            slots.forEach(function (slot) {
+              $scope.appointments.push({
+                slotID: slot.id,
+                id: slot.Appointment.id,
+                date: slot.date.split('T')[0],
+                time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+                name: slot.Appointment.name,
+                email: slot.Appointment.email,
+                phone: slot.Appointment.phone
+              });
+            });
+          }
+        });
+      }
+
+      $scope.seeDetail = function (appointment, $event) {
+        $event.preventDefault();
+
+        $scope.appointment = appointment;
+        $('#appointment-detail-modal').modal('show');
       }
     }]);
 

@@ -23,6 +23,10 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
         templateUrl: 'dashboard/partials/slots',
         controller: 'ManageSlotsCtrl'
       }).
+      when('/dashboard/:name/appointments', {
+        templateUrl: 'dashboard/partials/appointments',
+        controller: 'AppointmentsListCtrl'
+      }).
       otherwise({
         redirectTo: '/dashboard'
       });
