@@ -5672,7 +5672,6 @@ table.floatThead-table {
   background: #e8e8e8; }
 
 .public-calendar #calendar .slot.selected {
-  background: green;
   color: #fff; }
   .public-calendar #calendar .slot.selected:hover {
     opacity: 0.8; }
@@ -5739,6 +5738,9 @@ body.dashboard {
 
 code.url:hover {
   cursor: pointer; }
+
+.calendar-menu {
+  display: inline-block; }
 
 #calendar {
   height: 440px; }
