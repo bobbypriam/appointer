@@ -12,22 +12,27 @@ block content
           span.icon-bar
         .navbar-brand Appointer
       #navbar.navbar-collapse.collapse
-        p.nav.navbar-text Hello, #{user.username}!
         ul.nav.navbar-nav.navbar-right
-          li: a(href=baseurl+'logout') Logout
+          li.visible-md-block.visible-lg-block.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown') #{user.username} 
+              i.glyphicon.glyphicon-user
+              b.caret
+            ul.dropdown-menu
+              li: a(href=baseurl+'logout') Logout
+          li.visible-xs-block.visible-sm-block: a(href=baseurl+'logout') Logout
   
   .body(ng-app='appointer', ng-controller='MainCtrl')
     .container-fluid
       .row
         .col-sm-3.col-md-2.sidebar
           ul.nav.nav-sidebar
-            li
-              a(href=baseurl+'dashboard') My Calendars
-              ul
+            li: a(href=baseurl+'dashboard') Dashboard
+            li: a(href=baseurl+'dashboard/settings') Settings
+            li#nav-my-calendars My Calendars
+              ul.nav-calendars-list
                 li(ng-repeat='calendar in calendars')
                   a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
-                li: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') + New...
-            li: a(href=baseurl+'dashboard/settings') Settings
+                li.text-center: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create New...
         
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           div(ng-view)
