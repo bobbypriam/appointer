@@ -16,9 +16,9 @@ var HomeController = {
   doLogin: function (req, res, next) {
     if (req.session.user) {
       if (req.session.user.email === '')
-        res.redirect(res.locals.baseurl+'/register');
+        res.redirect(res.locals.baseurl+'register');
       else
-        res.redirect(res.locals.baseurl+'/dashboard');
+        res.redirect(res.locals.baseurl+'dashboard');
     } else {
       var ticket = req.query.ticket;
       if (ticket) {
@@ -49,13 +49,13 @@ var HomeController = {
   },
   getLogout: function (req, res, next) {
     delete req.session.user;
-    res.redirect(cas_host + '/logout');
+    res.redirect(cas_host + 'logout');
   },
   getRegister: function (req, res, next) {
     if (!req.session.user)
-      res.redirect(res.locals.baseurl+'/login');
+      res.redirect(res.locals.baseurl+'login');
     else if (req.session.user.email !== '')
-      res.redirect(res.locals.baseurl+'/dashboard');
+      res.redirect(res.locals.baseurl+'dashboard');
     else
       res.render('register', {
         title: 'Thank you for registering! | Appointer'
@@ -69,7 +69,7 @@ var HomeController = {
           email: email
         }).then(function () {
           req.session.user = user;
-          res.redirect(res.locals.baseurl+'/dashboard');
+          res.redirect(res.locals.baseurl+'dashboard');
         });
       });
   }
