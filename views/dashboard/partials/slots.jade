@@ -8,11 +8,16 @@ h1.page-header {{ calendar.title }}
 
 .row
   .col-md-12
-    p Choose your available time!
-    
     p
-      button.btn.btn-primary(ng-click='prev()') Previous
-      button.btn.btn-primary(ng-click='next()') Next
+      .btn-group
+        button.btn.btn-default(ng-click='prev()'): i.glyphicon.glyphicon-chevron-left
+        button.btn.btn-default(ng-click='next()'): i.glyphicon.glyphicon-chevron-right
+      
+      .btn-toolbar.pull-right
+        .btn-group
+          button.btn.btn-default(ng-click="save()") Save
+        .btn-group
+          button.btn.btn-primary(ng-click="saveAndPublish()") Save and Publish
 
     #calendar
       table.table(float-thead='floatTheadOptions', ng-model='time')
@@ -24,8 +29,3 @@ h1.page-header {{ calendar.title }}
             tr(ng-repeat='time in times')
               td {{ time }}
               td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='toggleSlot(day, time, $event)', ng-class='{ "selected": checkIfSelected(day, time) }')
-
-  .row
-    .col-md-12.text-right
-      button.btn.btn-primary(ng-click="save()") Save
-      button.btn.btn-success(ng-click="saveAndPublish()") Save and Publish

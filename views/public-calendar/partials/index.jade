@@ -4,8 +4,9 @@
     p.calendar-description {{ calendar.description }}
     
     p
-      button.btn.btn-primary(ng-click='prev()') Previous
-      button.btn.btn-primary(ng-click='next()') Next
+      .btn-group
+        button.btn.btn-default(ng-click='prev()'): i.glyphicon.glyphicon-chevron-left
+        button.btn.btn-default(ng-click='next()'): i.glyphicon.glyphicon-chevron-right
 
     #calendar
       table.table(float-thead='floatTheadOptions', ng-model='time')

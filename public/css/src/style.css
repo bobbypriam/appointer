@@ -5647,7 +5647,7 @@ button.close {
   #calendar table {
     margin-bottom: 0; }
   #calendar .slot.selected {
-    background: green; }
+    background: #195fad; }
 
 table.floatThead-table {
   background-color: #fff; }
