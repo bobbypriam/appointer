@@ -13,7 +13,7 @@ h1 {{ calendar.title }}
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/slots') Manage slots
       li(role='presentation')
-        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#publish-calendar-modal') Publish/Unpublish calendar
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#publish-calendar-modal') {{ calendar.published ? 'Unpublish calendar' : 'Publish calendar' }}
       li.divider(role='presentation')
       li.dropdown-header(role='presentation') Appointments
       li(role='presentation')
@@ -76,7 +76,7 @@ h1 {{ calendar.title }}
 
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
-        button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='togglePublish($event)') Yes
+        button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='togglePublish($event)') {{ calendar.published ? 'Unpublish' : 'Publish' }}
 
 #delete-calendar-modal.modal.fade
   .modal-dialog
