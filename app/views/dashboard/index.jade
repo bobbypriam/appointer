@@ -52,7 +52,7 @@ block content
               .form-group
                 label.col-sm-2.control-label Title
                 .col-sm-10
-                  input.form-control(placeholder='My Awesome Calendar', ng-model='form.title')
+                  input.form-control(placeholder='My Awesome Calendar', ng-model='form.title', ng-change='form.url = (form.title | normalizeTitle); checkUrl()')
               .form-group
                 label.col-sm-2.control-label Description
                 .col-sm-10
