@@ -27570,7 +27570,7 @@ angular.module('appointer.controllers', [])
         duration: calendar.duration,
         startDate: calendar.startDate.split('T')[0],
         endDate: calendar.endDate.split('T')[0]
-      }
+      };
 
       $scope.submitPost = function () {
         var newCal = {
@@ -27588,7 +27588,26 @@ angular.module('appointer.controllers', [])
             alert('Success!');
           }
         });
-      }
+      };
+
+      $scope.checkUrl = function () {
+        console.log($scope.calendar.url);
+        if (!$scope.calendar.url) {
+          $scope.urlStatus = 'URL cannot be empty!';
+          return;
+        }
+        if ($scope.calendar.url === calendar.url) {
+          $scope.urlStatus = 'Available';
+          return;
+        }
+        $scope.urlStatus = 'Checking...';
+        CalendarService.checkUrl($scope.calendar.url, function (response) {
+          if (response.ok)
+            $scope.urlStatus = 'Available';
+          else
+            $scope.urlStatus = 'Not available';
+        });
+      };
     }])
 
   .controller('ManageSlotsCtrl', ['$scope', '$location', '$routeParams', 'CalendarService', 

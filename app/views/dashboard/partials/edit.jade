@@ -20,7 +20,9 @@ h1.page-header {{ calendar.title }}
       .form-group
         label.col-sm-2.control-label Public URL
         .col-sm-4
-          input.form-control(ng-model='calendar.url', name='url')
+          input.form-control(ng-model='calendar.url', name='url', ng-change='checkUrl()', ng-init='checkUrl()')
+        .col-sm-4
+          p: {{ urlStatus }}
       .form-group
         label.col-sm-2.control-label Duration
         .col-sm-4
