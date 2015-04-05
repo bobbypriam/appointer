@@ -42,6 +42,10 @@ angular.module('appointer.services', [])
         $http.get('dashboard/appointments/get/'+id).success(callback);
       }
 
+      model.deleteAppointment = function (appointment, callback) {
+        $http.post('dashboard/appointments/delete', { appointment: appointment }).success(callback);
+      }
+
       return model;
     }])
   .factory('UserService', ['$http',

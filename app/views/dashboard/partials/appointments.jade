@@ -47,11 +47,28 @@ h1.page-header {{ calendar.title }}
               .row
                 .col-md-2: p: strong Phone
                 .col-md-8: p {{ appointment.phone }}
-            .col-md-6
+            .col-md-6(ng-show='!appointment.rescheduling && !appointment.deleting')
               h4 Actions
-              p: a.btn.btn-primary(href='#') Ask for reschedule
-              p: a.btn.btn-danger(href='#') Delete
+              p: a.btn.btn-primary(href='#', ng-click='rescheduling()') Ask for reschedule
+              p: a.btn.btn-danger(href='#', ng-click='deleting()') Delete
+            .col-md-6(ng-show='appointment.rescheduling')
+              h4 Ask for Reschedule
+              p Give a message of the reason.
+              p: textarea.form-control(ng-model='form.reason')
+              .btn-toolbar
+                .btn-group
+                  a.btn.btn-default(href='#', ng-click='reset()') Cancel
+                .btn-group
+                  a.btn.btn-primary(href='#', ng-click='postReschedule()') Send
+            .col-md-6(ng-show='appointment.deleting')
+              h4 Delete
+              p Are you sure you want to delete this appointment?
+              .btn-toolbar
+                .btn-group
+                  a.btn.btn-default(href='#', ng-click='reset()') Cancel
+                .btn-group
+                  a.btn.btn-danger(href='#', ng-click='postDelete()') Delete
 
 
       .modal-footer
-        button.btn.btn-default(type='button', data-dismiss='modal') OK
+        button.btn.btn-default(type='button', data-dismiss='modal', ng-click='reset()') OK

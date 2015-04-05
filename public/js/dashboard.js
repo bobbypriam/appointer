@@ -27757,7 +27757,9 @@ angular.module('appointer.controllers', [])
                 time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
                 name: slot.Appointment.name,
                 email: slot.Appointment.email,
-                phone: slot.Appointment.phone
+                phone: slot.Appointment.phone,
+                rescheduling: false,
+                deleting: false
               });
             });
           }
@@ -27768,7 +27770,37 @@ angular.module('appointer.controllers', [])
         $event.preventDefault();
 
         $scope.appointment = appointment;
+        $scope.reset();
         $('#appointment-detail-modal').modal('show');
+      }
+
+      $scope.rescheduling = function () {
+        $scope.appointment.rescheduling = true;
+      }
+
+      $scope.deleting = function () {
+        $scope.appointment.deleting = true;
+      }
+
+      $scope.postDelete = function () {
+        var appointment = {
+          id: $scope.appointment.id,
+          SlotId: $scope.appointment.slotID
+        };
+        console.log(appointment);
+        CalendarService.deleteAppointment(appointment, function (response) {
+          if (response.ok) {
+            $scope.appointments = $scope.appointments.filter(function (app) {
+              return app.id !== appointment.id;
+            });
+            $('#appointment-detail-modal').modal('hide');
+          }
+        });
+      }
+
+      $scope.reset = function () {
+        $scope.appointment.rescheduling = false;
+        $scope.appointment.deleting = false;
       }
     }]);
 
@@ -27826,6 +27858,10 @@ angular.module('appointer.services', [])
 
       model.getAppointments = function (id, callback) {
         $http.get('dashboard/appointments/get/'+id).success(callback);
+      }
+
+      model.deleteAppointment = function (appointment, callback) {
+        $http.post('dashboard/appointments/delete', { appointment: appointment }).success(callback);
       }
 
       return model;

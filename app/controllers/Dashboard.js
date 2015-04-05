@@ -8,7 +8,7 @@ var DashboardController = {
     });
   },
   getCalendar: function (req, res, next) {
-
+    // not needed
   },
   postNewCalendar: function (req, res, next) {
     var calendar = {
@@ -27,10 +27,10 @@ var DashboardController = {
       });
   },
   togglePublish: function (req, res, next) {
-
+    // not needed
   },
   getEditCalendar: function (req, res, next) {
-
+    // not needed
   },
   postEditCalendar: function (req, res, next) {
     var newCal = req.body.calendar;
@@ -42,7 +42,7 @@ var DashboardController = {
       });
   },
   getManageSlots: function (req, res, next) {
-
+    // not needed
   },
   postManageSlots: function (req, res, next) {
     var calendarID = req.body.calendarID;
@@ -91,10 +91,23 @@ var DashboardController = {
 
   },
   postDeleteAppointment: function (req, res, next) {
-
+    var appointmentToDelete = req.body.appointment;
+    models.Appointment.find({ where: { id: appointmentToDelete.id } })
+      .then(function (appointment) {
+        if (appointment)
+          appointment.destroy().then(function () {
+            models.Slot.find({ where: { id: appointmentToDelete.SlotId } }).
+              then(function (slot) {
+                slot.update({ status: false })
+                  .then(function () {
+                    res.json({ ok: true });
+                  });
+              });
+          });
+      });
   },
   getSettings: function (req, res, next) {
-
+    // not needed
   },
   postSettings: function (req, res, next) {
     var email = req.body.details.email;
