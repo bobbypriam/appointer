@@ -1,10 +1,20 @@
 extends layout
 
 block content
-  h1 Thank you for using Appointer!
-  p Please enter your email address. This will be used for notifications. We won't send you spam, promise.
-  p You can change this later in the settings.
+  .container
+    .row
+      .col-md-12.text-center
+    .row
+      .col-md-6.col-md-offset-3.text-center
+        .panel.panel-default
+          .panel-body
+            h2 Thank you for using Appointer!
+            p Please enter your email address. This will be used for notifications. We won't send you spam, promise.
 
-  form(action=baseurl+"register", method="post")
-    input(type="email", name="email", placeholder="Email Address")
-    input(type="submit", value="Done!")
+            form(class="form", action=baseurl+"register", method="post")
+              .form-group
+                input.form-control.input-lg(type="email", name="email", placeholder="Email Address")
+              .form-group
+                input.form-control.btn.btn-primary.input-lg(type="submit", value="Done!")
+
+            p.text-muted You can change this later in the settings.
