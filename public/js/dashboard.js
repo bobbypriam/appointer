@@ -27501,11 +27501,12 @@ angular.module('appointer.controllers', [])
             var slots = response.slots;
             $scope.appointments = [];
             slots.forEach(function (slot) {
-              $scope.appointments.push({
-                date: slot.date.split('T')[0],
-                time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
-                name: slot.Appointment.name
-              });
+              if((new Date(slot.date.split('T')[0])).getTime() > (new Date()).getTime())
+                $scope.appointments.push({
+                  date: slot.date.split('T')[0],
+                  time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+                  name: slot.Appointment.name
+                });
             });
           }
         });
@@ -27591,7 +27592,6 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.checkUrl = function () {
-        console.log($scope.calendar.url);
         if (!$scope.calendar.url) {
           $scope.urlStatus = 'URL cannot be empty!';
           return;
