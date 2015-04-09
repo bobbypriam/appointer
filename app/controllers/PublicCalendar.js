@@ -17,15 +17,14 @@ var PublicCalendarController = {
   },
   postBooking: function (req, res, next) {
     var appointment = req.body.appointment;
-    appointment.appointment.token = appointment.slot.id + '' +
-        require('crypto').randomBytes(30).toString('hex');
-
     models.Slot.find({ where: appointment.slot })
       .then(function(slot) {
         slot.update({
           status: true
         }).then(function (s) {
           appointment.appointment.SlotId = s.id;
+          appointment.appointment.token = s.id + '' +
+              require('crypto').randomBytes(30).toString('hex');
           models.Appointment.create(appointment.appointment)
             .then(function(app) {
               res.json({ ok: true, appointment: appointment });
