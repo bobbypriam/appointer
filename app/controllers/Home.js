@@ -59,7 +59,7 @@ var HomeController = {
     else
       res.render('register', {
         title: 'Thank you for registering! | Appointer'
-      })
+      });
   },
   postRegister: function (req, res, next) {
     var email = req.body.email;
@@ -73,6 +73,6 @@ var HomeController = {
         });
       });
   }
-}
+};
 
 module.exports = HomeController;

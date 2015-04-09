@@ -7,4 +7,4 @@ module.exports = session({
     resave: false,
     saveUninitialized: false,
     unset: 'destroy'
-})
+});

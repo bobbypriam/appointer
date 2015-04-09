@@ -56,6 +56,6 @@ var PublicCalendarController = {
   getPartial: function (req, res, next) {
     res.render('public-calendar/partials/' + req.params.name);
   }
-}
+};
 
 module.exports = PublicCalendarController;

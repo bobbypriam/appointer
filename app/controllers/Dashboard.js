@@ -20,7 +20,7 @@ var DashboardController = {
       endDate: req.body.end,
       published: false,
       UserId: req.session.user.id
-    }
+    };
     models.Calendar.create(calendar)
       .then(function(cal) {
         res.json({ ok: true, calendar: cal.dataValues });
@@ -168,6 +168,6 @@ var DashboardController = {
       res.json({ ok: true, slots: formattedSlots });
     });
   }
-}
+};
 
 module.exports = DashboardController;
