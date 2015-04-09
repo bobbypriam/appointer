@@ -5752,6 +5752,14 @@ footer {
 body.home {
   padding-top: 50px;
   padding-bottom: 20px; }
+  body.home section {
+    padding-top: 40px;
+    padding-bottom: 40px; }
+    body.home section#benefit img {
+      max-height: 167px; }
+    body.home section#you {
+      background: #555555;
+      color: #fff; }
 
 .btn {
   font-family: "Gandhi Sans";
