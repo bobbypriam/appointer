@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .body
+    .container-fluid
+      .row
+        .col-md-6.col-md-offset-3
+          .row
+            .col-md-12
+              .panel.panel-default
+                .panel-body
+                  h1 Cancel Appointment
+                  p: strong Date
+                  p #{appointment.Slot.date.toISOString().split('T')[0]}
+                  p: strong Time
+                  p #{appointment.Slot.time.split(':')[0]+':'+appointment.Slot.time.split(':')[1]}
+                  p: strong Name
+                  p #{appointment.name}
+                  p: strong Email
+                  p #{appointment.email}
+                  p: strong Phone
+                  p #{appointment.phone}
+                  p.text-center Are you sure you want to cancel this appointment?
+                  .row.text-center
+                    .col-md-6.col-md-offset-3
+                      form.form(action=baseurl+'cancel/'+appointment.token, method='post')
+                        .form-group
+                          input(type="hidden", name="token", value=appointment.token)
+                          input.btn.btn-danger(type="submit", value="Cancel this appointment")

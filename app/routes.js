@@ -38,6 +38,7 @@ router.get('/calendar/:name', PublicCalendarController.getCalendar);
 router.post('/create-appointment', PublicCalendarController.postBooking);
 
 // cancel routes
+router.get('/cancel/success', PublicCalendarController.getCancelSuccess);
 router.get('/cancel/:token', PublicCalendarController.getCancel);
 router.post('/cancel/:token', PublicCalendarController.postCancel);
 

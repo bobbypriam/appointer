@@ -32,12 +32,20 @@ var PublicCalendarController = {
         });
       });
   },
-  getCancel: function (req, res, next) {
-    var token = req.params.token;
-    res.send(token);
-  },
   postCancel: function (req, res, next) {
-
+    var token = req.body.token;
+    models.Appointment.find({
+      where: { token: token },
+      include: [ models.Slot ]
+    }).then(function (appointment) {
+      appointment.Slot.update({
+        status: false
+      }).then(function () {
+        appointment.destroy().then(function () {
+          res.redirect(res.locals.baseurl+'cancel/success');
+        });
+      });
+    });
   },
   postReschedule: function (req, res, next) {
 
@@ -48,6 +56,23 @@ var PublicCalendarController = {
       include: [ models.Slot ]
     }).then(function (calendar) {
       res.json(calendar);
+    });
+  },
+  getCancel: function (req, res, next) {
+    var token = req.params.token;
+    models.Appointment.find({
+      where: { token: token },
+      include: [ models.Slot ]
+    }).then(function (appointment) {
+      res.render('public-calendar/cancel', {
+        title: 'Cancel Appointment | Appointer',
+        appointment: appointment
+      });
+    });
+  },
+  getCancelSuccess: function (req, res, next) {
+    res.render('public-calendar/cancel-success', {
+      title: 'Success | Appointer'
     });
   },
   redirectIndex: function (req, res, next) {
