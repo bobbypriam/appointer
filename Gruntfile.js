@@ -8,7 +8,7 @@ module.exports = function (grunt) {
           "jQuery": true
         }
       },
-      all: ['public/js/dashboard/*.js', 'public/js/public/*.js']
+      all: ['app/**/*.js', 'public/js/dashboard/*.js', 'public/js/public/*.js']
     },
     sass: {
       dist: {
