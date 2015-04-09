@@ -27363,8 +27363,6 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     }
 })();
 
-'use strict';
-
 angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
@@ -27377,16 +27375,11 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
       }).
       otherwise({
         redirectTo: function (routeParams) {
-          console.log(routeParams);
           return '/'+routeParams.name;
         }
       });
     $locationProvider.html5Mode(true);
   }]);
-'use strict';
-
-/* Controllers */
-
 angular.module('appointer.controllers', [])
   .controller('IndexCtrl', ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService',
     function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
@@ -27419,31 +27412,31 @@ angular.module('appointer.controllers', [])
           date: day,
           time: time,
           CalendarId: cal.id
-        }
+        };
         $('.modal').modal('show');
-      }
+      };
 
       $scope.checkIfSelected = function (day, time) {
         return $.grep($scope.selected, function(slot) {
           return slot.date == day && slot.time == time;
         }).length !== 0;
-      }
+      };
 
       $scope.floatTheadOptions = {
         scrollContainer: function($table){
             return $table.closest('#calendar');
         }
-      }
+      };
 
       $scope.prev = function () {
         shift(-7);
-      }
+      };
 
       $scope.next = function () {
         if ($scope.days.length < 7)
           return;
         shift(7);
-      }
+      };
 
       $scope.submit = function () {
         CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
@@ -27453,7 +27446,7 @@ angular.module('appointer.controllers', [])
             $timeout(redirectSuccess, 0);
           }
         });
-      }
+      };
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
@@ -27504,10 +27497,6 @@ angular.module('appointer.controllers', [])
         $location.path(cal.url + '/success');
       }
     }]);
-'use strict';
-
-/* Filters */
-
 angular.module('appointer.filters', []).
   filter('normalizeTitle', function() {
     return function(text) {
@@ -27516,9 +27505,6 @@ angular.module('appointer.filters', []).
     };
   });
 
-'use strict';
-
-/* Services */
 angular.module('appointer.services', [])
   .factory('CalendarService', ['$http',
     function ($http) {
@@ -27526,11 +27512,11 @@ angular.module('appointer.services', [])
 
       model.getCalendar = function (id, callback) {
         $http.get('calendar/'+id).success(callback);
-      }
+      };
 
       model.createAppointment = function (appointment, callback) {
         $http.post('create-appointment', appointment).success(callback);
-      }
+      };
 
       return model;
     }]);
