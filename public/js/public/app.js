@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.
@@ -12,7 +10,6 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
       }).
       otherwise({
         redirectTo: function (routeParams) {
-          console.log(routeParams);
           return '/'+routeParams.name;
         }
       });

@@ -1,7 +1,3 @@
-'use strict';
-
-/* Filters */
-
 angular.module('appointer.filters', []).
   filter('normalizeTitle', function() {
     return function(text) {

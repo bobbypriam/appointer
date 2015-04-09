@@ -1,7 +1,3 @@
-'use strict';
-
-/* Controllers */
-
 angular.module('appointer.controllers', [])
   .controller('IndexCtrl', ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService',
     function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
@@ -34,31 +30,31 @@ angular.module('appointer.controllers', [])
           date: day,
           time: time,
           CalendarId: cal.id
-        }
+        };
         $('.modal').modal('show');
-      }
+      };
 
       $scope.checkIfSelected = function (day, time) {
         return $.grep($scope.selected, function(slot) {
           return slot.date == day && slot.time == time;
         }).length !== 0;
-      }
+      };
 
       $scope.floatTheadOptions = {
         scrollContainer: function($table){
             return $table.closest('#calendar');
         }
-      }
+      };
 
       $scope.prev = function () {
         shift(-7);
-      }
+      };
 
       $scope.next = function () {
         if ($scope.days.length < 7)
           return;
         shift(7);
-      }
+      };
 
       $scope.submit = function () {
         CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
@@ -68,7 +64,7 @@ angular.module('appointer.controllers', [])
             $timeout(redirectSuccess, 0);
           }
         });
-      }
+      };
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
