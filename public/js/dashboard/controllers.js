@@ -11,6 +11,14 @@ angular.module('appointer.controllers', [])
 
       $scope.form = {};
       var step = $scope.step = 1;
+
+      $scope.isViewLoading = false;
+      $scope.$on('$routeChangeStart', function() {
+        $scope.isViewLoading = true;
+      });
+      $scope.$on('$routeChangeSuccess', function() {
+        $scope.isViewLoading = false;
+      });
       
       $scope.next = function () {
         if ($scope.urlStatus !== 'Available')

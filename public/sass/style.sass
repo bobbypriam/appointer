@@ -1,3 +1,4 @@
+@import "colors"
 @import "bootstrap-variables"
 @import "../vendor/bootstrap/sass/bootstrap"
 @import "calendar"
@@ -7,3 +8,62 @@
 body.home
   padding-top: 50px
   padding-bottom: 20px
+
+.btn
+  // text-transform: uppercase
+  font-family: "Gandhi Sans"
+  font-weight: bold
+
+.loader-container
+  position: absolute
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  padding-top: 22%
+  background: rgba(255,255,255,0.8)
+
+.loader
+  margin: 5em auto
+  width: 1em
+  height: 1em
+  border-radius: 50%
+  position: relative
+  text-indent: -9999em
+  -webkit-animation: loader 1.3s infinite linear
+  animation: loader 1.3s infinite linear
+  -webkit-transform: translateZ(0)
+  -ms-transform: translateZ(0)
+  transform: translateZ(0)
+  .loader-big
+    font-size: 20px
+  .loader-small
+    font-size: 10px
+
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
++keyframes(loader)
+  0%, 100%
+    box-shadow: 0em -3em 0em 0.2em $appointer-primary, 2em -2em 0 0em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 -0.5em $appointer-primary, -3em 0em 0 -0.5em $appointer-primary, -2em -2em 0 0em $appointer-primary
+  12.5%
+    box-shadow: 0em -3em 0em 0em $appointer-primary, 2em -2em 0 0.2em $appointer-primary, 3em 0em 0 0em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 -0.5em $appointer-primary, -3em 0em 0 -0.5em $appointer-primary, -2em -2em 0 -0.5em $appointer-primary
+  25%
+    box-shadow: 0em -3em 0em -0.5em $appointer-primary, 2em -2em 0 0em $appointer-primary, 3em 0em 0 0.2em $appointer-primary, 2em 2em 0 0em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 -0.5em $appointer-primary, -3em 0em 0 -0.5em $appointer-primary, -2em -2em 0 -0.5em $appointer-primary
+  37.5%
+    box-shadow: 0em -3em 0em -0.5em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 0em $appointer-primary, 2em 2em 0 0.2em $appointer-primary, 0em 3em 0 0em $appointer-primary, -2em 2em 0 -0.5em $appointer-primary, -3em 0em 0 -0.5em $appointer-primary, -2em -2em 0 -0.5em $appointer-primary
+  50%
+    box-shadow: 0em -3em 0em -0.5em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 0em $appointer-primary, 0em 3em 0 0.2em $appointer-primary, -2em 2em 0 0em $appointer-primary, -3em 0em 0 -0.5em $appointer-primary, -2em -2em 0 -0.5em $appointer-primary
+  62.5%
+    box-shadow: 0em -3em 0em -0.5em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 0em $appointer-primary, -2em 2em 0 0.2em $appointer-primary, -3em 0em 0 0em $appointer-primary, -2em -2em 0 -0.5em $appointer-primary
+  75%
+    box-shadow: 0em -3em 0em -0.5em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 0em $appointer-primary, -3em 0em 0 0.2em $appointer-primary, -2em -2em 0 0em $appointer-primary
+  87.5%
+    box-shadow: 0em -3em 0em 0em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 0em $appointer-primary, -3em 0em 0 0em $appointer-primary, -2em -2em 0 0.2em $appointer-primary
