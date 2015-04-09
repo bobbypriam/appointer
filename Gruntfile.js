@@ -1,6 +1,16 @@
 module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    jshint: {
+      options: {
+        globals: {
+          "angular": true,
+          "jQuery": true
+        }
+      },
+      beforeconcat: ['public/js/dashboard/*.js', 'public/js/public/*.js'],
+      afterconcat: ['public/js/dashboard.js', 'public/js/public.js']
+    },
     sass: {
       dist: {
         files: {
@@ -57,6 +67,7 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
