@@ -34,9 +34,9 @@ var HomeController = {
               console.log('user.username: ' + user.username);
               console.log('user.email: ' + user.email);
               if (created || user.email === '') {
-                res.redirect(res.locals.baseurl+'/register');
+                res.redirect(res.locals.baseurl+'register');
               } else {
-                res.redirect(res.locals.baseurl+'/dashboard');
+                res.redirect(res.locals.baseurl+'dashboard');
               }
             });
           }
