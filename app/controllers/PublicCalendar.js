@@ -30,6 +30,10 @@ var PublicCalendarController = {
         });
       });
   },
+  getCancel: function (req, res, next) {
+    var token = req.params.token;
+    res.send(token);
+  },
   postCancel: function (req, res, next) {
 
   },
@@ -45,7 +49,7 @@ var PublicCalendarController = {
     });
   },
   redirectIndex: function (req, res, next) {
-    res.redirect(res.locals.baseurl+'/'+req.params.name);
+    res.redirect(res.locals.baseurl+req.params.name);
   },
   getPartial: function (req, res, next) {
     res.render('public-calendar/partials/' + req.params.name);

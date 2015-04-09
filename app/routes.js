@@ -36,6 +36,11 @@ router.get('/dashboard/*', DashboardController.redirectIndex);
 router.get('/partials/:name', PublicCalendarController.getPartial);
 router.get('/calendar/:name', PublicCalendarController.getCalendar);
 router.post('/create-appointment', PublicCalendarController.postBooking);
+
+// cancel routes
+router.get('/cancel/:token', PublicCalendarController.getCancel);
+router.post('/cancel/:token', PublicCalendarController.postCancel);
+
 router.get('/:name', PublicCalendarController.get);
 
 router.get('/:name/*', PublicCalendarController.redirectIndex);
