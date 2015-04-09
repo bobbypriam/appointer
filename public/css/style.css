@@ -5758,16 +5758,18 @@ footer {
   padding: 30px 40px 40px; }
 
 body.home {
-  padding-top: 50px;
-  padding-bottom: 20px; }
+  padding-top: 50px; }
   body.home section {
     padding-top: 40px;
     padding-bottom: 40px; }
     body.home section#benefit img {
       max-height: 167px; }
     body.home section#you {
-      background: #555555;
-      color: #fff; }
+      background: #eeeeee;
+      margin-bottom: 20px; }
+  body.home footer {
+    margin-top: 40px;
+    margin-bottom: 20px; }
 
 .btn {
   font-family: "Gandhi Sans";
