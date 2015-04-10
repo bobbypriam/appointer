@@ -10,6 +10,7 @@ var app = express();
 var routes = require('./routes');
 var session = require('./configs/session');
 var baseurl = require('./configs/baseurl');
+var mailer = require('./configs/mailer');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session);
 app.use(baseurl);
+app.use(mailer);
 app.use(express.static(path.join(__dirname, '../public')));
 
 // route mapping
