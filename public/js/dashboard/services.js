@@ -43,6 +43,10 @@ angular.module('appointer.services', [])
         $http.post('dashboard/appointments/delete', { appointment: appointment }).success(callback);
       };
 
+      model.postAskForReschedule = function (data, callback) {
+        $http.post('dashboard/appointments/reschedule', data).success(callback);
+      };
+
       return model;
     }])
   .factory('UserService', ['$http',

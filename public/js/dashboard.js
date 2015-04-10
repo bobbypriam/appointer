@@ -27779,6 +27779,7 @@ angular.module('appointer.controllers', [])
                 name: slot.Appointment.name,
                 email: slot.Appointment.email,
                 phone: slot.Appointment.phone,
+                token: slot.Appointment.token,
                 rescheduling: false,
                 deleting: false
               });
@@ -27815,6 +27816,21 @@ angular.module('appointer.controllers', [])
               return app.id !== appointment.id;
             });
             $('#appointment-detail-modal').modal('hide');
+          }
+        });
+      };
+
+      $scope.postReschedule = function () {
+        var data = {
+          email: $scope.appointment.email,
+          reason: $scope.form.reason,
+          token: $scope.appointment.token
+        };
+        CalendarService.postAskForReschedule(data, function (response) {
+          if (response.ok) {
+            console.log(response.data);
+            $scope.form = {};
+            $scope.reset();
           }
         });
       };
@@ -27876,6 +27892,10 @@ angular.module('appointer.services', [])
 
       model.deleteAppointment = function (appointment, callback) {
         $http.post('dashboard/appointments/delete', { appointment: appointment }).success(callback);
+      };
+
+      model.postAskForReschedule = function (data, callback) {
+        $http.post('dashboard/appointments/reschedule', data).success(callback);
       };
 
       return model;

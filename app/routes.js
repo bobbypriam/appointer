@@ -29,6 +29,7 @@ router.get('/dashboard/slots/get/:id', DashboardController.getSlots);
 router.post('/dashboard/slots/post', DashboardController.postManageSlots);
 router.get('/dashboard/appointments/get/:id', DashboardController.getAppointmentList);
 router.post('/dashboard/appointments/delete', DashboardController.postDeleteAppointment);
+router.post('/dashboard/appointments/reschedule', DashboardController.postAskForReschedule);
 
 router.get('/dashboard/*', DashboardController.redirectIndex);
 

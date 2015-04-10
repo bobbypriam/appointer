@@ -88,7 +88,22 @@ var DashboardController = {
     });
   },
   postAskForReschedule: function (req, res, next) {
-
+    var data = req.body;
+    res.locals.mailer.sendMail({
+      from: res.locals.sender,
+      to: data.email,
+      subject: '[Appointer] You have been asked for a reschedule',
+      html: '<h1>You have been asked for a reschedule</h1> \
+             <p>The reason is: </p> \
+             <p><blockquote>' + data.reason + '</blockquote></p> \
+             <p>For reschedule, visit \
+              <a href="http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+data.token+'">http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+data.token+'</a> \
+             <p>'
+    }, function(err, info) {
+      if (err) console.log(err);
+      else console.log('Message sent:', info.response);
+    });
+    res.json({ ok: true, data: data });
   },
   postDeleteAppointment: function (req, res, next) {
     var appointmentToDelete = req.body.appointment;
