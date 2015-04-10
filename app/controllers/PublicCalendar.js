@@ -36,6 +36,15 @@ var PublicCalendarController = {
                 if (err) console.log(err);
                 else console.log('Message sent:', info.response);
               });
+              // res.locals.mailer.sendMail({
+              //   from: res.locals.sender,
+              //   to: // user's email, need to get calendar and user from slot,
+              //   subject: '[New Booking] ' + app.name,
+              //   html: '<h1>' + app.name + ' has made a booking.</h1><p>Here are the details</p>'
+              // }, function(err, info) {
+              //   if (err) console.log(err);
+              //   else console.log('Message sent:', info.response);
+              // });
               res.json({ ok: true, appointment: appointment });
             });
         });
