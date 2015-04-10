@@ -1,3 +1,4 @@
+
 var models = require('../models');
 
 var PublicCalendarController = {
@@ -30,8 +31,19 @@ var PublicCalendarController = {
               res.locals.mailer.sendMail({
                 from: res.locals.sender,
                 to: app.email,
-                subject: 'You have made a new booking!',
-                html: '<h1>Successfully made booking</h1><p>Here are the details</p><p>For cancelling, visit <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'">http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'</a><p>'
+                subject: '[Appointer] You have made a new appointment!',
+                html: '<h1>Successfully made appointment</h1>\
+                       <p>Here are the details</p>\
+                       <p>For cancelling, visit\
+                        <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'">\
+                          http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'\
+                        </a>\
+                       </p>\
+                       <p>For reschedule, visit\
+                        <a href="http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'">\
+                          http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'\
+                        </a>\
+                       </p>'
               }, function(err, info) {
                 if (err) console.log(err);
                 else console.log('Message sent:', info.response);
