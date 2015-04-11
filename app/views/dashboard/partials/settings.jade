@@ -5,11 +5,11 @@ ol.breadcrumb
 h1.page-header User Settings
     
 .row
-  .form-horizontal
+  form.form-horizontal(name='form', novalidate)
     .form-group
       label.col-sm-2.control-label Email Address
       .col-sm-4
-        input.form-control(ng-model='form.email', name='email')
+        input.form-control(type='email', ng-model='form.email', name='email')
 
 .row
   .col-md-6
