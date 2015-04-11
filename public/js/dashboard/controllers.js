@@ -17,13 +17,20 @@ angular.module('appointer.controllers', [])
       });
       
       $scope.next = function () {
-        if ($scope.urlStatus !== 'Available')
-          return;
-
         if (step == 1) {
+          if ($scope.urlStatus !== 'Available' || !$scope.form.title || !$scope.form.description) {
+            $scope.isStepOneError = true;
+            return;
+          }
+          $scope.isStepOneError = false;
           step++;
           update(step);
         } else {
+          if (!$scope.form.duration || !$scope.form.start || !$scope.form.end) {
+            $scope.isStepTwoError = true;
+            return;
+          }
+          $scope.isStepTwoError = false;
           CalendarService.postCalendar($scope.form, function (data) {
             if (data.ok) {
               CalendarService.getCalendars(function (calendar) {

@@ -52,22 +52,29 @@ block content
             .form-horizontal.step-one
               .form-group
                 label.col-sm-2.control-label Title
-                .col-sm-10
+                .col-sm-8
                   input.form-control(placeholder='My Awesome Calendar', ng-model='form.title', ng-change='form.url = (form.title | normalizeTitle); checkUrl()')
+                .col-sm-2(ng-show="!form.title && isStepOneError")
+                  p.help-text * required
               .form-group
                 label.col-sm-2.control-label Description
-                .col-sm-10
+                .col-sm-8
                   textarea.form-control(placeholder='Describe your calendar here...', ng-model='form.description')
-              .form-group
+                .col-sm-2(ng-show="!form.description && isStepOneError")
+                  p.help-text * required
+              .form-group.has-feedback
                 label.col-sm-2.control-label URL
                 .col-sm-8
                   input.form-control(placeholder='my-awesome-calendar', ng-model='form.url', ng-change='checkUrl()')
-                .col-sm-2.status(ng-init='status = ""') {{ urlStatus }}
+                  span.glyphicon.form-control-feedback(aria-hidden='true', ng-class='{"glyphicon-ok": form.url && urlStatus == "Available", "glyphicon-remove": form.url && urlStatus != "Available"}')
+                .col-sm-2(ng-show="!form.url && isStepOneError")
+                  p.help-text * required
+                  status.hidden(ng-init='urlStatus = ""') {{ urlStatus }}
 
             .form-horizontal.step-two
               .form-group
-                label.col-sm-2.control-label Duration
-                .col-sm-8
+                label.col-sm-3.control-label Duration
+                .col-sm-7
                   select.form-control(ng-model='form.duration') Duration
                     option(value='15', selected) 15 Minutes
                     option(value='30') 30 Minutes
@@ -77,18 +84,24 @@ block content
                     option(value='90') 1 Hour 30 Minutes
                     option(value='105') 1 Hour 40 Minutes
                     option(value='120') 2 Hours
+                .col-sm-2(ng-show="!form.duration && isStepTwoError")
+                  p.help-text * required
               .form-group
-                label.col-sm-2.control-label Start Date
-                .col-sm-8
+                label.col-sm-3.control-label Start Date
+                .col-sm-7
                   .input-group.date
-                    input.form-control(ng-model='form.start', placeholder='YYYY-MM-DD')
+                    input.form-control(ng-model='form.start')
                     .input-group-addon: i.glyphicon.glyphicon-calendar
+                .col-sm-2(ng-show="!form.start && isStepTwoError")
+                  p.help-text * required
               .form-group
-                label.col-sm-2.control-label End Date
-                .col-sm-8
+                label.col-sm-3.control-label End Date
+                .col-sm-7
                   .input-group.date
-                    input.form-control(ng-model='form.end', placeholder='YYYY-MM-DD')
+                    input.form-control(ng-model='form.end')
                     .input-group-addon: i.glyphicon.glyphicon-calendar
+                .col-sm-2(ng-show="!form.end && isStepTwoError")
+                  p.help-text * required
 
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal', ng-click='restartForm()') Cancel
