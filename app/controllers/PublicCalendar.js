@@ -111,7 +111,84 @@ var PublicCalendarController = {
     });
   },
   postReschedule: function (req, res, next) {
+    var newSlot = req.body.slot;
+    var oldAppointmentId = req.body.appointmentId;
+    models.Appointment.find({
+      where: { id: oldAppointmentId },
+      include: [ 
+        { model: models.Slot, include: [
+          { model: models.Calendar, include: [
+            { model: models.User }
+          ]} 
+        ]}
+      ]
+    }).then(function (appointment) {
+      var slot = appointment.Slot;
+      // set old slot to false
+      slot.update({
+        status: false
+      }).then(function() {
+        // save old appointment data
+        var data = {
+          name: appointment.name,
+          email: appointment.email,
+          phone: appointment.phone
+        };
+        // delete appointment
+        appointment.destroy();
 
+        // find new slot
+        models.Slot.find({
+          where: newSlot,
+          include: [
+            { model: models.Calendar, include: [ models.User ] }
+          ]
+        }).then(function(slot) {
+          // set new slot to true
+          slot.update({
+            status: true
+          }).then(function (s) {
+            data.SlotId = s.id;
+            data.token = s.id + '' +
+              require('crypto').randomBytes(30).toString('hex');
+            models.Appointment.create(data)
+              .then(function(app) {
+                // send mail to appointment maker
+                res.locals.mailer.sendMail({
+                  from: res.locals.sender,
+                  to: app.email,
+                  subject: '[Appointer] A reschedule has been done',
+                  html: '<h1>Reschedule done</h1>\
+                         <p>For cancelling, visit\
+                          <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'">\
+                            http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'\
+                          </a>\
+                         </p>\
+                         <p>For reschedule, visit\
+                          <a href="http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'">\
+                            http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'\
+                          </a>\
+                         </p>'
+                }, function(err, info) {
+                  if (err) console.log(err);
+                  else console.log('Message sent:', info.response);
+                });
+                // send mail to calendar maker
+                res.locals.mailer.sendMail({
+                  from: res.locals.sender,
+                  to: s.Calendar.User.email,
+                  subject: '[Appointer - Reschedule] ' + app.name,
+                  html: '<h1>' + app.name + ' has made a reschedule.</h1><p>Here are the details</p>'
+                }, function(err, info) {
+                  if (err) console.log(err);
+                  else console.log('Message sent:', info.response);
+                });
+                res.json({ ok: true });
+              });
+          });
+        });
+      });
+    });
   },
   getCalendar: function (req, res, next) {
     models.Calendar.find({
@@ -136,6 +213,27 @@ var PublicCalendarController = {
   getCancelSuccess: function (req, res, next) {
     res.render('public-calendar/cancel-success', {
       title: 'Success | Appointer'
+    });
+  },
+  getReschedule: function (req, res, next) {
+    var token = req.params.token;
+    models.Appointment.find({
+      where: { token: token },
+      include: [ 
+        { model: models.Slot, include: [
+          { model: models.Calendar, include: [
+            { model: models.User }
+          ]} 
+        ]}
+      ]
+    }).then(function (appointment) {
+      if (appointment)
+        res.render('public-calendar/reschedule', {
+          title: 'Reschedule Appointment | Appointer',
+          appointment: appointment
+        });
+      else
+        next();
     });
   },
   redirectIndex: function (req, res, next) {

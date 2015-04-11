@@ -11,5 +11,9 @@ angular.module('appointer.services', [])
         $http.post('create-appointment', appointment).success(callback);
       };
 
+      model.rescheduleAppointment = function (appointment, callback) {
+        $http.post('reschedule-appointment', appointment).success(callback);
+      };
+
       return model;
     }]);

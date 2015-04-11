@@ -37,11 +37,15 @@ router.get('/dashboard/*', DashboardController.redirectIndex);
 router.get('/partials/:name', PublicCalendarController.getPartial);
 router.get('/calendar/:name', PublicCalendarController.getCalendar);
 router.post('/create-appointment', PublicCalendarController.postBooking);
+router.post('/reschedule-appointment', PublicCalendarController.postReschedule);
 
 // cancel routes
 router.get('/cancel/success', PublicCalendarController.getCancelSuccess);
 router.get('/cancel/:token', PublicCalendarController.getCancel);
 router.post('/cancel/:token', PublicCalendarController.postCancel);
+
+// reschedule routes
+router.get('/reschedule/:token', PublicCalendarController.getReschedule);
 
 router.get('/:name', PublicCalendarController.get);
 

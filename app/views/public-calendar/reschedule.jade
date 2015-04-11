@@ -1,0 +1,48 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width', initial-scale='1')
+    base(href=baseurl+'reschedule')
+    title= title
+    link(rel='stylesheet', href=baseurl+'css/style.min.css')
+    block css
+    script sessionStorage.calendarName = '#{appointment.Slot.Calendar.url}'; sessionStorage.appointment = '{ "id": "#{appointment.id}", "name": "#{appointment.name}", "email": "#{appointment.email}", "phone": "#{appointment.phone}", "date": "#{appointment.Slot.date.toISOString().split("T")[0]}", "time": "#{appointment.Slot.time.split(':').splice(0,2).join(':')}" }';
+
+  body.public-calendar
+    block content
+      .body(ng-app='appointer')
+        .container-fluid
+          .row
+            .col-md-10.col-md-offset-1
+              div(ng-controller='RescheduleCtrl')
+                div(ng-hide='success')
+                  include ./partials/index.jade
+
+                  #reschedule-modal.modal.fade
+                    .modal-dialog
+                      .modal-content
+                        .modal-header
+                          button.close(type="button", data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') &times;
+                          h4 Reschedule Appointment
+                        .modal-body
+                          p Are you sure you want to reschedule to this slot?
+                          p Old appointment: <strong>{{ oldAppointment.date | date: 'EEE, d/M' }}</strong> - <strong>{{ oldAppointment.time }}</strong>
+                          p New appointment: <strong>{{ form.slot.date | date: 'EEE, d/M' }}</strong> - <strong>{{ form.slot.time }}</strong>
+
+                        .modal-footer
+                          button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+                          button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='submit()') Yes
+
+                div(ng-show='success')
+                  .row
+                    .col-md-12
+                      .panel.panel-default
+                        .panel-body
+                          h1 Success
+                          p Your appointment has been rescheduled.
+
+    script(type='text/javascript', src=baseurl+'js/public.min.js')
+    block js
