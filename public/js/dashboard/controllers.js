@@ -178,6 +178,16 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.submitPost = function () {
+        if (!$scope.calendar.title ||
+            !$scope.calendar.description ||
+            !$scope.calendar.url ||
+            !$scope.calendar.duration ||
+            !$scope.calendar.startDate ||
+            !$scope.calendar.endDate) {
+          $scope.isError = true;
+          return;
+        }
+        $scope.isError = false;
         var newCal = {
           id: calendar.id,
           title: $scope.calendar.title,
