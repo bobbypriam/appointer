@@ -25,7 +25,7 @@ angular.module('appointer.controllers', [])
         if (!$scope.checkIfSelected(day, time))
           return false;
 
-        $scope.form = {};
+        $scope.form = { appointment: {} };
         $scope.form.slot = {
           date: day,
           time: time,
@@ -57,6 +57,10 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.submit = function () {
+        if (!$scope.form.appointment.name || !$scope.form.appointment.phone || !$scope.form.appointment.email) {
+          alert('Fields should not be empty.');
+          return; 
+        }
         CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
           if (response.ok) {
             $('.modal').modal('hide');
