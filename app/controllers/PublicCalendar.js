@@ -72,11 +72,38 @@ var PublicCalendarController = {
     var token = req.body.token;
     models.Appointment.find({
       where: { token: token },
-      include: [ models.Slot ]
+      include: [ 
+        { model: models.Slot, include: [
+          { model: models.Calendar, include: [
+            { model: models.User }
+          ]} 
+        ]}
+      ]
     }).then(function (appointment) {
       appointment.Slot.update({
         status: false
       }).then(function () {
+        // send mail to appointment maker
+        res.locals.mailer.sendMail({
+          from: res.locals.sender,
+          to: appointment.email,
+          subject: '[Appointer] You have cancelled your appointment',
+          html: '<h1>Cancelled your appointment</h1>\
+                 <p>Your appointment record for ' + appointment.Slot.Calendar.title + ' calendar has been deleted.</p>'
+        }, function(err, info) {
+          if (err) console.log(err);
+          else console.log('Message sent:', info.response);
+        });
+        // send mail to calendar maker
+        res.locals.mailer.sendMail({
+          from: res.locals.sender,
+          to: appointment.Slot.Calendar.User.email,
+          subject: '[Appointer - Cancel Booking] ' + appointment.name,
+          html: '<h1>' + appointment.name + ' has cancelled their booking on  ' + appointment.Slot.Calendar.title + ' calendar.</h1>'
+        }, function(err, info) {
+          if (err) console.log(err);
+          else console.log('Message sent:', info.response);
+        });
         appointment.destroy().then(function () {
           res.redirect(res.locals.baseurl+'cancel/success');
         });
