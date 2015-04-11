@@ -18,8 +18,12 @@ var PublicCalendarController = {
   },
   postBooking: function (req, res, next) {
     var appointment = req.body.appointment;
-    models.Slot.find({ where: appointment.slot })
-      .then(function(slot) {
+    models.Slot.find({
+      where: appointment.slot,
+      include: [
+        { model: models.Calendar, include: [ models.User ] }
+      ]
+    }).then(function(slot) {
         slot.update({
           status: true
         }).then(function (s) {
@@ -28,6 +32,7 @@ var PublicCalendarController = {
               require('crypto').randomBytes(30).toString('hex');
           models.Appointment.create(appointment.appointment)
             .then(function(app) {
+              // send mail to appointment maker
               res.locals.mailer.sendMail({
                 from: res.locals.sender,
                 to: app.email,
@@ -48,15 +53,16 @@ var PublicCalendarController = {
                 if (err) console.log(err);
                 else console.log('Message sent:', info.response);
               });
-              // res.locals.mailer.sendMail({
-              //   from: res.locals.sender,
-              //   to: // user's email, need to get calendar and user from slot,
-              //   subject: '[New Booking] ' + app.name,
-              //   html: '<h1>' + app.name + ' has made a booking.</h1><p>Here are the details</p>'
-              // }, function(err, info) {
-              //   if (err) console.log(err);
-              //   else console.log('Message sent:', info.response);
-              // });
+              // send mail to calendar maker
+              res.locals.mailer.sendMail({
+                from: res.locals.sender,
+                to: s.Calendar.User.email,
+                subject: '[Appointer - New Booking] ' + app.name,
+                html: '<h1>' + app.name + ' has made a booking.</h1><p>Here are the details</p>'
+              }, function(err, info) {
+                if (err) console.log(err);
+                else console.log('Message sent:', info.response);
+              });
               res.json({ ok: true, appointment: appointment });
             });
         });
