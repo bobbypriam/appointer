@@ -31,37 +31,7 @@ var PublicCalendarController = {
               require('crypto').randomBytes(30).toString('hex');
           models.Appointment.create(appointment.appointment)
             .then(function(app) {
-              // send mail to appointment maker
-              res.locals.mailer.sendMail({
-                from: res.locals.sender,
-                to: app.email,
-                subject: '[Appointer] You have made a new appointment!',
-                html: '<h1>Successfully made appointment</h1>\
-                       <p>Here are the details</p>\
-                       <p>For cancelling, visit\
-                        <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'">\
-                          http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'\
-                        </a>\
-                       </p>\
-                       <p>For reschedule, visit\
-                        <a href="http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'">\
-                          http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'\
-                        </a>\
-                       </p>'
-              }, function(err, info) {
-                if (err) console.log(err);
-                else console.log('Message sent:', info.response);
-              });
-              // send mail to calendar maker
-              res.locals.mailer.sendMail({
-                from: res.locals.sender,
-                to: s.Calendar.User.email,
-                subject: '[Appointer - New Booking] ' + app.name,
-                html: '<h1>' + app.name + ' has made a booking.</h1><p>Here are the details</p>'
-              }, function(err, info) {
-                if (err) console.log(err);
-                else console.log('Message sent:', info.response);
-              });
+              res.locals.mailer.sendNewBooking(app.email, s.Calendar.User.email, app);
               res.json({ ok: true, appointment: appointment });
             });
         });
@@ -82,27 +52,9 @@ var PublicCalendarController = {
       appointment.Slot.update({
         status: false
       }).then(function () {
-        // send mail to appointment maker
-        res.locals.mailer.sendMail({
-          from: res.locals.sender,
-          to: appointment.email,
-          subject: '[Appointer] You have cancelled your appointment',
-          html: '<h1>Cancelled your appointment</h1>\
-                 <p>Your appointment record for ' + appointment.Slot.Calendar.title + ' calendar has been deleted.</p>'
-        }, function(err, info) {
-          if (err) console.log(err);
-          else console.log('Message sent:', info.response);
-        });
-        // send mail to calendar maker
-        res.locals.mailer.sendMail({
-          from: res.locals.sender,
-          to: appointment.Slot.Calendar.User.email,
-          subject: '[Appointer - Cancel Booking] ' + appointment.name,
-          html: '<h1>' + appointment.name + ' has cancelled their booking on  ' + appointment.Slot.Calendar.title + ' calendar.</h1>'
-        }, function(err, info) {
-          if (err) console.log(err);
-          else console.log('Message sent:', info.response);
-        });
+        res.locals.mailer.sendCancel(appointment.email,
+              appointment.Slot.Calendar.User.email,
+              appointment.Slot.Calendar, appointment);
         appointment.destroy().then(function () {
           res.redirect(res.locals.baseurl+'cancel/success');
         });
@@ -152,36 +104,7 @@ var PublicCalendarController = {
               require('crypto').randomBytes(30).toString('hex');
             models.Appointment.create(data)
               .then(function(app) {
-                // send mail to appointment maker
-                res.locals.mailer.sendMail({
-                  from: res.locals.sender,
-                  to: app.email,
-                  subject: '[Appointer] A reschedule has been done',
-                  html: '<h1>Reschedule done</h1>\
-                         <p>For cancelling, visit\
-                          <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'">\
-                            http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+app.token+'\
-                          </a>\
-                         </p>\
-                         <p>For reschedule, visit\
-                          <a href="http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'">\
-                            http://ppl-b02.cs.ui.ac.id/appointer/reschedule/'+app.token+'\
-                          </a>\
-                         </p>'
-                }, function(err, info) {
-                  if (err) console.log(err);
-                  else console.log('Message sent:', info.response);
-                });
-                // send mail to calendar maker
-                res.locals.mailer.sendMail({
-                  from: res.locals.sender,
-                  to: s.Calendar.User.email,
-                  subject: '[Appointer - Reschedule] ' + app.name,
-                  html: '<h1>' + app.name + ' has made a reschedule.</h1><p>Here are the details</p>'
-                }, function(err, info) {
-                  if (err) console.log(err);
-                  else console.log('Message sent:', info.response);
-                });
+                res.locals.mailer.sendReschedule(app.email, s.Calendar.User.email, s.Calendar, app);
                 res.json({ ok: true });
               });
           });
