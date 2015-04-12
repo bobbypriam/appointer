@@ -61,8 +61,10 @@ h1 {{ calendar.title }}
           td {{ appointment.date | date: 'd MMM y' }}
           td {{ appointment.time }}
           td {{ appointment.name }}
-        tr(ng-if='!appointments.length')
+        tr(ng-if='isLoadedAppointments && !appointments.length')
           td.text-center(colspan=3) No upcoming appointments.
+    .loader-container.loader-container-small(ng-if='!isLoadedAppointments')
+      .loader.loader-small.text-center
     p: a(href=baseurl+'dashboard/{{ calendar.url }}/appointments') See all appointments
 
 #publish-calendar-modal.modal.fade

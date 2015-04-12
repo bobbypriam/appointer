@@ -5791,6 +5791,8 @@ body.home {
   bottom: 0;
   padding-top: 22%;
   background: rgba(255, 255, 255, 0.8); }
+  .loader-container.loader-container-small {
+    padding-top: 0; }
 
 .loader {
   margin: 5em auto;
@@ -5804,9 +5806,9 @@ body.home {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0); }
-  .loader .loader-big {
+  .loader.loader-big {
     font-size: 20px; }
-  .loader .loader-small {
+  .loader.loader-small {
     font-size: 10px; }
 
 @-webkit-keyframes loader {
