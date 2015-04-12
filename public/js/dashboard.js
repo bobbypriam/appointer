@@ -27791,6 +27791,7 @@ angular.module('appointer.controllers', [])
         return cal.url == $routeParams.name;
       })[0];
 
+      $scope.isLoadedAppointments = false;
       fetchAppointments();
 
       function fetchAppointments() {
@@ -27812,6 +27813,7 @@ angular.module('appointer.controllers', [])
                 deleting: false
               });
             });
+            $scope.isLoadedAppointments = true;
           }
         });
       }

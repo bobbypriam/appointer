@@ -22,8 +22,11 @@ h1.page-header {{ calendar.title }}
           td {{ appointment.name }}
           td
             a(href="#", ng-click="seeDetail(appointment, $event)") See Details
-        tr(ng-if='!appointments.length')
+        tr(ng-if='isLoadedAppointments && !appointments.length')
           td.text-center(colspan=3) No appointments yet.
+        tr(ng-if='!isLoadedAppointments')
+          .loader-container.loader-container-small(ng-if='!isLoadedAppointments')
+            .loader.loader-small.text-center
 
 #appointment-detail-modal.modal.fade
   .modal-dialog
