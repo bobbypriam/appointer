@@ -31,6 +31,8 @@ html
                           p Are you sure you want to reschedule to this slot?
                           p Old appointment: <strong>{{ oldAppointment.date | date: 'EEE, d/M' }}</strong> - <strong>{{ oldAppointment.time }}</strong>
                           p New appointment: <strong>{{ form.slot.date | date: 'EEE, d/M' }}</strong> - <strong>{{ form.slot.time }}</strong>
+                        .loader-container.loader-container-small(ng-if='processing')
+                          .loader.loader-small.text-center
 
                         .modal-footer
                           button.btn.btn-default(type='button', data-dismiss='modal') Cancel

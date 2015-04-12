@@ -27461,11 +27461,11 @@ angular.module('appointer.controllers', [])
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
-          $scope.processing = true;
+          $scope.isViewLoading = true;
           startIdx += inc;
           endIdx += inc;
           populateDays();
-          $scope.processing = false;
+          $scope.isViewLoading = false;
         }
       }
 
@@ -27586,11 +27586,11 @@ angular.module('appointer.controllers', [])
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
-          $scope.processing = true;
+          $scope.isViewLoading = true;
           startIdx += inc;
           endIdx += inc;
           populateDays();
-          $scope.processing = false;
+          $scope.isViewLoading = false;
         }
       }
 
