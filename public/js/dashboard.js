@@ -27652,9 +27652,11 @@ angular.module('appointer.controllers', [])
       var startIdx = 0;
       var endIdx = 6;
 
+      $scope.processing = true;
       populateSelected();
       populateDays();
       populateTimes();
+      $scope.processing = false;
 
       $scope.toggleSlot = function (day, time, $event) {
         var target = $($event.target);
@@ -27703,6 +27705,7 @@ angular.module('appointer.controllers', [])
       };
 
       function submitSlots(published) {
+        $scope.processing = true;
         var slots = {
           calendarID: calendar.id,
           slots: $scope.selected,
@@ -27711,6 +27714,7 @@ angular.module('appointer.controllers', [])
         CalendarService.postSlots(slots, function (response) {
           if (response.ok) {
             CalendarService.getCalendars(function (calendars) {
+              $scope.processing = false;
               $location.path('dashboard/'+calendar.url);
             });
           }
@@ -27719,9 +27723,11 @@ angular.module('appointer.controllers', [])
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
+          $scope.processing = true;
           startIdx += inc;
           endIdx += inc;
           populateDays();
+          $scope.processing = false;
         }
       }
 
