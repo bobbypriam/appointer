@@ -32,7 +32,7 @@ var mailer = {
     });
   },
 
-  sendNewBooking: function (appointmentMaker, calendarMaker, appointment) {
+  sendNewBooking: function (appointmentMaker, calendarMaker, slot, appointment) {
     // send mail to appointment maker
     this._transporter.sendMail({
       from: this._sender,
@@ -40,6 +40,13 @@ var mailer = {
       subject: '[Appointer] You have made a new appointment!',
       html: '<h1>Successfully made appointment</h1>\
              <p>Here are the details</p>\
+             <ul>\
+              <li><strong>Date:</strong> ' + slot.date.toISOString().split('T')[0] + '</li>\
+              <li><strong>Time:</strong> ' + slot.time.split(':').splice(0,2).join(':') + '</li>\
+              <li><strong>Name:</strong> ' + appointment.name + '</li>\
+              <li><strong>Email:</strong> ' + appointment.email + '</li>\
+              <li><strong>Phone:</strong> ' + appointment.phone + '</li>\
+             </ul>\
              <p>For cancelling, visit\
               <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+appointment.token+'">\
                 http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+appointment.token+'\
@@ -59,7 +66,15 @@ var mailer = {
       from: this._sender,
       to: calendarMaker,
       subject: '[Appointer - New Booking] ' + appointment.name,
-      html: '<h1>' + appointment.name + ' has made a booking.</h1><p>Here are the details</p>'
+      html: '<h1>' + appointment.name + ' has made a booking.</h1>\
+             <p>Here are the details</p>\
+             <ul>\
+              <li><strong>Date:</strong> ' + slot.date.toISOString().split('T')[0] + '</li>\
+              <li><strong>Time:</strong> ' + slot.time.split(':').splice(0,2).join(':') + '</li>\
+              <li><strong>Name:</strong> ' + appointment.name + '</li>\
+              <li><strong>Email:</strong> ' + appointment.email + '</li>\
+              <li><strong>Phone:</strong> ' + appointment.phone + '</li>\
+             </ul>'
     }, function(err, info) {
       if (err) console.log(err);
       else console.log('Message sent:', info.response);
@@ -90,13 +105,21 @@ var mailer = {
     });
   },
 
-  sendReschedule: function (appointmentMaker, calendarMaker, calendar, appointment) {
+  sendReschedule: function (appointmentMaker, calendarMaker, calendar, slot, appointment) {
     // send mail to appointment maker
     this._transporter.sendMail({
       from: this._sender,
       to: appointmentMaker,
-      subject: '[Appointer] A reschedule has been done',
-      html: '<h1>Reschedule done</h1>\
+      subject: '[Appointer] You have rescheduled your appointment',
+      html: '<h1>Rescheduled your appointment</h1>\
+             <p>Here are the details</p>\
+             <ul>\
+              <li><strong>Date:</strong> ' + slot.date.toISOString().split('T')[0] + '</li>\
+              <li><strong>Time:</strong> ' + slot.time.split(':').splice(0,2).join(':') + '</li>\
+              <li><strong>Name:</strong> ' + appointment.name + '</li>\
+              <li><strong>Email:</strong> ' + appointment.email + '</li>\
+              <li><strong>Phone:</strong> ' + appointment.phone + '</li>\
+             </ul>\
              <p>For cancelling, visit\
               <a href="http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+appointment.token+'">\
                 http://ppl-b02.cs.ui.ac.id/appointer/cancel/'+appointment.token+'\
@@ -116,7 +139,15 @@ var mailer = {
       from: this._sender,
       to: calendarMaker,
       subject: '[Appointer - Reschedule] ' + appointment.name,
-      html: '<h1>' + appointment.name + ' has made a reschedule.</h1><p>Here are the details</p>'
+      html: '<h1>' + appointment.name + ' has made a reschedule.</h1>\
+             <p>Here are the details</p>\
+             <ul>\
+              <li><strong>Date:</strong> ' + slot.date.toISOString().split('T')[0] + '</li>\
+              <li><strong>Time:</strong> ' + slot.time.split(':').splice(0,2).join(':') + '</li>\
+              <li><strong>Name:</strong> ' + appointment.name + '</li>\
+              <li><strong>Email:</strong> ' + appointment.email + '</li>\
+              <li><strong>Phone:</strong> ' + appointment.phone + '</li>\
+             </ul>'
     }, function(err, info) {
       if (err) console.log(err);
       else console.log('Message sent:', info.response);

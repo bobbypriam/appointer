@@ -31,7 +31,7 @@ var PublicCalendarController = {
               require('crypto').randomBytes(30).toString('hex');
           models.Appointment.create(appointment.appointment)
             .then(function(app) {
-              res.locals.mailer.sendNewBooking(app.email, s.Calendar.User.email, app);
+              res.locals.mailer.sendNewBooking(app.email, s.Calendar.User.email, s, app);
               res.json({ ok: true, appointment: appointment });
             });
         });
@@ -104,7 +104,7 @@ var PublicCalendarController = {
               require('crypto').randomBytes(30).toString('hex');
             models.Appointment.create(data)
               .then(function(app) {
-                res.locals.mailer.sendReschedule(app.email, s.Calendar.User.email, s.Calendar, app);
+                res.locals.mailer.sendReschedule(app.email, s.Calendar.User.email, s.Calendar, s, app);
                 res.json({ ok: true });
               });
           });
