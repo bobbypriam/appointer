@@ -71,6 +71,8 @@ h1.page-header {{ calendar.title }}
                   a.btn.btn-default(href='#', ng-click='reset()') Cancel
                 .btn-group
                   a.btn.btn-danger(href='#', ng-click='postDelete()') Delete
+            .loader-container.loader-container-small(ng-if='processing')
+              .loader.loader-small.text-center
 
 
       .modal-footer

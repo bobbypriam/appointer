@@ -387,6 +387,7 @@ angular.module('appointer.controllers', [])
       })[0];
 
       $scope.isLoadedAppointments = false;
+      $scope.processing = false;
       fetchAppointments();
 
       function fetchAppointments() {
@@ -430,6 +431,7 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.postDelete = function () {
+        $scope.processing = true;
         var appointment = {
           id: $scope.appointment.id,
           SlotId: $scope.appointment.slotID
@@ -440,12 +442,15 @@ angular.module('appointer.controllers', [])
             $scope.appointments = $scope.appointments.filter(function (app) {
               return app.id !== appointment.id;
             });
+            alert('Successfully deleted');
+            $scope.processing = false;
             $('#appointment-detail-modal').modal('hide');
           }
         });
       };
 
       $scope.postReschedule = function () {
+        $scope.processing = true;
         var data = {
           email: $scope.appointment.email,
           reason: $scope.form.reason,
@@ -453,9 +458,10 @@ angular.module('appointer.controllers', [])
         };
         CalendarService.postAskForReschedule(data, function (response) {
           if (response.ok) {
-            console.log(response.data);
             $scope.form = {};
             $scope.reset();
+            alert('Successfully sent reschedule notification');
+            $scope.processing = false;
           }
         });
       };
