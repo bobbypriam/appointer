@@ -27390,6 +27390,7 @@ angular.module('appointer.controllers', [])
       var endIdx = 6;
       var startDate, endDate, duration;
       var cal;
+      $scope.isViewLoading = true;
 
       CalendarService.getCalendar($routeParams.name || sessionStorage.calendarName, function (calendar) {
         $scope.calendar = cal = calendar;
@@ -27403,6 +27404,7 @@ angular.module('appointer.controllers', [])
         populateTimes();
         populateSelected();
         jQuery('.table').trigger('update');
+        $scope.isViewLoading = false;
       });
 
       $scope.clickSlot = function (day, time, $event) {
@@ -27442,12 +27444,14 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.submit = function () {
+        $scope.processing = true;
         if (!$scope.form.appointment.name || !$scope.form.appointment.phone || !$scope.form.appointment.email) {
           alert('Fields should not be empty.');
           return; 
         }
         CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
           if (response.ok) {
+            $scope.processing = false;
             $('.modal').modal('hide');
             $('.modal-backdrop').remove();
             $timeout(redirectSuccess, 0);
@@ -27457,9 +27461,11 @@ angular.module('appointer.controllers', [])
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
+          $scope.processing = true;
           startIdx += inc;
           endIdx += inc;
           populateDays();
+          $scope.processing = false;
         }
       }
 
@@ -27512,6 +27518,7 @@ angular.module('appointer.controllers', [])
       var startDate, endDate, duration;
       var cal;
       var oldAppointment = $scope.oldAppointment = JSON.parse(sessionStorage.appointment);
+      $scope.isViewLoading = true;
 
       CalendarService.getCalendar(sessionStorage.calendarName, function (calendar) {
         $scope.calendar = cal = calendar;
@@ -27525,6 +27532,7 @@ angular.module('appointer.controllers', [])
         populateTimes();
         populateSelected();
         jQuery('.table').trigger('update');
+        $scope.isViewLoading = false;
       });
 
       $scope.success = false;
@@ -27567,17 +27575,22 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.submit = function () {
+        $scope.processing = true;
         CalendarService.rescheduleAppointment($scope.form, function(response) {
-          if (response.ok)
+          if (response.ok) {
+            $scope.processing = false;
             redirectSuccess();
+          }
         });
       };
 
       function shift(inc) {
         if (startIdx + inc >= 0) {
+          $scope.processing = true;
           startIdx += inc;
           endIdx += inc;
           populateDays();
+          $scope.processing = false;
         }
       }
 

@@ -17,6 +17,9 @@
             tr(ng-repeat='time in times')
               td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='clickSlot(day, time, $event)', ng-class='{ "selected": checkIfSelected(day, time) }') {{ time }}
 
+.loader-container(ng-show='isViewLoading')
+  .loader.loader-big
+
 #make-appointment-modal.modal.fade
   .modal-dialog
     .modal-content
@@ -39,6 +42,8 @@
             label.col-sm-2.control-label Phone
             .col-sm-8
               input.form-control(ng-model='form.appointment.phone')
+        .loader-container.loader-container-small(ng-if='processing')
+          .loader.loader-small.text-center
 
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
