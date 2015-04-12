@@ -102,6 +102,8 @@ block content
                     .input-group-addon: i.glyphicon.glyphicon-calendar
                 .col-sm-2(ng-show="!form.end && isStepTwoError")
                   p.help-text * required
+            .loader-container.loader-container-small(ng-if='processing')
+              .loader.loader-small.text-center
 
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal', ng-click='restartForm()') Cancel

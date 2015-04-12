@@ -31,9 +31,11 @@ angular.module('appointer.controllers', [])
             return;
           }
           $scope.isStepTwoError = false;
+          $scope.processing = true;
           CalendarService.postCalendar($scope.form, function (data) {
             if (data.ok) {
               CalendarService.getCalendars(function (calendar) {
+                $scope.processing = false;
                 $scope.restartForm();
                 $location.path('dashboard/' + data.calendar.url + '/slots');
                 $('.modal').modal('toggle');
