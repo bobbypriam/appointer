@@ -5,7 +5,7 @@ html
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width', initial-scale='1')
     title= title
-    link(rel='stylesheet', href='css/style.css')
+    link(rel='stylesheet', href=baseurl+'css/style.css')
     block css
   body.home
     nav.navbar.navbar-default.navbar-fixed-top
@@ -27,5 +27,6 @@ html
         .row
           .col-md-12.text-center
             p.text-muted Developed by PPL-B02 team at Fasilkom UI. All rights reserved.
-
+    
+    script(src=baseurl+'js/home.js')
     block js

@@ -7,6 +7,14 @@
 
 body.home
   padding-top: 50px
+  
+  .home-banner
+    @media screen and (min-width: $screen-sm-min)
+      padding: ($jumbotron-padding * 5) 0
+      .container &,
+      .container-fluid &
+        padding-left:  ($jumbotron-padding * 2)
+        padding-right: ($jumbotron-padding * 2)
 
   section
     padding-top: 40px
@@ -15,6 +23,10 @@ body.home
     &#benefit
       img
         max-height: 167px
+      
+      @media (min-width: $screen-sm-min)
+      .container .row div:not(:last-child)
+        margin-bottom: 40px
 
     &#you
       background: $gray-lighter
@@ -83,3 +95,9 @@ body.home
     box-shadow: 0em -3em 0em -0.5em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 0em $appointer-primary, -3em 0em 0 0.2em $appointer-primary, -2em -2em 0 0em $appointer-primary
   87.5%
     box-shadow: 0em -3em 0em 0em $appointer-primary, 2em -2em 0 -0.5em $appointer-primary, 3em 0em 0 -0.5em $appointer-primary, 2em 2em 0 -0.5em $appointer-primary, 0em 3em 0 -0.5em $appointer-primary, -2em 2em 0 0em $appointer-primary, -3em 0em 0 0em $appointer-primary, -2em -2em 0 0.2em $appointer-primary
+
+.text-md-left
+  text-align: center
+  
+  @media (min-width: $screen-md-min)
+    text-align: left

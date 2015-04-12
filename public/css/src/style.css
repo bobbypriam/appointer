@@ -5751,11 +5751,19 @@ footer {
 
 body.home {
   padding-top: 50px; }
+  @media screen and (min-width: 768px) {
+    body.home .home-banner {
+      padding: 150px 0; }
+      .container body.home .home-banner, .container-fluid body.home .home-banner {
+        padding-left: 60px;
+        padding-right: 60px; } }
   body.home section {
     padding-top: 40px;
     padding-bottom: 40px; }
     body.home section#benefit img {
       max-height: 167px; }
+    body.home section#benefit .container .row div:not(:last-child) {
+      margin-bottom: 40px; }
     body.home section#you {
       background: #eeeeee;
       margin-bottom: 20px; }
@@ -5861,5 +5869,10 @@ body.home {
     box-shadow: 0em -3em 0em -0.5em #5195ce, 2em -2em 0 -0.5em #5195ce, 3em 0em 0 -0.5em #5195ce, 2em 2em 0 -0.5em #5195ce, 0em 3em 0 -0.5em #5195ce, -2em 2em 0 0em #5195ce, -3em 0em 0 0.2em #5195ce, -2em -2em 0 0em #5195ce; }
   87.5% {
     box-shadow: 0em -3em 0em 0em #5195ce, 2em -2em 0 -0.5em #5195ce, 3em 0em 0 -0.5em #5195ce, 2em 2em 0 -0.5em #5195ce, 0em 3em 0 -0.5em #5195ce, -2em 2em 0 0em #5195ce, -3em 0em 0 0em #5195ce, -2em -2em 0 0.2em #5195ce; } }
+.text-md-left {
+  text-align: center; }
+  @media (min-width: 992px) {
+    .text-md-left {
+      text-align: left; } }
 
 /*# sourceMappingURL=style.css.map */
