@@ -53,7 +53,7 @@ block content
               .form-group
                 label.col-sm-2.control-label Title
                 .col-sm-8
-                  input.form-control(placeholder='My Awesome Calendar', ng-model='form.title', ng-change='form.url = (form.title | normalizeTitle); checkUrl()')
+                  input.form-control(placeholder='My Awesome Calendar', ng-model='form.title', ng-model-options="{ debounce: 500 }", ng-change='form.url = (form.title | normalizeTitle); checkUrl()')
                 .col-sm-2(ng-show="!form.title && isStepOneError")
                   p.help-text * required
               .form-group
