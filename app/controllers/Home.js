@@ -49,7 +49,7 @@ var HomeController = {
   },
   getLogout: function (req, res, next) {
     delete req.session.user;
-    res.redirect(cas_host + 'logout');
+    res.redirect(cas_host + '/logout');
   },
   getRegister: function (req, res, next) {
     if (!req.session.user)
