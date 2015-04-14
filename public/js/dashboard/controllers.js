@@ -29,6 +29,9 @@ angular.module('appointer.controllers', [])
           if (!$scope.form.duration || !$scope.form.start || !$scope.form.end) {
             $scope.isStepTwoError = true;
             return;
+          } else if ($scope.form.end < $scope.form.start) {
+            alert('End date should be later than start date. Please check again!');
+            return;
           }
           $scope.isStepTwoError = false;
           $scope.processing = true;
@@ -195,6 +198,9 @@ angular.module('appointer.controllers', [])
             !$scope.calendar.startDate ||
             !$scope.calendar.endDate) {
           $scope.isError = true;
+          return;
+        } else if ($scope.calendar.endDate < $scope.calendar.startDate) {
+          alert('End date should be later than start date. Please check again!');
           return;
         }
         $scope.isError = false;
