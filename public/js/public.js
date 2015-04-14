@@ -27444,11 +27444,11 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.submit = function () {
-        $scope.processing = true;
         if (!$scope.form.appointment.name || !$scope.form.appointment.phone || !$scope.form.appointment.email) {
           alert('Fields should not be empty.');
           return; 
         }
+        $scope.processing = true;
         CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
           if (response.ok) {
             $scope.processing = false;
