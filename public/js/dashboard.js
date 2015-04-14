@@ -27464,6 +27464,7 @@ angular.module('appointer.controllers', [])
       };
 
       $scope.checkUrl = function () {
+        $scope.form.url = $scope.form.url.replace(/[^\w-]+/g,'');
         if (!$scope.form.url) {
           $scope.urlStatus = 'URL cannot be empty!';
           return;
@@ -27628,6 +27629,7 @@ angular.module('appointer.controllers', [])
           $scope.urlStatus = 'Available';
           return;
         }
+        $scope.calendar.url = $scope.calendar.url.replace(/[^\w-]+/g,'');
         $scope.urlStatus = 'Checking...';
         CalendarService.checkUrl($scope.calendar.url, function (response) {
           if (response.ok)
