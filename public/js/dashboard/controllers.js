@@ -18,8 +18,12 @@ angular.module('appointer.controllers', [])
       
       $scope.next = function () {
         if (step == 1) {
-          if ($scope.urlStatus !== 'Available' || !$scope.form.title || !$scope.form.description) {
+          if (!$scope.form.url || !$scope.form.title || !$scope.form.description) {
             alert('Fields cannot be empty!');
+            $scope.isStepOneError = true;
+            return;
+          } else if ($scope.urlStatus !== 'Available') {
+            alert('URL is not available');
             $scope.isStepOneError = true;
             return;
           }
@@ -212,6 +216,9 @@ angular.module('appointer.controllers', [])
           return;
         } else if ($scope.calendar.endDate < $scope.calendar.startDate) {
           alert('End date should be later than start date. Please check again!');
+          return;
+        } else if ($scope.urlStatus !== 'Available') {
+          alert('URL is not available');
           return;
         }
         $scope.processing = true;
