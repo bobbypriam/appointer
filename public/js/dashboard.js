@@ -27424,6 +27424,7 @@ angular.module('appointer.controllers', [])
       $scope.next = function () {
         if (step == 1) {
           if ($scope.urlStatus !== 'Available' || !$scope.form.title || !$scope.form.description) {
+            alert('Fields cannot be empty!');
             $scope.isStepOneError = true;
             return;
           }
@@ -27432,6 +27433,7 @@ angular.module('appointer.controllers', [])
           update(step);
         } else {
           if (!$scope.form.duration || !$scope.form.start || !$scope.form.end) {
+            alert('Fields cannot be empty!');
             $scope.isStepTwoError = true;
             return;
           } else if ($scope.form.end < $scope.form.start) {
@@ -27522,7 +27524,11 @@ angular.module('appointer.controllers', [])
             var slots = response.slots;
             $scope.appointments = [];
             slots.forEach(function (slot) {
-              if((new Date(slot.date.split('T')[0])).getTime() > (new Date()).getTime())
+
+              if(new Date(
+                  (new Date(slot.date.split('T')[0]))
+                    .setHours(slot.time.split(':')[0], 
+                              slot.time.split(':')[1])).getTime() > (new Date()).getTime())
                 $scope.appointments.push({
                   date: slot.date.split('T')[0],
                   time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
@@ -27586,6 +27592,10 @@ angular.module('appointer.controllers', [])
           return element.url == $routeParams.name;
         })[0];
 
+      $scope.mockCalendar = {
+        title: calendar.title
+      };
+
       $scope.calendar = {
         title: calendar.title,
         description: calendar.description,
@@ -27602,12 +27612,14 @@ angular.module('appointer.controllers', [])
             !$scope.calendar.duration ||
             !$scope.calendar.startDate ||
             !$scope.calendar.endDate) {
+          alert("Fields cannot be empty!");
           $scope.isError = true;
           return;
         } else if ($scope.calendar.endDate < $scope.calendar.startDate) {
           alert('End date should be later than start date. Please check again!');
           return;
         }
+        $scope.processing = true;
         $scope.isError = false;
         var newCal = {
           id: calendar.id,
@@ -27620,6 +27632,8 @@ angular.module('appointer.controllers', [])
         };
         CalendarService.updateCalendar(newCal, function (response) {
           if (response.ok) {
+            $scope.mockCalendar.title = newCal.title;
+            $scope.processing = false;
             CalendarService.getCalendars(function (calendar) {});
             alert('Success!');
           }

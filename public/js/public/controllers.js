@@ -60,7 +60,7 @@ angular.module('appointer.controllers', [])
 
       $scope.submit = function () {
         if (!$scope.form.appointment.name || !$scope.form.appointment.phone || !$scope.form.appointment.email) {
-          alert('Fields should not be empty.');
+          alert('Fields should not be empty and email should be properly formatted');
           return; 
         }
         $scope.processing = true;

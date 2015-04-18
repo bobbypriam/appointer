@@ -1,9 +1,9 @@
 ol.breadcrumb
   li: a(href=baseurl+'dashboard') Dashboard
-  li: a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
+  li: a(href=baseurl+'dashboard/{{ calendar.url }}') {{ mockCalendar.title }}
   li.active Edit Details
 
-h1.page-header {{ calendar.title }} 
+h1.page-header {{ mockCalendar.title }} 
   small Edit Details
     
 .row
@@ -47,6 +47,9 @@ h1.page-header {{ calendar.title }}
           .input-group.date
             input.form-control(ng-model='calendar.endDate', placeholder='YYYY-MM-DD')
             .input-group-addon: i.glyphicon.glyphicon-calendar
+
+.loader-container(ng-if='processing')
+  .loader.loader-big
 
 .row
   .col-md-6
