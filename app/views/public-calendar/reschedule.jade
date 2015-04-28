@@ -6,7 +6,7 @@ html
     meta(name='viewport', content='width=device-width', initial-scale='1')
     base(href=baseurl+'reschedule')
     title= title
-    link(rel='stylesheet', href=baseurl+'css/style.min.css')
+    link(rel='stylesheet', href=baseurl+'assets/css/main.min.css')
     block css
     script sessionStorage.calendarName = '#{appointment.Slot.Calendar.url}'; sessionStorage.appointment = '{ "id": "#{appointment.id}", "name": "#{appointment.name}", "email": "#{appointment.email}", "phone": "#{appointment.phone}", "date": "#{appointment.Slot.date.toISOString().split("T")[0]}", "time": "#{appointment.Slot.time.split(':').splice(0,2).join(':')}" }';
 
@@ -46,5 +46,5 @@ html
                           h1 Success
                           p Your appointment has been rescheduled.
 
-    script(type='text/javascript', src=baseurl+'js/public.min.js')
+    script(type='text/javascript', src=baseurl+'app/public.min.js')
     block js
