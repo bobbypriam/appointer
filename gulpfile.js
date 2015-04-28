@@ -63,7 +63,12 @@ gulp.task('concat-uglify-js', ['lint'], function () {
   return [dashboard, publicCalendar];
 });
 
+gulp.task('watch', function () {
+  gulp.watch('public/app/**/*.js', ['js']);
+  gulp.watch('public/assets/src/sass/**/*.sass', ['css']);
+});
+
 gulp.task('css', ['concat-minify-css']);
 gulp.task('js', ['concat-uglify-js']);
 
-gulp.task('default', ['lint', 'sass']);
+gulp.task('default', ['css', 'js', 'watch']);
