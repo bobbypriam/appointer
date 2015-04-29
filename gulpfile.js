@@ -8,64 +8,64 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 
 gulp.task('lint', function () {
-  return gulp.src(['app/**/*.js',
-            'public/app/dashboard/*.js',
-            'public/app/public/*.js',
-            'public/assets/js/*.js'])
+  return gulp.src(['server/**/*.js',
+            'client/app/dashboard/*.js',
+            'client/app/public/*.js',
+            'client/assets/js/*.js'])
           .pipe(jshint())
           .pipe(jshint.reporter());
 });
 
 gulp.task('sass', function () {
-  return gulp.src('public/assets/src/sass/style.sass')
+  return gulp.src('client/assets/src/sass/style.sass')
           .pipe(sass())
-          .pipe(gulp.dest('public/assets/css'));
+          .pipe(gulp.dest('client/assets/css'));
 });
 
 gulp.task('concat-minify-css', ['sass'], function () {
-  return gulp.src(['public/assets/vendor/datepicker/css/bootstrap-datepicker3.min.css',
-            'public/assets/css/style.css'])
+  return gulp.src(['client/assets/vendor/datepicker/css/bootstrap-datepicker3.min.css',
+            'client/assets/css/style.css'])
           .pipe(concat('main.css'))
-          .pipe(gulp.dest('public/assets/css'))
+          .pipe(gulp.dest('client/assets/css'))
           .pipe(rename('main.min.css'))
           .pipe(cssmin())
-          .pipe(gulp.dest('public/assets/css'));
+          .pipe(gulp.dest('client/assets/css'));
 });
 
 gulp.task('concat-uglify-js', ['lint'], function () {
-  var dashboard = gulp.src(['public/assets/vendor/jquery/jquery.min.js',
-                            'public/assets/vendor/bootstrap/js/bootstrap.min.js',
-                            'public/assets/vendor/datepicker/js/bootstrap-datepicker.min.js',
-                            'public/assets/vendor/floatthead/jquery.floatThead.min.js',
-                            'public/assets/vendor/angular/angular.js',
-                            'public/assets/vendor/angular/angular-route.js',
-                            'public/assets/vendor/angular/angular-floatThead.js',
-                            'public/app/dashboard/*.js'])
+  var dashboard = gulp.src(['client/assets/vendor/jquery/jquery.min.js',
+                            'client/assets/vendor/bootstrap/js/bootstrap.min.js',
+                            'client/assets/vendor/datepicker/js/bootstrap-datepicker.min.js',
+                            'client/assets/vendor/floatthead/jquery.floatThead.min.js',
+                            'client/assets/vendor/angular/angular.js',
+                            'client/assets/vendor/angular/angular-route.js',
+                            'client/assets/vendor/angular/angular-floatThead.js',
+                            'client/app/dashboard/*.js'])
                       .pipe(concat('dashboard.js'))
-                      .pipe(gulp.dest('public/app'))
+                      .pipe(gulp.dest('client/app'))
                       .pipe(rename('dashboard.min.js'))
                       .pipe(uglify())
-                      .pipe(gulp.dest('public/app'));
+                      .pipe(gulp.dest('client/app'));
 
-  var publicCalendar = gulp.src(['public/assets/vendor/jquery/jquery.min.js',
-                                 'public/assets/vendor/bootstrap/js/bootstrap.min.js',
-                                 'public/assets/vendor/floatthead/jquery.floatThead.min.js',
-                                 'public/assets/vendor/angular/angular.js',
-                                 'public/assets/vendor/angular/angular-route.js',
-                                 'public/assets/vendor/angular/angular-floatThead.js',
-                                 'public/app/public/*.js'])
+  var publicCalendar = gulp.src(['client/assets/vendor/jquery/jquery.min.js',
+                                 'client/assets/vendor/bootstrap/js/bootstrap.min.js',
+                                 'client/assets/vendor/floatthead/jquery.floatThead.min.js',
+                                 'client/assets/vendor/angular/angular.js',
+                                 'client/assets/vendor/angular/angular-route.js',
+                                 'client/assets/vendor/angular/angular-floatThead.js',
+                                 'client/app/public/*.js'])
                       .pipe(concat('public.js'))
-                      .pipe(gulp.dest('public/app'))
+                      .pipe(gulp.dest('client/app'))
                       .pipe(rename('public.min.js'))
                       .pipe(uglify())
-                      .pipe(gulp.dest('public/app'));
+                      .pipe(gulp.dest('client/app'));
 
   return [dashboard, publicCalendar];
 });
 
 gulp.task('watch', function () {
-  gulp.watch('public/app/**/*.js', ['js']);
-  gulp.watch('public/assets/src/sass/**/*.sass', ['css']);
+  gulp.watch('client/app/**/*.js', ['js']);
+  gulp.watch('client/assets/src/sass/**/*.sass', ['css']);
 });
 
 gulp.task('css', ['concat-minify-css']);

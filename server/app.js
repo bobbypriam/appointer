@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(session);
 app.use(baseurl);
 app.use(mailer);
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../client')));
 
 // route mapping
 app.use('/', routes);
