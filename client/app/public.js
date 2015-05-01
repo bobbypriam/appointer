@@ -27383,8 +27383,37 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
       });
     $locationProvider.html5Mode(true);
   }]);
-angular.module('appointer.controllers', [])
-  .controller('IndexCtrl', ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService',
+angular.module('appointer.controllers', []);
+angular.module('appointer.filters', []).
+  filter('normalizeTitle', function() {
+    return function(text) {
+      if (typeof text !== 'undefined')
+        return text.replace(/\s+/g, '-').toLowerCase();
+    };
+  });
+
+angular.module('appointer.services', [])
+  .factory('CalendarService', ['$http',
+    function ($http) {
+      var model = {};
+
+      model.getCalendar = function (id, callback) {
+        $http.get('calendar/'+id).success(callback);
+      };
+
+      model.createAppointment = function (appointment, callback) {
+        $http.post('create-appointment', appointment).success(callback);
+      };
+
+      model.rescheduleAppointment = function (appointment, callback) {
+        $http.post('reschedule-appointment', appointment).success(callback);
+      };
+
+      return model;
+    }]);
+angular.module('appointer.controllers')
+
+.controller('IndexCtrl', ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService',
     function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
       var startIdx = 0;
       var endIdx = 6;
@@ -27509,9 +27538,10 @@ angular.module('appointer.controllers', [])
       function redirectSuccess() {
         $location.path(cal.url + '/success');
       }
-    }])
+    }]);
+angular.module('appointer.controllers')
 
-  .controller('RescheduleCtrl', ['$scope', '$location', '$timeout', 'CalendarService',
+.controller('RescheduleCtrl', ['$scope', '$location', '$timeout', 'CalendarService',
     function RescheduleCtrl($scope, $location, $timeout, CalendarService) {
       var startIdx = 0;
       var endIdx = 6;
@@ -27634,31 +27664,4 @@ angular.module('appointer.controllers', [])
       function redirectSuccess() {
         $scope.success = true;
       }
-    }]);
-angular.module('appointer.filters', []).
-  filter('normalizeTitle', function() {
-    return function(text) {
-      if (typeof text !== 'undefined')
-        return text.replace(/\s+/g, '-').toLowerCase();
-    };
-  });
-
-angular.module('appointer.services', [])
-  .factory('CalendarService', ['$http',
-    function ($http) {
-      var model = {};
-
-      model.getCalendar = function (id, callback) {
-        $http.get('calendar/'+id).success(callback);
-      };
-
-      model.createAppointment = function (appointment, callback) {
-        $http.post('create-appointment', appointment).success(callback);
-      };
-
-      model.rescheduleAppointment = function (appointment, callback) {
-        $http.post('reschedule-appointment', appointment).success(callback);
-      };
-
-      return model;
     }]);

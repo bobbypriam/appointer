@@ -9,8 +9,8 @@ var rename = require('gulp-rename');
 
 gulp.task('lint', function () {
   return gulp.src(['server/**/*.js',
-            'client/app/dashboard/*.js',
-            'client/app/public/*.js',
+            'client/app/dashboard/**/*.js',
+            'client/app/public/**/*.js',
             'client/assets/js/*.js'])
           .pipe(jshint())
           .pipe(jshint.reporter());
@@ -40,7 +40,7 @@ gulp.task('concat-uglify-js', ['lint'], function () {
                             'client/assets/vendor/angular/angular.js',
                             'client/assets/vendor/angular/angular-route.js',
                             'client/assets/vendor/angular/angular-floatThead.js',
-                            'client/app/dashboard/*.js'])
+                            'client/app/dashboard/**/*.js'])
                       .pipe(concat('dashboard.js'))
                       .pipe(gulp.dest('client/app'))
                       .pipe(rename('dashboard.min.js'))
@@ -53,7 +53,7 @@ gulp.task('concat-uglify-js', ['lint'], function () {
                                  'client/assets/vendor/angular/angular.js',
                                  'client/assets/vendor/angular/angular-route.js',
                                  'client/assets/vendor/angular/angular-floatThead.js',
-                                 'client/app/public/*.js'])
+                                 'client/app/public/**/*.js'])
                       .pipe(concat('public.js'))
                       .pipe(gulp.dest('client/app'))
                       .pipe(rename('public.min.js'))
