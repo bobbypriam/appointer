@@ -1,8 +1,13 @@
 var models = require('../models');
+var User = models.User;
+var Calendar = models.Calendar;
+var Slot = models.Slot;
+var Appointment = models.Appointment;
 
 var PublicCalendarController = {
+
   get: function (req, res, next) {
-    models.Calendar.find({
+    Calendar.find({
       where: { url: req.params.name, published: true }
     }).then(function (calendar) {
       if (calendar)
@@ -15,12 +20,22 @@ var PublicCalendarController = {
       }
     });
   },
+
+  getCalendar: function (req, res, next) {
+    Calendar.find({
+      where: { url: req.params.name },
+      include: [ Slot ]
+    }).then(function (calendar) {
+      res.json(calendar);
+    });
+  },
+
   postBooking: function (req, res, next) {
     var appointment = req.body.appointment;
-    models.Slot.find({
+    Slot.find({
       where: appointment.slot,
       include: [
-        { model: models.Calendar, include: [ models.User ] }
+        { model: Calendar, include: [ User ] }
       ]
     }).then(function(slot) {
         slot.update({
@@ -29,7 +44,7 @@ var PublicCalendarController = {
           appointment.appointment.SlotId = s.id;
           appointment.appointment.token = s.id + '' +
               require('crypto').randomBytes(30).toString('hex');
-          models.Appointment.create(appointment.appointment)
+          Appointment.create(appointment.appointment)
             .then(function(app) {
               res.locals.mailer.sendNewBooking(app.email, s.Calendar.User.email, s, app);
               res.json({ ok: true, appointment: appointment });
@@ -37,14 +52,34 @@ var PublicCalendarController = {
         });
       });
   },
+
+  getCancel: function (req, res, next) {
+    var token = req.params.token;
+    Appointment.find({
+      where: { token: token },
+      include: [ Slot ]
+    }).then(function (appointment) {
+      res.render('public-calendar/cancel', {
+        title: 'Cancel Appointment | Appointer',
+        appointment: appointment
+      });
+    });
+  },
+
+  getCancelSuccess: function (req, res, next) {
+    res.render('public-calendar/cancel-success', {
+      title: 'Success | Appointer'
+    });
+  },
+
   postCancel: function (req, res, next) {
     var token = req.body.token;
-    models.Appointment.find({
+    Appointment.find({
       where: { token: token },
       include: [ 
-        { model: models.Slot, include: [
-          { model: models.Calendar, include: [
-            { model: models.User }
+        { model: Slot, include: [
+          { model: Calendar, include: [
+            { model: User }
           ]} 
         ]}
       ]
@@ -61,15 +96,38 @@ var PublicCalendarController = {
       });
     });
   },
+
+  getReschedule: function (req, res, next) {
+    var token = req.params.token;
+    Appointment.find({
+      where: { token: token },
+      include: [ 
+        { model: Slot, include: [
+          { model: Calendar, include: [
+            { model: User }
+          ]} 
+        ]}
+      ]
+    }).then(function (appointment) {
+      if (appointment)
+        res.render('public-calendar/reschedule', {
+          title: 'Reschedule Appointment | Appointer',
+          appointment: appointment
+        });
+      else
+        next();
+    });
+  },
+
   postReschedule: function (req, res, next) {
     var newSlot = req.body.slot;
     var oldAppointmentId = req.body.appointmentId;
-    models.Appointment.find({
+    Appointment.find({
       where: { id: oldAppointmentId },
       include: [ 
-        { model: models.Slot, include: [
-          { model: models.Calendar, include: [
-            { model: models.User }
+        { model: Slot, include: [
+          { model: Calendar, include: [
+            { model: User }
           ]} 
         ]}
       ]
@@ -89,10 +147,10 @@ var PublicCalendarController = {
         appointment.destroy();
 
         // find new slot
-        models.Slot.find({
+        Slot.find({
           where: newSlot,
           include: [
-            { model: models.Calendar, include: [ models.User ] }
+            { model: Calendar, include: [ User ] }
           ]
         }).then(function(slot) {
           // set new slot to true
@@ -102,7 +160,7 @@ var PublicCalendarController = {
             data.SlotId = s.id;
             data.token = s.id + '' +
               require('crypto').randomBytes(30).toString('hex');
-            models.Appointment.create(data)
+            Appointment.create(data)
               .then(function(app) {
                 res.locals.mailer.sendReschedule(app.email, s.Calendar.User.email, s.Calendar, s, app);
                 res.json({ ok: true });
@@ -112,57 +170,13 @@ var PublicCalendarController = {
       });
     });
   },
-  getCalendar: function (req, res, next) {
-    models.Calendar.find({
-      where: { url: req.params.name },
-      include: [ models.Slot ]
-    }).then(function (calendar) {
-      res.json(calendar);
-    });
-  },
-  getCancel: function (req, res, next) {
-    var token = req.params.token;
-    models.Appointment.find({
-      where: { token: token },
-      include: [ models.Slot ]
-    }).then(function (appointment) {
-      res.render('public-calendar/cancel', {
-        title: 'Cancel Appointment | Appointer',
-        appointment: appointment
-      });
-    });
-  },
-  getCancelSuccess: function (req, res, next) {
-    res.render('public-calendar/cancel-success', {
-      title: 'Success | Appointer'
-    });
-  },
-  getReschedule: function (req, res, next) {
-    var token = req.params.token;
-    models.Appointment.find({
-      where: { token: token },
-      include: [ 
-        { model: models.Slot, include: [
-          { model: models.Calendar, include: [
-            { model: models.User }
-          ]} 
-        ]}
-      ]
-    }).then(function (appointment) {
-      if (appointment)
-        res.render('public-calendar/reschedule', {
-          title: 'Reschedule Appointment | Appointer',
-          appointment: appointment
-        });
-      else
-        next();
-    });
-  },
-  redirectIndex: function (req, res, next) {
-    res.redirect(res.locals.baseurl+req.params.name);
-  },
+  
   getPartial: function (req, res, next) {
     res.render('public-calendar/partials/' + req.params.name);
+  },
+
+  redirectIndex: function (req, res, next) {
+    res.redirect(res.locals.baseurl+req.params.name);
   }
 };
 
