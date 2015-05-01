@@ -172,7 +172,7 @@ var DashboardController = {
   },
 
   redirectIndex: function (req, res, next) {
-    res.redirect(res.locals.baseurl+'/dashboard');
+    res.redirect(res.locals.baseurl+'dashboard');
   }
 };
 
