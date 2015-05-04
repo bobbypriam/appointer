@@ -27371,626 +27371,724 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     }
 })();
 
-angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
-  config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer', [
+      'ngRoute',
+      'floatThead'
+    ]);
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .filter('normalizeTitle', function normalizeTitle() {
+      return function(text) {
+        if (typeof text !== 'undefined')
+          return text.replace(/\s+/g, '-').toLowerCase();
+      };
+    });
+  
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .config(['$routeProvider', '$locationProvider', DashboardRouter]);
+
+  function DashboardRouter($routeProvider, $locationProvider) {
     $routeProvider.
       when('/dashboard', {
         templateUrl: 'dashboard/partials/index',
-        controller: 'IndexCtrl'
+        controller: 'IndexController'
       }).
       when('/dashboard/settings', {
         templateUrl: 'dashboard/partials/settings',
-        controller: 'SettingsCtrl'
+        controller: 'SettingsController'
       }).
       when('/dashboard/:name', {
         templateUrl: 'dashboard/partials/detail',
-        controller: 'CalendarDetailCtrl'
+        controller: 'CalendarDetailController'
       }).
       when('/dashboard/:name/edit', {
         templateUrl: 'dashboard/partials/edit',
-        controller: 'EditCalendarDetailCtrl'
+        controller: 'EditCalendarDetailController'
       }).
       when('/dashboard/:name/slots', {
         templateUrl: 'dashboard/partials/slots',
-        controller: 'ManageSlotsCtrl'
+        controller: 'ManageSlotsController'
       }).
       when('/dashboard/:name/appointments', {
         templateUrl: 'dashboard/partials/appointments',
-        controller: 'AppointmentsListCtrl'
+        controller: 'AppointmentsListController'
       }).
       otherwise({
         redirectTo: '/dashboard'
       });
     $locationProvider.html5Mode(true);
-  }]);
-angular.module('appointer.controllers', []);
+  }
+})();
+(function () {
+  'use strict';
 
-angular.module('appointer.filters', []).
-  filter('normalizeTitle', function() {
-    return function(text) {
-      if (typeof text !== 'undefined')
-        return text.replace(/\s+/g, '-').toLowerCase();
-    };
-  });
+  angular
+    .module('appointer')
+    .controller('AppointmentsListController', AppointmentsListController);
 
-angular.module('appointer.services', [])
-  .factory('CalendarService', ['$http',
-    function ($http) {
-      var model = { calendars: [] };
+  AppointmentsListController.$inject = ['$scope', '$routeParams', 'CalendarService'];
 
-      model.getCalendars = function (callback) {
-        $http.get('dashboard/calendars').
-          success(function(data, status, headers, config) {
-            angular.copy(data.calendars, model.calendars);
-            callback(model.calendars);
+  function AppointmentsListController($scope, $routeParams, CalendarService) {
+    var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
+      return cal.url == $routeParams.name;
+    })[0];
+
+    $scope.isLoadedAppointments = false;
+    $scope.processing = false;
+    fetchAppointments();
+
+    function fetchAppointments() {
+      CalendarService.getAppointments(calendar.id, function (response) {
+        if (response.ok) {
+          var slots = response.slots;
+          $scope.appointments = [];
+          slots.forEach(function (slot) {
+            $scope.appointments.push({
+              slotID: slot.id,
+              id: slot.Appointment.id,
+              date: slot.date.split('T')[0],
+              time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+              name: slot.Appointment.name,
+              email: slot.Appointment.email,
+              phone: slot.Appointment.phone,
+              token: slot.Appointment.token,
+              rescheduling: false,
+              deleting: false
+            });
           });
+          $scope.isLoadedAppointments = true;
+        }
+      });
+    }
+
+    $scope.seeDetail = function (appointment, $event) {
+      $event.preventDefault();
+
+      $scope.appointment = appointment;
+      $scope.reset();
+      $('#appointment-detail-modal').modal('show');
+    };
+
+    $scope.rescheduling = function () {
+      $scope.appointment.rescheduling = true;
+    };
+
+    $scope.deleting = function () {
+      $scope.appointment.deleting = true;
+    };
+
+    $scope.postDelete = function () {
+      $scope.processing = true;
+      var appointment = {
+        id: $scope.appointment.id,
+        SlotId: $scope.appointment.slotID
       };
+      console.log(appointment);
+      CalendarService.deleteAppointment(appointment, function (response) {
+        if (response.ok) {
+          $scope.appointments = $scope.appointments.filter(function (app) {
+            return app.id !== appointment.id;
+          });
+          alert('Successfully deleted');
+          $scope.processing = false;
+          $('#appointment-detail-modal').modal('hide');
+        }
+      });
+    };
 
-      model.postCalendar = function (calendar, callback) {
-        $http.post('dashboard/calendars/new', calendar).success(callback);
+    $scope.postReschedule = function () {
+      $scope.processing = true;
+      var data = {
+        email: $scope.appointment.email,
+        reason: $scope.form.reason,
+        token: $scope.appointment.token
       };
+      CalendarService.postAskForReschedule(data, function (response) {
+        if (response.ok) {
+          $scope.form = {};
+          $scope.reset();
+          alert('Successfully sent reschedule notification');
+          $scope.processing = false;
+        }
+      });
+    };
 
-      model.updateCalendar = function (calendar, callback) {
-        $http.post('dashboard/calendars/edit', { calendar: calendar }).success(callback);
-      };
+    $scope.reset = function () {
+      $scope.appointment.rescheduling = false;
+      $scope.appointment.deleting = false;
+    };
+  }
 
-      model.deleteCalendar = function (calendar, callback) {
-        $http.post('dashboard/calendars/delete', { id: calendar.id, title: calendar.title }).success(callback);
-      };
+})();
+(function () {
+  'use strict';
 
-      model.checkUrl = function (url, callback) {
-        $http.post('dashboard/checkurl', { url: url }).success(callback);
-      };
+  angular
+    .module('appointer')
+    .controller('CalendarDetailController', CalendarDetailController);
 
-      model.getSlots = function (id, callback) {
-        $http.get('dashboard/slots/get/'+id).success(callback);
-      };
+  CalendarDetailController.$inject = ['$scope', '$window', '$location', '$routeParams', 'CalendarService'];
 
-      model.postSlots = function (slots, callback) {
-        $http.post('dashboard/slots/post', slots).success(callback);
-      };
-
-      model.getAppointments = function (id, callback) {
-        $http.get('dashboard/appointments/get/'+id).success(callback);
-      };
-
-      model.deleteAppointment = function (appointment, callback) {
-        $http.post('dashboard/appointments/delete', { appointment: appointment }).success(callback);
-      };
-
-      model.postAskForReschedule = function (data, callback) {
-        $http.post('dashboard/appointments/reschedule', data).success(callback);
-      };
-
-      return model;
-    }])
-  .factory('UserService', ['$http',
-    function ($http) {
-      var model = {};
-
-      model.getUserDetails = function (callback) {
-        $http.get('dashboard/user').success(callback);
-      };
-
-      model.editUserDetails = function (details, callback) {
-        $http.post('dashboard/user', { details: details }).success(callback);
-      };
-
-      return model;
-    }]);
-angular.module('appointer.controllers')
-
-.controller('AppointmentsListCtrl', ['$scope', '$routeParams', 'CalendarService',
-    function AppointmentsListCtrl($scope, $routeParams, CalendarService) {
-      var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
-        return cal.url == $routeParams.name;
+  function CalendarDetailController($scope, $window, $location, $routeParams, CalendarService) {
+    var calendar = $scope.calendar = $.grep(CalendarService.calendars,
+      function (element) {
+        return element.url == $routeParams.name;
       })[0];
+    $scope.isLoadedAppointments = false;
+    fetchAppointments();
 
-      $scope.isLoadedAppointments = false;
-      $scope.processing = false;
-      fetchAppointments();
+    function fetchAppointments() {
+      CalendarService.getAppointments(calendar.id, function (response) {
+        if (response.ok) {
+          var slots = response.slots;
+          $scope.appointments = [];
+          slots.forEach(function (slot) {
 
-      function fetchAppointments() {
-        CalendarService.getAppointments(calendar.id, function (response) {
-          if (response.ok) {
-            var slots = response.slots;
-            $scope.appointments = [];
-            slots.forEach(function (slot) {
+            if(new Date(
+                (new Date(slot.date.split('T')[0]))
+                  .setHours(slot.time.split(':')[0], 
+                            slot.time.split(':')[1])).getTime() > (new Date()).getTime())
               $scope.appointments.push({
-                slotID: slot.id,
-                id: slot.Appointment.id,
                 date: slot.date.split('T')[0],
                 time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
-                name: slot.Appointment.name,
-                email: slot.Appointment.email,
-                phone: slot.Appointment.phone,
-                token: slot.Appointment.token,
-                rescheduling: false,
-                deleting: false
+                name: slot.Appointment.name
               });
-            });
-            $scope.isLoadedAppointments = true;
-          }
-        });
+          });
+          $scope.isLoadedAppointments = true;
+        }
+      });
+    }
+
+    $scope.redirectToCalendar = function (url) {
+      $window.open(url, '_blank');
+    };
+
+    $scope.togglePublish = function ($event) {
+      $event.preventDefault();
+      var newCal = {
+        id: calendar.id,
+        published: !calendar.published
+      };
+      CalendarService.updateCalendar(newCal, function (response) {
+        if (response.ok) {
+          CalendarService.getCalendars(function (calendar) {});
+          calendar.published = !calendar.published;
+        }
+      });
+    };
+
+    $scope.checkTitle = function () {
+      if ($scope.form.title == $scope.calendar.title)
+        $('.delete-button').attr('disabled', false);
+      else
+        $('.delete-button').attr('disabled', true);
+    };
+
+    $scope.cancelDelete = function () {
+      $scope.form.title = '';
+    };
+
+    $scope.delete = function () {
+      var calendar = {
+        id: $scope.calendar.id,
+        title: $scope.form.title
+      };
+      CalendarService.deleteCalendar(calendar, function (response) {
+        if (response.ok) {
+          CalendarService.getCalendars(function (calendar) {
+            $('.modal-backdrop').remove();
+            $location.path('dashboard');
+          });
+        }
+      });
+    };
+  }
+  
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('EditCalendarDetailController', EditCalendarDetailController);
+
+  EditCalendarDetailController.$inject = ['$scope', '$location', '$routeParams', 'CalendarService'];
+
+  function EditCalendarDetailController($scope, $location, $routeParams, CalendarService) {
+    var calendar = $.grep(CalendarService.calendars,
+      function (element) {
+        return element.url == $routeParams.name;
+      })[0];
+
+    $scope.mockCalendar = {
+      title: calendar.title
+    };
+
+    $scope.calendar = {
+      title: calendar.title,
+      description: calendar.description,
+      url: calendar.url,
+      duration: calendar.duration,
+      startDate: calendar.startDate.split('T')[0],
+      endDate: calendar.endDate.split('T')[0]
+    };
+
+    $scope.submitPost = function () {
+      if (!$scope.calendar.title ||
+          !$scope.calendar.description ||
+          !$scope.calendar.url ||
+          !$scope.calendar.duration ||
+          !$scope.calendar.startDate ||
+          !$scope.calendar.endDate) {
+        alert("Fields cannot be empty!");
+        $scope.isError = true;
+        return;
+      } else if ($scope.calendar.endDate < $scope.calendar.startDate) {
+        alert('End date should be later than start date. Please check again!');
+        return;
+      } else if ($scope.urlStatus !== 'Available') {
+        alert('URL is not available');
+        return;
       }
-
-      $scope.seeDetail = function (appointment, $event) {
-        $event.preventDefault();
-
-        $scope.appointment = appointment;
-        $scope.reset();
-        $('#appointment-detail-modal').modal('show');
+      $scope.processing = true;
+      $scope.isError = false;
+      var newCal = {
+        id: calendar.id,
+        title: $scope.calendar.title,
+        description: $scope.calendar.description,
+        url: $scope.calendar.url,
+        duration: $scope.calendar.duration,
+        startDate: $scope.calendar.startDate,
+        endDate: $scope.calendar.endDate
       };
+      CalendarService.updateCalendar(newCal, function (response) {
+        if (response.ok) {
+          $scope.mockCalendar.title = newCal.title;
+          $scope.processing = false;
+          CalendarService.getCalendars(function (calendar) {});
+          alert('Success!');
+        }
+      });
+    };
 
-      $scope.rescheduling = function () {
-        $scope.appointment.rescheduling = true;
-      };
-
-      $scope.deleting = function () {
-        $scope.appointment.deleting = true;
-      };
-
-      $scope.postDelete = function () {
-        $scope.processing = true;
-        var appointment = {
-          id: $scope.appointment.id,
-          SlotId: $scope.appointment.slotID
-        };
-        console.log(appointment);
-        CalendarService.deleteAppointment(appointment, function (response) {
-          if (response.ok) {
-            $scope.appointments = $scope.appointments.filter(function (app) {
-              return app.id !== appointment.id;
-            });
-            alert('Successfully deleted');
-            $scope.processing = false;
-            $('#appointment-detail-modal').modal('hide');
-          }
-        });
-      };
-
-      $scope.postReschedule = function () {
-        $scope.processing = true;
-        var data = {
-          email: $scope.appointment.email,
-          reason: $scope.form.reason,
-          token: $scope.appointment.token
-        };
-        CalendarService.postAskForReschedule(data, function (response) {
-          if (response.ok) {
-            $scope.form = {};
-            $scope.reset();
-            alert('Successfully sent reschedule notification');
-            $scope.processing = false;
-          }
-        });
-      };
-
-      $scope.reset = function () {
-        $scope.appointment.rescheduling = false;
-        $scope.appointment.deleting = false;
-      };
-    }]);
-angular.module('appointer.controllers')
-
-.controller('CalendarDetailCtrl', ['$scope', '$window', '$location', '$routeParams', 'CalendarService', 
-    function CalendarDetailCtrl($scope, $window, $location, $routeParams, CalendarService) {
-      var calendar = $scope.calendar = $.grep(CalendarService.calendars,
-        function (element) {
-          return element.url == $routeParams.name;
-        })[0];
-      $scope.isLoadedAppointments = false;
-      fetchAppointments();
-
-      function fetchAppointments() {
-        CalendarService.getAppointments(calendar.id, function (response) {
-          if (response.ok) {
-            var slots = response.slots;
-            $scope.appointments = [];
-            slots.forEach(function (slot) {
-
-              if(new Date(
-                  (new Date(slot.date.split('T')[0]))
-                    .setHours(slot.time.split(':')[0], 
-                              slot.time.split(':')[1])).getTime() > (new Date()).getTime())
-                $scope.appointments.push({
-                  date: slot.date.split('T')[0],
-                  time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
-                  name: slot.Appointment.name
-                });
-            });
-            $scope.isLoadedAppointments = true;
-          }
-        });
+    $scope.checkUrl = function () {
+      if (!$scope.calendar.url) {
+        $scope.urlStatus = 'URL cannot be empty!';
+        return;
       }
-
-      $scope.redirectToCalendar = function (url) {
-        $window.open(url, '_blank');
-      };
-
-      $scope.togglePublish = function ($event) {
-        $event.preventDefault();
-        var newCal = {
-          id: calendar.id,
-          published: !calendar.published
-        };
-        CalendarService.updateCalendar(newCal, function (response) {
-          if (response.ok) {
-            CalendarService.getCalendars(function (calendar) {});
-            calendar.published = !calendar.published;
-          }
-        });
-      };
-
-      $scope.checkTitle = function () {
-        if ($scope.form.title == $scope.calendar.title)
-          $('.delete-button').attr('disabled', false);
+      if ($scope.calendar.url === calendar.url) {
+        $scope.urlStatus = 'Available';
+        return;
+      }
+      $scope.calendar.url = $scope.calendar.url.replace(/[^\w-]+/g,'');
+      $scope.urlStatus = 'Checking...';
+      CalendarService.checkUrl($scope.calendar.url, function (response) {
+        if (response.ok)
+          $scope.urlStatus = 'Available';
         else
-          $('.delete-button').attr('disabled', true);
-      };
+          $scope.urlStatus = 'Not available';
+      });
+    };
+  }
 
-      $scope.cancelDelete = function () {
-        $scope.form.title = '';
-      };
+})();
+(function () {
+  'use strict';
 
-      $scope.delete = function () {
-        var calendar = {
-          id: $scope.calendar.id,
-          title: $scope.form.title
-        };
-        CalendarService.deleteCalendar(calendar, function (response) {
-          if (response.ok) {
-            CalendarService.getCalendars(function (calendar) {
-              $('.modal-backdrop').remove();
-              $location.path('dashboard');
-            });
-          }
-        });
-      };
-    }]);
-angular.module('appointer.controllers')
+  angular
+    .module('appointer')
+    .controller('GlobalController', GlobalController);
 
-.controller('EditCalendarDetailCtrl', ['$scope', '$location', '$routeParams', 'CalendarService', 
-    function EditCalendarDetailCtrl($scope, $location, $routeParams, CalendarService) {
-      var calendar = $.grep(CalendarService.calendars,
-        function (element) {
-          return element.url == $routeParams.name;
-        })[0];
+  GlobalController.$inject = ['$scope', '$location', 'CalendarService'];
 
-      $scope.mockCalendar = {
-        title: calendar.title
-      };
+  function GlobalController($scope, $location, CalendarService) {
+    CalendarService.getCalendars(function (calendars) {});
+    $scope.calendars = CalendarService.calendars;
 
-      $scope.calendar = {
-        title: calendar.title,
-        description: calendar.description,
-        url: calendar.url,
-        duration: calendar.duration,
-        startDate: calendar.startDate.split('T')[0],
-        endDate: calendar.endDate.split('T')[0]
-      };
+    $scope.form = {};
+    var step = $scope.step = 1;
 
-      $scope.submitPost = function () {
-        if (!$scope.calendar.title ||
-            !$scope.calendar.description ||
-            !$scope.calendar.url ||
-            !$scope.calendar.duration ||
-            !$scope.calendar.startDate ||
-            !$scope.calendar.endDate) {
-          alert("Fields cannot be empty!");
-          $scope.isError = true;
-          return;
-        } else if ($scope.calendar.endDate < $scope.calendar.startDate) {
-          alert('End date should be later than start date. Please check again!');
+    $scope.isViewLoading = false;
+    $scope.$on('$routeChangeStart', function() {
+      $scope.isViewLoading = true;
+    });
+    $scope.$on('$routeChangeSuccess', function() {
+      $scope.isViewLoading = false;
+    });
+    
+    $scope.next = function () {
+      if (step == 1) {
+        if (!$scope.form.url || !$scope.form.title || !$scope.form.description) {
+          alert('Fields cannot be empty!');
+          $scope.isStepOneError = true;
           return;
         } else if ($scope.urlStatus !== 'Available') {
           alert('URL is not available');
+          $scope.isStepOneError = true;
           return;
         }
-        $scope.processing = true;
-        $scope.isError = false;
-        var newCal = {
-          id: calendar.id,
-          title: $scope.calendar.title,
-          description: $scope.calendar.description,
-          url: $scope.calendar.url,
-          duration: $scope.calendar.duration,
-          startDate: $scope.calendar.startDate,
-          endDate: $scope.calendar.endDate
-        };
-        CalendarService.updateCalendar(newCal, function (response) {
-          if (response.ok) {
-            $scope.mockCalendar.title = newCal.title;
-            $scope.processing = false;
-            CalendarService.getCalendars(function (calendar) {});
-            alert('Success!');
-          }
-        });
-      };
-
-      $scope.checkUrl = function () {
-        if (!$scope.calendar.url) {
-          $scope.urlStatus = 'URL cannot be empty!';
-          return;
-        }
-        if ($scope.calendar.url === calendar.url) {
-          $scope.urlStatus = 'Available';
-          return;
-        }
-        $scope.calendar.url = $scope.calendar.url.replace(/[^\w-]+/g,'');
-        $scope.urlStatus = 'Checking...';
-        CalendarService.checkUrl($scope.calendar.url, function (response) {
-          if (response.ok)
-            $scope.urlStatus = 'Available';
-          else
-            $scope.urlStatus = 'Not available';
-        });
-      };
-    }]);
-angular.module('appointer.controllers')
-
-.controller('IndexCtrl', ['$scope', 'CalendarService', 
-    function IndexCtrl($scope, CalendarService) {
-      $scope.calendars = CalendarService.calendars;
-      $scope.isLoaded = false;
-      while(true)
-        if ($scope.calendars) {
-          $scope.isLoaded = true;
-          break;
-        }
-    }]);
-angular.module('appointer.controllers')
-
-  .controller('MainCtrl', ['$scope', '$location', 'CalendarService',
-    function MainCtrl($scope, $location, CalendarService) {
-      CalendarService.getCalendars(function (calendars) {});
-      $scope.calendars = CalendarService.calendars;
-
-      $scope.form = {};
-      var step = $scope.step = 1;
-
-      $scope.isViewLoading = false;
-      $scope.$on('$routeChangeStart', function() {
-        $scope.isViewLoading = true;
-      });
-      $scope.$on('$routeChangeSuccess', function() {
-        $scope.isViewLoading = false;
-      });
-      
-      $scope.next = function () {
-        if (step == 1) {
-          if (!$scope.form.url || !$scope.form.title || !$scope.form.description) {
-            alert('Fields cannot be empty!');
-            $scope.isStepOneError = true;
-            return;
-          } else if ($scope.urlStatus !== 'Available') {
-            alert('URL is not available');
-            $scope.isStepOneError = true;
-            return;
-          }
-          $scope.isStepOneError = false;
-          step++;
-          update(step);
-        } else {
-          if (!$scope.form.duration || !$scope.form.start || !$scope.form.end) {
-            alert('Fields cannot be empty!');
-            $scope.isStepTwoError = true;
-            return;
-          } else if ($scope.form.end < $scope.form.start) {
-            alert('End date should be later than start date. Please check again!');
-            return;
-          }
-          $scope.isStepTwoError = false;
-          $scope.processing = true;
-          CalendarService.postCalendar($scope.form, function (data) {
-            if (data.ok) {
-              CalendarService.getCalendars(function (calendar) {
-                $scope.processing = false;
-                $scope.restartForm();
-                $location.path('dashboard/' + data.calendar.url + '/slots');
-                $('.modal').modal('toggle');
-                $('.modal-backdrop').remove();
-              });
-            }
-          });
-        }
-      };
-
-      $scope.back = function () {
-        step--;
+        $scope.isStepOneError = false;
+        step++;
         update(step);
-      };
-
-      $scope.restartForm = function () {
-        $scope.form = {};
-        $scope.urlStatus = '';
-        $scope.step = step = 1;
-        show(step);
-      };
-
-      $scope.checkUrl = function () {
-        $scope.form.url = $scope.form.url.replace(/[^\w-]+/g,'');
-        if (!$scope.form.url) {
-          $scope.urlStatus = 'URL cannot be empty!';
+      } else {
+        if (!$scope.form.duration || !$scope.form.start || !$scope.form.end) {
+          alert('Fields cannot be empty!');
+          $scope.isStepTwoError = true;
+          return;
+        } else if ($scope.form.end < $scope.form.start) {
+          alert('End date should be later than start date. Please check again!');
           return;
         }
-        $scope.urlStatus = 'Checking...';
-        CalendarService.checkUrl($scope.form.url, function (response) {
-          if (response.ok)
-            $scope.urlStatus = 'Available';
-          else
-            $scope.urlStatus = 'Not available';
-        });
-      };
-
-      $scope.restartForm();
-
-      // Functions
-      function update(step) {
-        $scope.step = step;
-        show(step);
-      }
-
-      function show(step) {
-        var steps = ['', 'one', 'two'];
-        $('.step-one, .step-two').hide();
-        $('.step-' + steps[step]).show();
-      }
-    }]);
-angular.module('appointer.controllers')
-
-.controller('ManageSlotsCtrl', ['$scope', '$location', '$routeParams', 'CalendarService', 
-    function ManageSlotsCtrl($scope, $location, $routeParams, CalendarService) {
-      $('tbody').css('height', $(window).height() - 200);
-
-      var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
-        return cal.url == $routeParams.name;
-      })[0];
-
-      var startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
-      var endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
-      var duration = calendar.duration;
-      var startIdx = 0;
-      var endIdx = 6;
-
-      $scope.processing = true;
-      populateSelected();
-      populateDays();
-      populateTimes();
-      $scope.processing = false;
-
-      $scope.toggleSlot = function (day, time, $event) {
-        var target = $($event.target);
-        target.toggleClass('selected');
-        if (target.hasClass('selected')) {
-          $scope.selected.push({
-            date: day,
-            time: time,
-            status: false
-          });
-        } else {
-          $scope.selected = $.grep($scope.selected, function(slot) {
-            return slot.date !== day || slot.time !== time;
-          });
-        }
-      };
-
-      $scope.checkIfSelected = function (day, time) {
-        return $.grep($scope.selected, function(slot) {
-          return slot.date == day && slot.time == time;
-        }).length !== 0;
-      };
-
-      $scope.floatTheadOptions = {
-        scrollContainer: function($table){
-            return $table.closest('#calendar');
-        }
-      };
-
-      $scope.prev = function () {
-        shift(-7);
-      };
-
-      $scope.next = function () {
-        if ($scope.days.length < 7)
-          return;
-        shift(7);
-      };
-
-      $scope.save = function () {
-        submitSlots(calendar.published);
-      };
-
-      $scope.saveAndPublish = function () {
-        submitSlots(true);
-      };
-
-      function submitSlots(published) {
+        $scope.isStepTwoError = false;
         $scope.processing = true;
-        var slots = {
-          calendarID: calendar.id,
-          slots: $scope.selected,
-          published: published
-        };
-        CalendarService.postSlots(slots, function (response) {
-          if (response.ok) {
-            CalendarService.getCalendars(function (calendars) {
+        CalendarService.postCalendar($scope.form, function (data) {
+          if (data.ok) {
+            CalendarService.getCalendars(function (calendar) {
               $scope.processing = false;
-              $location.path('dashboard/'+calendar.url);
+              $scope.restartForm();
+              $location.path('dashboard/' + data.calendar.url + '/slots');
+              $('.modal').modal('toggle');
+              $('.modal-backdrop').remove();
             });
           }
         });
       }
+    };
 
-      function shift(inc) {
-        if (startIdx + inc >= 0) {
-          $scope.processing = true;
-          startIdx += inc;
-          endIdx += inc;
-          populateDays();
-          $scope.processing = false;
-        }
-      }
+    $scope.back = function () {
+      step--;
+      update(step);
+    };
 
-      function populateSelected() {
-        $scope.selected = [];
-        CalendarService.getSlots(calendar.id, function (response) {
-          if (response.ok) {
-            response.slots.forEach(function (slot) {
-              $scope.selected.push({
-                date: slot.date.split('T')[0],
-                time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
-                status: slot.status
-              });
-            });
-          }
-        });
-      }
-
-      function populateDays() {
-        $scope.days = [];
-        for (var i = startIdx; i <= endIdx; i++) {
-          var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-          current.setTime(startDate.getTime());
-          current.setDate(startDate.getDate() + i);
-          current = new Date(current.getTime());
-          if (current.getTime() <= endDate.getTime()) {
-            $scope.days.push(current.getFullYear() + '-' +
-                             (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
-                             (current.getDate() < 10 ? '0' : '') + current.getDate());
-          }
-        }
-      }
-
-      function populateTimes() {
-        var d = new Date();
-        d.setHours(7, 0);
-
-        $scope.times = [];
-        while (d.getHours() < 21) {
-          $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
-          d.setMinutes(d.getMinutes() + duration);
-        }
-      }
-    }]);
-angular.module('appointer.controllers')
-
-.controller('SettingsCtrl', ['$scope', 'UserService', 
-    function SettingsCtrl($scope, UserService) {
+    $scope.restartForm = function () {
       $scope.form = {};
-      
-      UserService.getUserDetails(function(response) {
-        $scope.form.email = response.email;
-      });
+      $scope.urlStatus = '';
+      $scope.step = step = 1;
+      show(step);
+    };
 
-      $scope.submitPost = function () {
-        if (!$scope.form.email) {
-          alert('Email cannot be empty and should be properly formatted');
-          return;
-        }
-        UserService.editUserDetails($scope.form, function(response) {
-          if (response.ok)
-            alert('Success!');
+    $scope.checkUrl = function () {
+      $scope.form.url = $scope.form.url.replace(/[^\w-]+/g,'');
+      if (!$scope.form.url) {
+        $scope.urlStatus = 'URL cannot be empty!';
+        return;
+      }
+      $scope.urlStatus = 'Checking...';
+      CalendarService.checkUrl($scope.form.url, function (response) {
+        if (response.ok)
+          $scope.urlStatus = 'Available';
+        else
+          $scope.urlStatus = 'Not available';
+      });
+    };
+
+    $scope.restartForm();
+
+    // Functions
+    function update(step) {
+      $scope.step = step;
+      show(step);
+    }
+
+    function show(step) {
+      var steps = ['', 'one', 'two'];
+      $('.step-one, .step-two').hide();
+      $('.step-' + steps[step]).show();
+    }
+  }
+  
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('IndexController', IndexController);
+
+  IndexController.$inject = ['$scope', 'CalendarService'];
+
+  function IndexController($scope, CalendarService) {
+    $scope.calendars = CalendarService.calendars;
+    $scope.isLoaded = false;
+    while(true)
+      if ($scope.calendars) {
+        $scope.isLoaded = true;
+        break;
+      }
+  }
+
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('ManageSlotsController', ManageSlotsController);
+
+  ManageSlotsController.$inject = ['$scope', '$location', '$routeParams', 'CalendarService'];
+
+  function ManageSlotsController($scope, $location, $routeParams, CalendarService) {
+    $('tbody').css('height', $(window).height() - 200);
+
+    var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
+      return cal.url == $routeParams.name;
+    })[0];
+
+    var startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
+    var endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
+    var duration = calendar.duration;
+    var startIdx = 0;
+    var endIdx = 6;
+
+    $scope.processing = true;
+    populateSelected();
+    populateDays();
+    populateTimes();
+    $scope.processing = false;
+
+    $scope.toggleSlot = function (day, time, $event) {
+      var target = $($event.target);
+      target.toggleClass('selected');
+      if (target.hasClass('selected')) {
+        $scope.selected.push({
+          date: day,
+          time: time,
+          status: false
         });
+      } else {
+        $scope.selected = $.grep($scope.selected, function(slot) {
+          return slot.date !== day || slot.time !== time;
+        });
+      }
+    };
+
+    $scope.checkIfSelected = function (day, time) {
+      return $.grep($scope.selected, function(slot) {
+        return slot.date == day && slot.time == time;
+      }).length !== 0;
+    };
+
+    $scope.floatTheadOptions = {
+      scrollContainer: function($table){
+          return $table.closest('#calendar');
+      }
+    };
+
+    $scope.prev = function () {
+      shift(-7);
+    };
+
+    $scope.next = function () {
+      if ($scope.days.length < 7)
+        return;
+      shift(7);
+    };
+
+    $scope.save = function () {
+      submitSlots(calendar.published);
+    };
+
+    $scope.saveAndPublish = function () {
+      submitSlots(true);
+    };
+
+    function submitSlots(published) {
+      $scope.processing = true;
+      var slots = {
+        calendarID: calendar.id,
+        slots: $scope.selected,
+        published: published
       };
-    }]);
+      CalendarService.postSlots(slots, function (response) {
+        if (response.ok) {
+          CalendarService.getCalendars(function (calendars) {
+            $scope.processing = false;
+            $location.path('dashboard/'+calendar.url);
+          });
+        }
+      });
+    }
+
+    function shift(inc) {
+      if (startIdx + inc >= 0) {
+        $scope.processing = true;
+        startIdx += inc;
+        endIdx += inc;
+        populateDays();
+        $scope.processing = false;
+      }
+    }
+
+    function populateSelected() {
+      $scope.selected = [];
+      CalendarService.getSlots(calendar.id, function (response) {
+        if (response.ok) {
+          response.slots.forEach(function (slot) {
+            $scope.selected.push({
+              date: slot.date.split('T')[0],
+              time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+              status: slot.status
+            });
+          });
+        }
+      });
+    }
+
+    function populateDays() {
+      $scope.days = [];
+      for (var i = startIdx; i <= endIdx; i++) {
+        var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        current.setTime(startDate.getTime());
+        current.setDate(startDate.getDate() + i);
+        current = new Date(current.getTime());
+        if (current.getTime() <= endDate.getTime()) {
+          $scope.days.push(current.getFullYear() + '-' +
+                           (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
+                           (current.getDate() < 10 ? '0' : '') + current.getDate());
+        }
+      }
+    }
+
+    function populateTimes() {
+      var d = new Date();
+      d.setHours(7, 0);
+
+      $scope.times = [];
+      while (d.getHours() < 21) {
+        $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
+        d.setMinutes(d.getMinutes() + duration);
+      }
+    }
+  }
+  
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('SettingsController', SettingsController);
+
+  SettingsController.$inject = ['$scope', 'UserService'];
+
+  function SettingsController($scope, UserService) {
+    $scope.form = {};
+    
+    UserService.getUserDetails(function(response) {
+      $scope.form.email = response.email;
+    });
+
+    $scope.submitPost = function () {
+      if (!$scope.form.email) {
+        alert('Email cannot be empty and should be properly formatted');
+        return;
+      }
+      UserService.editUserDetails($scope.form, function(response) {
+        if (response.ok)
+          alert('Success!');
+      });
+    };
+  }
+  
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .factory('CalendarService', CalendarService);
+
+  CalendarService.$inject = ['$http'];
+
+  function CalendarService($http) {
+    var model = { calendars: [] };
+
+    model.getCalendars = function (callback) {
+      $http.get('dashboard/calendars').
+        success(function(data, status, headers, config) {
+          angular.copy(data.calendars, model.calendars);
+          callback(model.calendars);
+        });
+    };
+
+    model.postCalendar = function (calendar, callback) {
+      $http.post('dashboard/calendars/new', calendar).success(callback);
+    };
+
+    model.updateCalendar = function (calendar, callback) {
+      $http.post('dashboard/calendars/edit', { calendar: calendar }).success(callback);
+    };
+
+    model.deleteCalendar = function (calendar, callback) {
+      $http.post('dashboard/calendars/delete', { id: calendar.id, title: calendar.title }).success(callback);
+    };
+
+    model.checkUrl = function (url, callback) {
+      $http.post('dashboard/checkurl', { url: url }).success(callback);
+    };
+
+    model.getSlots = function (id, callback) {
+      $http.get('dashboard/slots/get/'+id).success(callback);
+    };
+
+    model.postSlots = function (slots, callback) {
+      $http.post('dashboard/slots/post', slots).success(callback);
+    };
+
+    model.getAppointments = function (id, callback) {
+      $http.get('dashboard/appointments/get/'+id).success(callback);
+    };
+
+    model.deleteAppointment = function (appointment, callback) {
+      $http.post('dashboard/appointments/delete', { appointment: appointment }).success(callback);
+    };
+
+    model.postAskForReschedule = function (data, callback) {
+      $http.post('dashboard/appointments/reschedule', data).success(callback);
+    };
+
+    return model;
+  }
+
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .factory('UserService', UserService);
+
+  UserService.$inject = ['$http'];
+
+  function UserService($http) {
+    var model = {};
+
+    model.getUserDetails = function (callback) {
+      $http.get('dashboard/user').success(callback);
+    };
+
+    model.editUserDetails = function (details, callback) {
+      $http.post('dashboard/user', { details: details }).success(callback);
+    };
+
+    return model;
+  }
+
+})();
