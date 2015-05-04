@@ -8,12 +8,33 @@
   CalendarDetailController.$inject = ['$scope', '$window', '$location', '$routeParams', 'CalendarService'];
 
   function CalendarDetailController($scope, $window, $location, $routeParams, CalendarService) {
-    var calendar = $scope.calendar = $.grep(CalendarService.calendars,
-      function (element) {
-        return element.url == $routeParams.name;
-      })[0];
+    
+    // bindable variables
+    $scope.calendar = {};
     $scope.isLoadedAppointments = false;
-    fetchAppointments();
+
+    // bindable functions
+    $scope.cancelDelete = cancelDelete;
+    $scope.checkTitle = checkTitle;
+    $scope.delete = deleteCalendar;
+    $scope.redirectToCalendar = redirectToCalendar;
+    $scope.togglePublish = togglePublish;
+
+    var calendar = {};
+
+    initiate();
+
+    function initiate() {
+      fetchCalendar();
+      fetchAppointments();
+    }
+
+    function fetchCalendar() {
+      $scope.calendar = calendar = $.grep(CalendarService.calendars,
+        function (element) {
+          return element.url == $routeParams.name;
+        })[0];
+    }
 
     function fetchAppointments() {
       CalendarService.getAppointments(calendar.id, function (response) {
@@ -37,11 +58,11 @@
       });
     }
 
-    $scope.redirectToCalendar = function (url) {
+    function redirectToCalendar(url) {
       $window.open(url, '_blank');
-    };
+    }
 
-    $scope.togglePublish = function ($event) {
+    function togglePublish($event) {
       $event.preventDefault();
       var newCal = {
         id: calendar.id,
@@ -53,20 +74,20 @@
           calendar.published = !calendar.published;
         }
       });
-    };
+    }
 
-    $scope.checkTitle = function () {
+    function checkTitle() {
       if ($scope.form.title == $scope.calendar.title)
         $('.delete-button').attr('disabled', false);
       else
         $('.delete-button').attr('disabled', true);
-    };
+    }
 
-    $scope.cancelDelete = function () {
+    function cancelDelete() {
       $scope.form.title = '';
-    };
+    }
 
-    $scope.delete = function () {
+    function deleteCalendar() {
       var calendar = {
         id: $scope.calendar.id,
         title: $scope.form.title
@@ -79,7 +100,7 @@
           });
         }
       });
-    };
+    }
   }
   
 })();

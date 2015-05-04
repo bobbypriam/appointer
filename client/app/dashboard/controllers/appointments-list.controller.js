@@ -8,13 +8,34 @@
   AppointmentsListController.$inject = ['$scope', '$routeParams', 'CalendarService'];
 
   function AppointmentsListController($scope, $routeParams, CalendarService) {
-    var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
-      return cal.url == $routeParams.name;
-    })[0];
-
+    
+    // bindable variables
+    $scope.calendar = {};
     $scope.isLoadedAppointments = false;
     $scope.processing = false;
-    fetchAppointments();
+
+    // bindable functions
+    $scope.deleting = deleting;
+    $scope.postDelete = postDelete;
+    $scope.postReschedule = postReschedule;
+    $scope.rescheduling = rescheduling;
+    $scope.reset = reset;
+    $scope.seeDetail = seeDetail;
+
+    var calendar = {};
+
+    initiate();
+
+    function initiate() {
+      fetchCalendar();
+      fetchAppointments();
+    }
+
+    function fetchCalendar() {
+      $scope.calendar = calendar = CalendarService.calendars.filter(function(cal) {
+        return cal.url == $routeParams.name;
+      })[0];
+    }
 
     function fetchAppointments() {
       CalendarService.getAppointments(calendar.id, function (response) {
@@ -40,23 +61,23 @@
       });
     }
 
-    $scope.seeDetail = function (appointment, $event) {
+    function seeDetail(appointment, $event) {
       $event.preventDefault();
 
       $scope.appointment = appointment;
       $scope.reset();
       $('#appointment-detail-modal').modal('show');
-    };
+    }
 
-    $scope.rescheduling = function () {
+    function rescheduling() {
       $scope.appointment.rescheduling = true;
-    };
+    }
 
-    $scope.deleting = function () {
+    function deleting() {
       $scope.appointment.deleting = true;
-    };
+    }
 
-    $scope.postDelete = function () {
+    function postDelete() {
       $scope.processing = true;
       var appointment = {
         id: $scope.appointment.id,
@@ -73,9 +94,9 @@
           $('#appointment-detail-modal').modal('hide');
         }
       });
-    };
+    }
 
-    $scope.postReschedule = function () {
+    function postReschedule() {
       $scope.processing = true;
       var data = {
         email: $scope.appointment.email,
@@ -90,12 +111,12 @@
           $scope.processing = false;
         }
       });
-    };
+    }
 
-    $scope.reset = function () {
+    function reset() {
       $scope.appointment.rescheduling = false;
       $scope.appointment.deleting = false;
-    };
+    }
   }
 
 })();

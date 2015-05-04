@@ -27448,13 +27448,34 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   AppointmentsListController.$inject = ['$scope', '$routeParams', 'CalendarService'];
 
   function AppointmentsListController($scope, $routeParams, CalendarService) {
-    var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
-      return cal.url == $routeParams.name;
-    })[0];
-
+    
+    // bindable variables
+    $scope.calendar = {};
     $scope.isLoadedAppointments = false;
     $scope.processing = false;
-    fetchAppointments();
+
+    // bindable functions
+    $scope.deleting = deleting;
+    $scope.postDelete = postDelete;
+    $scope.postReschedule = postReschedule;
+    $scope.rescheduling = rescheduling;
+    $scope.reset = reset;
+    $scope.seeDetail = seeDetail;
+
+    var calendar = {};
+
+    initiate();
+
+    function initiate() {
+      fetchCalendar();
+      fetchAppointments();
+    }
+
+    function fetchCalendar() {
+      $scope.calendar = calendar = CalendarService.calendars.filter(function(cal) {
+        return cal.url == $routeParams.name;
+      })[0];
+    }
 
     function fetchAppointments() {
       CalendarService.getAppointments(calendar.id, function (response) {
@@ -27480,23 +27501,23 @@ function ngViewFillContentFactory($compile, $controller, $route) {
       });
     }
 
-    $scope.seeDetail = function (appointment, $event) {
+    function seeDetail(appointment, $event) {
       $event.preventDefault();
 
       $scope.appointment = appointment;
       $scope.reset();
       $('#appointment-detail-modal').modal('show');
-    };
+    }
 
-    $scope.rescheduling = function () {
+    function rescheduling() {
       $scope.appointment.rescheduling = true;
-    };
+    }
 
-    $scope.deleting = function () {
+    function deleting() {
       $scope.appointment.deleting = true;
-    };
+    }
 
-    $scope.postDelete = function () {
+    function postDelete() {
       $scope.processing = true;
       var appointment = {
         id: $scope.appointment.id,
@@ -27513,9 +27534,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           $('#appointment-detail-modal').modal('hide');
         }
       });
-    };
+    }
 
-    $scope.postReschedule = function () {
+    function postReschedule() {
       $scope.processing = true;
       var data = {
         email: $scope.appointment.email,
@@ -27530,12 +27551,12 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           $scope.processing = false;
         }
       });
-    };
+    }
 
-    $scope.reset = function () {
+    function reset() {
       $scope.appointment.rescheduling = false;
       $scope.appointment.deleting = false;
-    };
+    }
   }
 
 })();
@@ -27549,12 +27570,33 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   CalendarDetailController.$inject = ['$scope', '$window', '$location', '$routeParams', 'CalendarService'];
 
   function CalendarDetailController($scope, $window, $location, $routeParams, CalendarService) {
-    var calendar = $scope.calendar = $.grep(CalendarService.calendars,
-      function (element) {
-        return element.url == $routeParams.name;
-      })[0];
+    
+    // bindable variables
+    $scope.calendar = {};
     $scope.isLoadedAppointments = false;
-    fetchAppointments();
+
+    // bindable functions
+    $scope.cancelDelete = cancelDelete;
+    $scope.checkTitle = checkTitle;
+    $scope.delete = deleteCalendar;
+    $scope.redirectToCalendar = redirectToCalendar;
+    $scope.togglePublish = togglePublish;
+
+    var calendar = {};
+
+    initiate();
+
+    function initiate() {
+      fetchCalendar();
+      fetchAppointments();
+    }
+
+    function fetchCalendar() {
+      $scope.calendar = calendar = $.grep(CalendarService.calendars,
+        function (element) {
+          return element.url == $routeParams.name;
+        })[0];
+    }
 
     function fetchAppointments() {
       CalendarService.getAppointments(calendar.id, function (response) {
@@ -27578,11 +27620,11 @@ function ngViewFillContentFactory($compile, $controller, $route) {
       });
     }
 
-    $scope.redirectToCalendar = function (url) {
+    function redirectToCalendar(url) {
       $window.open(url, '_blank');
-    };
+    }
 
-    $scope.togglePublish = function ($event) {
+    function togglePublish($event) {
       $event.preventDefault();
       var newCal = {
         id: calendar.id,
@@ -27594,20 +27636,20 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           calendar.published = !calendar.published;
         }
       });
-    };
+    }
 
-    $scope.checkTitle = function () {
+    function checkTitle() {
       if ($scope.form.title == $scope.calendar.title)
         $('.delete-button').attr('disabled', false);
       else
         $('.delete-button').attr('disabled', true);
-    };
+    }
 
-    $scope.cancelDelete = function () {
+    function cancelDelete() {
       $scope.form.title = '';
-    };
+    }
 
-    $scope.delete = function () {
+    function deleteCalendar() {
       var calendar = {
         id: $scope.calendar.id,
         title: $scope.form.title
@@ -27620,7 +27662,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           });
         }
       });
-    };
+    }
   }
   
 })();
@@ -27635,25 +27677,44 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   EditCalendarDetailController.$inject = ['$scope', '$location', '$routeParams', 'CalendarService'];
 
   function EditCalendarDetailController($scope, $location, $routeParams, CalendarService) {
-    var calendar = $.grep(CalendarService.calendars,
-      function (element) {
-        return element.url == $routeParams.name;
-      })[0];
+    
+    // bindable variables
+    $scope.calendar = {};
+    $scope.mockCalendar = {};
 
-    $scope.mockCalendar = {
-      title: calendar.title
-    };
+    // bindable functions
+    $scope.checkUrl = checkUrl;
+    $scope.submitPost = submitPost;
 
-    $scope.calendar = {
-      title: calendar.title,
-      description: calendar.description,
-      url: calendar.url,
-      duration: calendar.duration,
-      startDate: calendar.startDate.split('T')[0],
-      endDate: calendar.endDate.split('T')[0]
-    };
+    var calendar = {};
 
-    $scope.submitPost = function () {
+    initiate();
+
+    function initiate() {
+      fetchCalendar();
+    }
+
+    function fetchCalendar() {
+      calendar = $.grep(CalendarService.calendars,
+        function (element) {
+          return element.url == $routeParams.name;
+        })[0];
+
+      $scope.mockCalendar = {
+        title: calendar.title
+      };
+
+      $scope.calendar = {
+        title: calendar.title,
+        description: calendar.description,
+        url: calendar.url,
+        duration: calendar.duration,
+        startDate: calendar.startDate.split('T')[0],
+        endDate: calendar.endDate.split('T')[0]
+      };
+    }
+
+    function submitPost() {
       if (!$scope.calendar.title ||
           !$scope.calendar.description ||
           !$scope.calendar.url ||
@@ -27689,9 +27750,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           alert('Success!');
         }
       });
-    };
+    }
 
-    $scope.checkUrl = function () {
+    function checkUrl() {
       if (!$scope.calendar.url) {
         $scope.urlStatus = 'URL cannot be empty!';
         return;
@@ -27708,7 +27769,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
         else
           $scope.urlStatus = 'Not available';
       });
-    };
+    }
   }
 
 })();
@@ -27722,21 +27783,46 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   GlobalController.$inject = ['$scope', '$location', 'CalendarService'];
 
   function GlobalController($scope, $location, CalendarService) {
-    CalendarService.getCalendars(function (calendars) {});
-    $scope.calendars = CalendarService.calendars;
 
+    // bindable variables
+    $scope.calendars = [];
     $scope.form = {};
-    var step = $scope.step = 1;
-
+    $scope.isStepOneError = false;
+    $scope.isStepTwoError = false;
     $scope.isViewLoading = false;
-    $scope.$on('$routeChangeStart', function() {
+    $scope.step = 1;
+    $scope.urlStatus = '';
+
+    // bindable functions
+    $scope.back = back;
+    $scope.checkUrl = checkUrl;
+    $scope.next = next;
+    $scope.restartForm = restartForm;
+
+    $scope.$on('$routeChangeStart', showLoading);
+    $scope.$on('$routeChangeSuccess', hideLoading);
+
+    var step = $scope.step;
+
+    initiate();
+
+    function initiate() {
+      CalendarService.getCalendars(function (calendars) {
+        $scope.calendars = calendars;
+      });
+
+      restartForm();
+    }
+
+    function showLoading() {
       $scope.isViewLoading = true;
-    });
-    $scope.$on('$routeChangeSuccess', function() {
+    }
+
+    function hideLoading() {
       $scope.isViewLoading = false;
-    });
+    }
     
-    $scope.next = function () {
+    function next() {
       if (step == 1) {
         if (!$scope.form.url || !$scope.form.title || !$scope.form.description) {
           alert('Fields cannot be empty!');
@@ -27773,21 +27859,21 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           }
         });
       }
-    };
+    }
 
-    $scope.back = function () {
+    function back() {
       step--;
       update(step);
-    };
+    }
 
-    $scope.restartForm = function () {
+    function restartForm() {
       $scope.form = {};
       $scope.urlStatus = '';
       $scope.step = step = 1;
       show(step);
-    };
+    }
 
-    $scope.checkUrl = function () {
+    function checkUrl() {
       $scope.form.url = $scope.form.url.replace(/[^\w-]+/g,'');
       if (!$scope.form.url) {
         $scope.urlStatus = 'URL cannot be empty!';
@@ -27800,11 +27886,8 @@ function ngViewFillContentFactory($compile, $controller, $route) {
         else
           $scope.urlStatus = 'Not available';
       });
-    };
+    }
 
-    $scope.restartForm();
-
-    // Functions
     function update(step) {
       $scope.step = step;
       show(step);
@@ -27848,25 +27931,66 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   ManageSlotsController.$inject = ['$scope', '$location', '$routeParams', 'CalendarService'];
 
   function ManageSlotsController($scope, $location, $routeParams, CalendarService) {
-    $('tbody').css('height', $(window).height() - 200);
 
-    var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
-      return cal.url == $routeParams.name;
-    })[0];
-
-    var startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
-    var endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
-    var duration = calendar.duration;
-    var startIdx = 0;
-    var endIdx = 6;
-
-    $scope.processing = true;
-    populateSelected();
-    populateDays();
-    populateTimes();
+    // bindable variables
+    $scope.calendar = {};
+    $scope.floatTheadOptions = {};
     $scope.processing = false;
 
-    $scope.toggleSlot = function (day, time, $event) {
+    // bindable functions
+    $scope.checkIfSelected = checkIfSelected;
+    $scope.next = next;
+    $scope.prev = prev;
+    $scope.save = save;
+    $scope.saveAndPublish = saveAndPublish;
+    $scope.toggleSlot = toggleSlot;
+
+    var calendar;
+    var startDate;
+    var endDate;
+    var duration;
+    var startIdx;
+    var endIdx;
+
+    initiate();
+
+    function initiate() {
+      $scope.processing = true;
+      fetchCalendar();
+      populateCalendar();
+      initiateFloatThead();
+      $scope.processing = false;
+    }
+
+    function fetchCalendar() {
+      calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
+        return cal.url == $routeParams.name;
+      })[0];
+
+      startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
+      endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
+      duration = calendar.duration;
+      startIdx = 0;
+      endIdx = 6;
+    }
+
+    function populateCalendar() {
+      populateSelected();
+      populateDays();
+      populateTimes();
+    }
+
+    function initiateFloatThead() {
+      $('tbody').css('height', $(window).height() - 200);
+
+      $scope.floatTheadOptions = {
+        scrollContainer: function($table){
+            return $table.closest('#calendar');
+        }
+      };
+    }
+
+    function toggleSlot(day, time, $event) {
       var target = $($event.target);
       target.toggleClass('selected');
       if (target.hasClass('selected')) {
@@ -27880,37 +28004,31 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           return slot.date !== day || slot.time !== time;
         });
       }
-    };
+    }
 
-    $scope.checkIfSelected = function (day, time) {
+    function checkIfSelected(day, time) {
       return $.grep($scope.selected, function(slot) {
         return slot.date == day && slot.time == time;
       }).length !== 0;
-    };
+    }
 
-    $scope.floatTheadOptions = {
-      scrollContainer: function($table){
-          return $table.closest('#calendar');
-      }
-    };
-
-    $scope.prev = function () {
+    function prev() {
       shift(-7);
-    };
+    }
 
-    $scope.next = function () {
+    function next() {
       if ($scope.days.length < 7)
         return;
       shift(7);
-    };
+    }
 
-    $scope.save = function () {
+    function save() {
       submitSlots(calendar.published);
-    };
+    }
 
-    $scope.saveAndPublish = function () {
+    function saveAndPublish() {
       submitSlots(true);
-    };
+    }
 
     function submitSlots(published) {
       $scope.processing = true;
@@ -27992,13 +28110,19 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   SettingsController.$inject = ['$scope', 'UserService'];
 
   function SettingsController($scope, UserService) {
-    $scope.form = {};
     
-    UserService.getUserDetails(function(response) {
-      $scope.form.email = response.email;
-    });
+    $scope.form = {};
+    $scope.submitPost = submitPost;
 
-    $scope.submitPost = function () {
+    initiate();
+
+    function initiate() {
+      UserService.getUserDetails(function(response) {
+        $scope.form.email = response.email;
+      });
+    }
+
+    function submitPost() {
       if (!$scope.form.email) {
         alert('Email cannot be empty and should be properly formatted');
         return;
@@ -28007,7 +28131,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
         if (response.ok)
           alert('Success!');
       });
-    };
+    }
   }
   
 })();

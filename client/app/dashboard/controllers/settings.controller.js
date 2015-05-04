@@ -8,13 +8,19 @@
   SettingsController.$inject = ['$scope', 'UserService'];
 
   function SettingsController($scope, UserService) {
-    $scope.form = {};
     
-    UserService.getUserDetails(function(response) {
-      $scope.form.email = response.email;
-    });
+    $scope.form = {};
+    $scope.submitPost = submitPost;
 
-    $scope.submitPost = function () {
+    initiate();
+
+    function initiate() {
+      UserService.getUserDetails(function(response) {
+        $scope.form.email = response.email;
+      });
+    }
+
+    function submitPost() {
       if (!$scope.form.email) {
         alert('Email cannot be empty and should be properly formatted');
         return;
@@ -23,7 +29,7 @@
         if (response.ok)
           alert('Success!');
       });
-    };
+    }
   }
   
 })();

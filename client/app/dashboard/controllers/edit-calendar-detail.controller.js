@@ -8,25 +8,44 @@
   EditCalendarDetailController.$inject = ['$scope', '$location', '$routeParams', 'CalendarService'];
 
   function EditCalendarDetailController($scope, $location, $routeParams, CalendarService) {
-    var calendar = $.grep(CalendarService.calendars,
-      function (element) {
-        return element.url == $routeParams.name;
-      })[0];
+    
+    // bindable variables
+    $scope.calendar = {};
+    $scope.mockCalendar = {};
 
-    $scope.mockCalendar = {
-      title: calendar.title
-    };
+    // bindable functions
+    $scope.checkUrl = checkUrl;
+    $scope.submitPost = submitPost;
 
-    $scope.calendar = {
-      title: calendar.title,
-      description: calendar.description,
-      url: calendar.url,
-      duration: calendar.duration,
-      startDate: calendar.startDate.split('T')[0],
-      endDate: calendar.endDate.split('T')[0]
-    };
+    var calendar = {};
 
-    $scope.submitPost = function () {
+    initiate();
+
+    function initiate() {
+      fetchCalendar();
+    }
+
+    function fetchCalendar() {
+      calendar = $.grep(CalendarService.calendars,
+        function (element) {
+          return element.url == $routeParams.name;
+        })[0];
+
+      $scope.mockCalendar = {
+        title: calendar.title
+      };
+
+      $scope.calendar = {
+        title: calendar.title,
+        description: calendar.description,
+        url: calendar.url,
+        duration: calendar.duration,
+        startDate: calendar.startDate.split('T')[0],
+        endDate: calendar.endDate.split('T')[0]
+      };
+    }
+
+    function submitPost() {
       if (!$scope.calendar.title ||
           !$scope.calendar.description ||
           !$scope.calendar.url ||
@@ -62,9 +81,9 @@
           alert('Success!');
         }
       });
-    };
+    }
 
-    $scope.checkUrl = function () {
+    function checkUrl() {
       if (!$scope.calendar.url) {
         $scope.urlStatus = 'URL cannot be empty!';
         return;
@@ -81,7 +100,7 @@
         else
           $scope.urlStatus = 'Not available';
       });
-    };
+    }
   }
 
 })();

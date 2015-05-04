@@ -8,21 +8,46 @@
   GlobalController.$inject = ['$scope', '$location', 'CalendarService'];
 
   function GlobalController($scope, $location, CalendarService) {
-    CalendarService.getCalendars(function (calendars) {});
-    $scope.calendars = CalendarService.calendars;
 
+    // bindable variables
+    $scope.calendars = [];
     $scope.form = {};
-    var step = $scope.step = 1;
-
+    $scope.isStepOneError = false;
+    $scope.isStepTwoError = false;
     $scope.isViewLoading = false;
-    $scope.$on('$routeChangeStart', function() {
+    $scope.step = 1;
+    $scope.urlStatus = '';
+
+    // bindable functions
+    $scope.back = back;
+    $scope.checkUrl = checkUrl;
+    $scope.next = next;
+    $scope.restartForm = restartForm;
+
+    $scope.$on('$routeChangeStart', showLoading);
+    $scope.$on('$routeChangeSuccess', hideLoading);
+
+    var step = $scope.step;
+
+    initiate();
+
+    function initiate() {
+      CalendarService.getCalendars(function (calendars) {
+        $scope.calendars = calendars;
+      });
+
+      restartForm();
+    }
+
+    function showLoading() {
       $scope.isViewLoading = true;
-    });
-    $scope.$on('$routeChangeSuccess', function() {
+    }
+
+    function hideLoading() {
       $scope.isViewLoading = false;
-    });
+    }
     
-    $scope.next = function () {
+    function next() {
       if (step == 1) {
         if (!$scope.form.url || !$scope.form.title || !$scope.form.description) {
           alert('Fields cannot be empty!');
@@ -59,21 +84,21 @@
           }
         });
       }
-    };
+    }
 
-    $scope.back = function () {
+    function back() {
       step--;
       update(step);
-    };
+    }
 
-    $scope.restartForm = function () {
+    function restartForm() {
       $scope.form = {};
       $scope.urlStatus = '';
       $scope.step = step = 1;
       show(step);
-    };
+    }
 
-    $scope.checkUrl = function () {
+    function checkUrl() {
       $scope.form.url = $scope.form.url.replace(/[^\w-]+/g,'');
       if (!$scope.form.url) {
         $scope.urlStatus = 'URL cannot be empty!';
@@ -86,11 +111,8 @@
         else
           $scope.urlStatus = 'Not available';
       });
-    };
+    }
 
-    $scope.restartForm();
-
-    // Functions
     function update(step) {
       $scope.step = step;
       show(step);

@@ -8,25 +8,66 @@
   ManageSlotsController.$inject = ['$scope', '$location', '$routeParams', 'CalendarService'];
 
   function ManageSlotsController($scope, $location, $routeParams, CalendarService) {
-    $('tbody').css('height', $(window).height() - 200);
 
-    var calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
-      return cal.url == $routeParams.name;
-    })[0];
-
-    var startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
-    var endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
-    var duration = calendar.duration;
-    var startIdx = 0;
-    var endIdx = 6;
-
-    $scope.processing = true;
-    populateSelected();
-    populateDays();
-    populateTimes();
+    // bindable variables
+    $scope.calendar = {};
+    $scope.floatTheadOptions = {};
     $scope.processing = false;
 
-    $scope.toggleSlot = function (day, time, $event) {
+    // bindable functions
+    $scope.checkIfSelected = checkIfSelected;
+    $scope.next = next;
+    $scope.prev = prev;
+    $scope.save = save;
+    $scope.saveAndPublish = saveAndPublish;
+    $scope.toggleSlot = toggleSlot;
+
+    var calendar;
+    var startDate;
+    var endDate;
+    var duration;
+    var startIdx;
+    var endIdx;
+
+    initiate();
+
+    function initiate() {
+      $scope.processing = true;
+      fetchCalendar();
+      populateCalendar();
+      initiateFloatThead();
+      $scope.processing = false;
+    }
+
+    function fetchCalendar() {
+      calendar = $scope.calendar = CalendarService.calendars.filter(function(cal) {
+        return cal.url == $routeParams.name;
+      })[0];
+
+      startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
+      endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
+      duration = calendar.duration;
+      startIdx = 0;
+      endIdx = 6;
+    }
+
+    function populateCalendar() {
+      populateSelected();
+      populateDays();
+      populateTimes();
+    }
+
+    function initiateFloatThead() {
+      $('tbody').css('height', $(window).height() - 200);
+
+      $scope.floatTheadOptions = {
+        scrollContainer: function($table){
+            return $table.closest('#calendar');
+        }
+      };
+    }
+
+    function toggleSlot(day, time, $event) {
       var target = $($event.target);
       target.toggleClass('selected');
       if (target.hasClass('selected')) {
@@ -40,37 +81,31 @@
           return slot.date !== day || slot.time !== time;
         });
       }
-    };
+    }
 
-    $scope.checkIfSelected = function (day, time) {
+    function checkIfSelected(day, time) {
       return $.grep($scope.selected, function(slot) {
         return slot.date == day && slot.time == time;
       }).length !== 0;
-    };
+    }
 
-    $scope.floatTheadOptions = {
-      scrollContainer: function($table){
-          return $table.closest('#calendar');
-      }
-    };
-
-    $scope.prev = function () {
+    function prev() {
       shift(-7);
-    };
+    }
 
-    $scope.next = function () {
+    function next() {
       if ($scope.days.length < 7)
         return;
       shift(7);
-    };
+    }
 
-    $scope.save = function () {
+    function save() {
       submitSlots(calendar.published);
-    };
+    }
 
-    $scope.saveAndPublish = function () {
+    function saveAndPublish() {
       submitSlots(true);
-    };
+    }
 
     function submitSlots(published) {
       $scope.processing = true;
