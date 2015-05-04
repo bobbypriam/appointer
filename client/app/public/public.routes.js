@@ -1,12 +1,18 @@
-angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
-  config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .config(['$routeProvider', '$locationProvider', PublicRouter]);
+
+  function PublicRouter($routeProvider, $locationProvider) {
     $routeProvider.
       when('/reschedule/success', {
         templateUrl: 'partials/reschedule-success'
       }).
       when('/:name', {
         templateUrl: 'partials/index',
-        controller: 'IndexCtrl'
+        controller: 'IndexController'
       }).
       when('/:name/success', {
         templateUrl: 'partials/success'
@@ -17,4 +23,6 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
         }
       });
     $locationProvider.html5Mode(true);
-  }]);
+  }
+  
+})();

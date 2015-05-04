@@ -27387,12 +27387,14 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
   angular
     .module('appointer')
-    .filter('normalizeTitle', function normalizeTitle() {
-      return function(text) {
-        if (typeof text !== 'undefined')
-          return text.replace(/\s+/g, '-').toLowerCase();
-      };
-    });
+    .filter('normalizeTitle', normalizeTitle);
+
+  function normalizeTitle() {
+    return function(text) {
+      if (typeof text !== 'undefined')
+        return text.replace(/\s+/g, '-').toLowerCase();
+    };
+  }
   
 })();
 
@@ -27434,6 +27436,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
       });
     $locationProvider.html5Mode(true);
   }
+  
 })();
 (function () {
   'use strict';

@@ -27363,15 +27363,31 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     }
 })();
 
-angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', 'appointer.services', 'appointer.filters']).
-  config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer', [
+      'ngRoute',
+      'floatThead'
+    ]);
+
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .config(['$routeProvider', '$locationProvider', PublicRouter]);
+
+  function PublicRouter($routeProvider, $locationProvider) {
     $routeProvider.
       when('/reschedule/success', {
         templateUrl: 'partials/reschedule-success'
       }).
       when('/:name', {
         templateUrl: 'partials/index',
-        controller: 'IndexCtrl'
+        controller: 'IndexController'
       }).
       when('/:name/success', {
         templateUrl: 'partials/success'
@@ -27382,286 +27398,305 @@ angular.module('appointer', ['ngRoute', 'floatThead', 'appointer.controllers', '
         }
       });
     $locationProvider.html5Mode(true);
-  }]);
-angular.module('appointer.controllers', []);
-angular.module('appointer.filters', []).
-  filter('normalizeTitle', function() {
-    return function(text) {
-      if (typeof text !== 'undefined')
-        return text.replace(/\s+/g, '-').toLowerCase();
+  }
+  
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('IndexController', IndexController);
+
+  IndexController.$inject = ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService'];
+
+  function IndexController($scope, $location, $timeout, $routeParams, CalendarService) {
+    var startIdx = 0;
+    var endIdx = 6;
+    var startDate, endDate, duration;
+    var cal;
+    $scope.isViewLoading = true;
+
+    CalendarService.getCalendar($routeParams.name || sessionStorage.calendarName, function (calendar) {
+      $scope.calendar = cal = calendar;
+      $scope.slots = calendar.Slots;
+
+      startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
+      endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
+      duration = calendar.duration;
+
+      populateDays();
+      populateTimes();
+      populateSelected();
+      jQuery('.table').trigger('update');
+      $scope.isViewLoading = false;
+    });
+
+    $scope.clickSlot = function (day, time, $event) {
+      var target = $($event.target);
+      if (!$scope.checkIfSelected(day, time))
+        return false;
+
+      $scope.form = { appointment: {} };
+      $scope.form.slot = {
+        date: day,
+        time: time,
+        CalendarId: cal.id
+      };
+      $('.modal').modal('show');
     };
-  });
 
-angular.module('appointer.services', [])
-  .factory('CalendarService', ['$http',
-    function ($http) {
-      var model = {};
+    $scope.checkIfSelected = function (day, time) {
+      return $.grep($scope.selected, function(slot) {
+        return slot.date == day && slot.time == time;
+      }).length !== 0;
+    };
 
-      model.getCalendar = function (id, callback) {
-        $http.get('calendar/'+id).success(callback);
-      };
+    $scope.floatTheadOptions = {
+      scrollContainer: function($table){
+          return $table.closest('#calendar');
+      }
+    };
 
-      model.createAppointment = function (appointment, callback) {
-        $http.post('create-appointment', appointment).success(callback);
-      };
+    $scope.prev = function () {
+      shift(-7);
+    };
 
-      model.rescheduleAppointment = function (appointment, callback) {
-        $http.post('reschedule-appointment', appointment).success(callback);
-      };
+    $scope.next = function () {
+      if ($scope.days.length < 7)
+        return;
+      shift(7);
+    };
 
-      return model;
-    }]);
-angular.module('appointer.controllers')
-
-.controller('IndexCtrl', ['$scope', '$location', '$timeout', '$routeParams', 'CalendarService',
-    function IndexCtrl($scope, $location, $timeout, $routeParams, CalendarService) {
-      var startIdx = 0;
-      var endIdx = 6;
-      var startDate, endDate, duration;
-      var cal;
-      $scope.isViewLoading = true;
-
-      CalendarService.getCalendar($routeParams.name || sessionStorage.calendarName, function (calendar) {
-        $scope.calendar = cal = calendar;
-        $scope.slots = calendar.Slots;
-
-        startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
-        endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
-        duration = calendar.duration;
-
-        populateDays();
-        populateTimes();
-        populateSelected();
-        jQuery('.table').trigger('update');
-        $scope.isViewLoading = false;
+    $scope.submit = function () {
+      if (!$scope.form.appointment.name || !$scope.form.appointment.phone || !$scope.form.appointment.email) {
+        alert('Fields should not be empty and email should be properly formatted');
+        return; 
+      }
+      $scope.processing = true;
+      CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
+        if (response.ok) {
+          $scope.processing = false;
+          $('.modal').modal('hide');
+          $('.modal-backdrop').remove();
+          $timeout(redirectSuccess, 0);
+        }
       });
+    };
 
-      $scope.clickSlot = function (day, time, $event) {
-        var target = $($event.target);
-        if (!$scope.checkIfSelected(day, time))
-          return false;
-
-        $scope.form = { appointment: {} };
-        $scope.form.slot = {
-          date: day,
-          time: time,
-          CalendarId: cal.id
-        };
-        $('.modal').modal('show');
-      };
-
-      $scope.checkIfSelected = function (day, time) {
-        return $.grep($scope.selected, function(slot) {
-          return slot.date == day && slot.time == time;
-        }).length !== 0;
-      };
-
-      $scope.floatTheadOptions = {
-        scrollContainer: function($table){
-            return $table.closest('#calendar');
-        }
-      };
-
-      $scope.prev = function () {
-        shift(-7);
-      };
-
-      $scope.next = function () {
-        if ($scope.days.length < 7)
-          return;
-        shift(7);
-      };
-
-      $scope.submit = function () {
-        if (!$scope.form.appointment.name || !$scope.form.appointment.phone || !$scope.form.appointment.email) {
-          alert('Fields should not be empty and email should be properly formatted');
-          return; 
-        }
-        $scope.processing = true;
-        CalendarService.createAppointment({ appointment: $scope.form }, function(response) {
-          if (response.ok) {
-            $scope.processing = false;
-            $('.modal').modal('hide');
-            $('.modal-backdrop').remove();
-            $timeout(redirectSuccess, 0);
-          }
-        });
-      };
-
-      function shift(inc) {
-        if (startIdx + inc >= 0) {
-          $scope.isViewLoading = true;
-          startIdx += inc;
-          endIdx += inc;
-          populateDays();
-          $scope.isViewLoading = false;
-        }
-      }
-
-      function populateSelected() {
-        $scope.selected = [];
-        $scope.slots.forEach(function (slot) {
-          if (!slot.status)
-            $scope.selected.push({
-              date: slot.date.split('T')[0],
-              time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1]
-            });
-        });
-      }
-
-      function populateDays() {
-        $scope.days = [];
-        for (var i = startIdx; i <= endIdx; i++) {
-          var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-          current.setTime(startDate.getTime());
-          current.setDate(startDate.getDate() + i);
-          current = new Date(current.getTime());
-          if (current.getTime() <= endDate.getTime()) {
-            $scope.days.push(current.getFullYear() + '-' +
-                             (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
-                             (current.getDate() < 10 ? '0' : '') + current.getDate());
-          }
-        }
-      }
-
-      function populateTimes() {
-        var d = new Date();
-        d.setHours(7, 0);
-
-        $scope.times = [];
-        while (d.getHours() < 21) {
-          $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
-          d.setMinutes(d.getMinutes() + duration);
-        }
-      }
-
-      function redirectSuccess() {
-        $location.path(cal.url + '/success');
-      }
-    }]);
-angular.module('appointer.controllers')
-
-.controller('RescheduleCtrl', ['$scope', '$location', '$timeout', 'CalendarService',
-    function RescheduleCtrl($scope, $location, $timeout, CalendarService) {
-      var startIdx = 0;
-      var endIdx = 6;
-      var startDate, endDate, duration;
-      var cal;
-      var oldAppointment = $scope.oldAppointment = JSON.parse(sessionStorage.appointment);
-      $scope.isViewLoading = true;
-
-      CalendarService.getCalendar(sessionStorage.calendarName, function (calendar) {
-        $scope.calendar = cal = calendar;
-        $scope.slots = calendar.Slots;
-
-        startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
-        endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
-        duration = calendar.duration;
-
+    function shift(inc) {
+      if (startIdx + inc >= 0) {
+        $scope.isViewLoading = true;
+        startIdx += inc;
+        endIdx += inc;
         populateDays();
-        populateTimes();
-        populateSelected();
-        jQuery('.table').trigger('update');
         $scope.isViewLoading = false;
+      }
+    }
+
+    function populateSelected() {
+      $scope.selected = [];
+      $scope.slots.forEach(function (slot) {
+        if (!slot.status)
+          $scope.selected.push({
+            date: slot.date.split('T')[0],
+            time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1]
+          });
       });
+    }
 
-      $scope.success = false;
-
-      $scope.clickSlot = function (day, time, $event) {
-        var target = $($event.target);
-        if (!$scope.checkIfSelected(day, time))
-          return false;
-
-        $scope.form = {};
-        $scope.form.slot = {
-          date: day,
-          time: time,
-          CalendarId: cal.id
-        };
-        $scope.form.appointmentId = oldAppointment.id;
-        $('#reschedule-modal').modal('show');
-      };
-
-      $scope.checkIfSelected = function (day, time) {
-        return $.grep($scope.selected, function(slot) {
-          return slot.date == day && slot.time == time;
-        }).length !== 0;
-      };
-
-      $scope.floatTheadOptions = {
-        scrollContainer: function($table){
-            return $table.closest('#calendar');
-        }
-      };
-
-      $scope.prev = function () {
-        shift(-7);
-      };
-
-      $scope.next = function () {
-        if ($scope.days.length < 7)
-          return;
-        shift(7);
-      };
-
-      $scope.submit = function () {
-        $scope.processing = true;
-        CalendarService.rescheduleAppointment($scope.form, function(response) {
-          if (response.ok) {
-            $scope.processing = false;
-            redirectSuccess();
-          }
-        });
-      };
-
-      function shift(inc) {
-        if (startIdx + inc >= 0) {
-          $scope.isViewLoading = true;
-          startIdx += inc;
-          endIdx += inc;
-          populateDays();
-          $scope.isViewLoading = false;
+    function populateDays() {
+      $scope.days = [];
+      for (var i = startIdx; i <= endIdx; i++) {
+        var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        current.setTime(startDate.getTime());
+        current.setDate(startDate.getDate() + i);
+        current = new Date(current.getTime());
+        if (current.getTime() <= endDate.getTime()) {
+          $scope.days.push(current.getFullYear() + '-' +
+                           (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
+                           (current.getDate() < 10 ? '0' : '') + current.getDate());
         }
       }
+    }
 
-      function populateSelected() {
-        $scope.selected = [];
-        $scope.slots.forEach(function (slot) {
-          if (!slot.status)
-            $scope.selected.push({
-              date: slot.date.split('T')[0],
-              time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1]
-            });
-        });
+    function populateTimes() {
+      var d = new Date();
+      d.setHours(7, 0);
+
+      $scope.times = [];
+      while (d.getHours() < 21) {
+        $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
+        d.setMinutes(d.getMinutes() + duration);
       }
+    }
 
-      function populateDays() {
-        $scope.days = [];
-        for (var i = startIdx; i <= endIdx; i++) {
-          var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-          current.setTime(startDate.getTime());
-          current.setDate(startDate.getDate() + i);
-          current = new Date(current.getTime());
-          if (current.getTime() <= endDate.getTime()) {
-            $scope.days.push(current.getFullYear() + '-' +
-                             (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
-                             (current.getDate() < 10 ? '0' : '') + current.getDate());
-          }
+    function redirectSuccess() {
+      $location.path(cal.url + '/success');
+    }
+  }
+
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('RescheduleController', RescheduleController);
+
+  RescheduleController.$inject = ['$scope', '$location', '$timeout', 'CalendarService'];
+
+  function RescheduleController($scope, $location, $timeout, CalendarService) {
+    var startIdx = 0;
+    var endIdx = 6;
+    var startDate, endDate, duration;
+    var cal;
+    var oldAppointment = $scope.oldAppointment = JSON.parse(sessionStorage.appointment);
+    $scope.isViewLoading = true;
+
+    CalendarService.getCalendar(sessionStorage.calendarName, function (calendar) {
+      $scope.calendar = cal = calendar;
+      $scope.slots = calendar.Slots;
+
+      startDate = new Date(calendar.startDate.substring(0, calendar.startDate.indexOf('T')));
+      endDate = new Date(calendar.endDate.substring(0, calendar.endDate.indexOf('T')));
+      duration = calendar.duration;
+
+      populateDays();
+      populateTimes();
+      populateSelected();
+      jQuery('.table').trigger('update');
+      $scope.isViewLoading = false;
+    });
+
+    $scope.success = false;
+
+    $scope.clickSlot = function (day, time, $event) {
+      var target = $($event.target);
+      if (!$scope.checkIfSelected(day, time))
+        return false;
+
+      $scope.form = {};
+      $scope.form.slot = {
+        date: day,
+        time: time,
+        CalendarId: cal.id
+      };
+      $scope.form.appointmentId = oldAppointment.id;
+      $('#reschedule-modal').modal('show');
+    };
+
+    $scope.checkIfSelected = function (day, time) {
+      return $.grep($scope.selected, function(slot) {
+        return slot.date == day && slot.time == time;
+      }).length !== 0;
+    };
+
+    $scope.floatTheadOptions = {
+      scrollContainer: function($table){
+          return $table.closest('#calendar');
+      }
+    };
+
+    $scope.prev = function () {
+      shift(-7);
+    };
+
+    $scope.next = function () {
+      if ($scope.days.length < 7)
+        return;
+      shift(7);
+    };
+
+    $scope.submit = function () {
+      $scope.processing = true;
+      CalendarService.rescheduleAppointment($scope.form, function(response) {
+        if (response.ok) {
+          $scope.processing = false;
+          redirectSuccess();
+        }
+      });
+    };
+
+    function shift(inc) {
+      if (startIdx + inc >= 0) {
+        $scope.isViewLoading = true;
+        startIdx += inc;
+        endIdx += inc;
+        populateDays();
+        $scope.isViewLoading = false;
+      }
+    }
+
+    function populateSelected() {
+      $scope.selected = [];
+      $scope.slots.forEach(function (slot) {
+        if (!slot.status)
+          $scope.selected.push({
+            date: slot.date.split('T')[0],
+            time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1]
+          });
+      });
+    }
+
+    function populateDays() {
+      $scope.days = [];
+      for (var i = startIdx; i <= endIdx; i++) {
+        var current = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        current.setTime(startDate.getTime());
+        current.setDate(startDate.getDate() + i);
+        current = new Date(current.getTime());
+        if (current.getTime() <= endDate.getTime()) {
+          $scope.days.push(current.getFullYear() + '-' +
+                           (current.getMonth() < 10 ? '0' : '') + (current.getMonth() + 1) + '-' +
+                           (current.getDate() < 10 ? '0' : '') + current.getDate());
         }
       }
+    }
 
-      function populateTimes() {
-        var d = new Date();
-        d.setHours(7, 0);
+    function populateTimes() {
+      var d = new Date();
+      d.setHours(7, 0);
 
-        $scope.times = [];
-        while (d.getHours() < 21) {
-          $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
-          d.setMinutes(d.getMinutes() + duration);
-        }
+      $scope.times = [];
+      while (d.getHours() < 21) {
+        $scope.times.push((d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes());
+        d.setMinutes(d.getMinutes() + duration);
       }
+    }
 
-      function redirectSuccess() {
-        $scope.success = true;
-      }
-    }]);
+    function redirectSuccess() {
+      $scope.success = true;
+    }
+  }
+
+})();
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .factory('CalendarService', CalendarService);
+
+  CalendarService.$inject = ['$http'];
+
+  function CalendarService($http) {
+    var model = {};
+
+    model.getCalendar = function (id, callback) {
+      $http.get('calendar/'+id).success(callback);
+    };
+
+    model.createAppointment = function (appointment, callback) {
+      $http.post('create-appointment', appointment).success(callback);
+    };
+
+    model.rescheduleAppointment = function (appointment, callback) {
+      $http.post('reschedule-appointment', appointment).success(callback);
+    };
+
+    return model;
+  }
+
+})();
