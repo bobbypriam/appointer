@@ -4,7 +4,8 @@
   angular
     .module('appointer', [
       'ngRoute',
-      'floatThead'
+      'floatThead',
+      '720kb.socialshare'
     ]);
 
 })();

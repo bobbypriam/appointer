@@ -30,7 +30,13 @@ h1 {{ calendar.title }}
   .col-md-8
     h3.sub-header Public URL
     p Share this URL to your audience for booking.
-    p: code.url(ng-click="redirectToCalendar(calendar.url)") http://ppl-b02.cs.ui.ac.id#{baseurl}{{ calendar.url }}
+    p
+      code.url(ng-click="redirectToCalendar(calendar.url)") http://ppl-b02.cs.ui.ac.id#{baseurl}{{ calendar.url }}
+    p
+      | Share via 
+      a.btn.btn-primary.btn-xs(socialshare, socialshare-provider='twitter', socialshare-text='{{ calendar.title }}', socialshare-url='http://ppl-b02.cs.ui.ac.id'+baseurl+'{{ calendar.url }}') Twitter
+      |  
+      a.btn.btn-primary.btn-xs(socialshare, socialshare-provider='facebook', socialshare-url='http://ppl-b02.cs.ui.ac.id'+baseurl+'{{ calendar.url }}') Facebook
 
 .row
   .col-md-4.details

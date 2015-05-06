@@ -40,6 +40,7 @@ gulp.task('concat-uglify-js', ['lint'], function () {
                             'client/assets/vendor/angular/angular.js',
                             'client/assets/vendor/angular/angular-route.js',
                             'client/assets/vendor/angular/angular-floatThead.js',
+                            'client/assets/vendor/socialshare/angular-socialshare.js',
                             'client/app/dashboard/**/*.module.js',
                             'client/app/dashboard/**/*.js'])
                       .pipe(concat('dashboard.js'))
