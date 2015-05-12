@@ -81,13 +81,18 @@ var HomeController = {
 
   getFeedback: function (req, res, next) {
     res.render('feedback', {
-      title: 'Give Feedback | Appointer'
+      title: 'Give Feedback | Appointer',
+      captcha: req.recaptcha
     });
   },
 
   postFeedback: function (req, res, next) {
-    var feedback = req.body;
-    res.send(feedback);
+    if (!req.recaptcha.error) {
+      var feedback = req.body;
+      res.send(feedback);
+    } else {
+      res.send('error');
+    }
   }
 };
 

@@ -15,5 +15,10 @@ block content
                 input.form-control(type='email', name='email', placeholder='Email Address', required)
               .form-group
                 textarea.form-control(name='content', placeholder='What do you want to say about Appointer?')
+              .center-block
+                .g-recaptcha.form-group(data-sitekey='6LfwugYTAAAAAIS1gHu2H_9wGiEb6ind8_yh3mir')
               .form-group
                 input.form-control.btn.btn-primary(type='submit', value='Submit Feedback')
+
+block js
+  script(src='https://www.google.com/recaptcha/api.js')

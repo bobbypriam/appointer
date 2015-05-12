@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var recaptcha = require('./configs/recaptcha');
+
 var HomeController = require('./controllers/Home');
 var DashboardController = require('./controllers/Dashboard');
 var PublicCalendarController = require('./controllers/PublicCalendar');
@@ -13,8 +15,8 @@ router.get('/logout', HomeController.getLogout);
 router.get('/register', HomeController.getRegister);
 router.post('/register', HomeController.postRegister);
 router.get('/getting-started', HomeController.getUsageDemo);
-router.get('/feedback', HomeController.getFeedback);
-router.post('/feedback', HomeController.postFeedback);
+router.get('/feedback', recaptcha.middleware.render, HomeController.getFeedback);
+router.post('/feedback', recaptcha.middleware.verify, HomeController.postFeedback);
 
 // dashboard routes
 router.get('/dashboard', DashboardController.getIndex);
