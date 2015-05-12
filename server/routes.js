@@ -12,6 +12,9 @@ router.get('/sso-login', HomeController.doLogin);
 router.get('/logout', HomeController.getLogout);
 router.get('/register', HomeController.getRegister);
 router.post('/register', HomeController.postRegister);
+router.get('/getting-started', HomeController.getUsageDemo);
+router.get('/feedback', HomeController.getFeedback);
+router.post('/feedback', HomeController.postFeedback);
 
 // dashboard routes
 router.get('/dashboard', DashboardController.getIndex);

@@ -71,6 +71,23 @@ var HomeController = {
           res.redirect(res.locals.baseurl+'dashboard');
         });
       });
+  },
+
+  getUsageDemo: function (req, res, next) {
+    res.render('usage-demo', {
+      title: 'Getting Started - Usage Demonstration | Appointer'
+    });
+  },
+
+  getFeedback: function (req, res, next) {
+    res.render('feedback', {
+      title: 'Give Feedback | Appointer'
+    });
+  },
+
+  postFeedback: function (req, res, next) {
+    var feedback = req.body;
+    res.send(feedback);
   }
 };
 
