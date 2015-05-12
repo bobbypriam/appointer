@@ -1,5 +1,6 @@
 var cas = require('../configs/cas');
 var User = require('../models').User;
+var Feedback = require('../models').Feedback;
 
 var HomeController = {
 
@@ -80,18 +81,26 @@ var HomeController = {
   },
 
   getFeedback: function (req, res, next) {
+    var message = req.session.message;
+    delete req.session.message;
     res.render('feedback', {
       title: 'Give Feedback | Appointer',
-      captcha: req.recaptcha
+      captcha: req.recaptcha,
+      message: message
     });
   },
 
   postFeedback: function (req, res, next) {
     if (!req.recaptcha.error) {
       var feedback = req.body;
-      res.send(feedback);
+      Feedback.create(feedback)
+        .then(function () {
+          req.session.message = { type: 'success', content: 'Response recorded! Thank you.' };
+          res.redirect(res.locals.baseurl+'feedback');
+        });
     } else {
-      res.send('error');
+      req.session.message = { type: 'danger', content: 'Whoops! Wrong recaptcha.' };
+      res.redirect(res.locals.baseurl+'feedback');
     }
   }
 };

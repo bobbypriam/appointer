@@ -8,6 +8,8 @@ block content
           .panel-body
             h2 We'd love to hear from you!
             p The focus is you, so tell us what you think.
+            if message
+              div(class='alert alert-' + message.type) #{ message.content }
             form.form(action=baseurl+'feedback', method='post')
               .form-group
                 input.form-control(type='text', name='name', placeholder='Name', required)
