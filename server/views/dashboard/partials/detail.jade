@@ -17,7 +17,9 @@ h1 {{ calendar.title }}
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#close-calendar-modal') {{ calendar.closed ? 'Reopen calendar' : 'Close calendar' }}
       li(role='presentation')
-        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#background-modal') Change Calendar Background
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#background-modal') Change calendar background
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#custom-notification-modal') Set custom notification
       li.divider(role='presentation')
       li.dropdown-header(role='presentation') Appointments
       li(role='presentation')
@@ -105,7 +107,6 @@ h1 {{ calendar.title }}
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
         button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='toggleClose($event)') {{ calendar.closed ? 'Reopen' : 'Close' }}
 
-
 #background-modal.modal.fade
   .modal-dialog
     .modal-content
@@ -117,7 +118,21 @@ h1 {{ calendar.title }}
         .row.text-center
           .col-md-4(ng-repeat='color in colors')
             .background-select.thumbnail.center-block(style="background:{{ color }};width:120px;height:120px;cursor:pointer;", ng-click="selectColor(color)")
-        .selected-color {{ selectedColor }}
+        .hidden.selected-color {{ selectedColor }}
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+        button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='changeBackground($event)') Save
+
+#custom-notification-modal.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4 Set Custom Notification
+      .modal-body
+        p Notif here
 
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
