@@ -11,6 +11,10 @@
         templateUrl: 'dashboard/partials/index',
         controller: 'IndexController'
       }).
+      when('/dashboard/closed-calendars', {
+        templateUrl: 'dashboard/partials/closed-calendars',
+        controller: 'ClosedCalendarsController'
+      }).
       when('/dashboard/settings', {
         templateUrl: 'dashboard/partials/settings',
         controller: 'SettingsController'

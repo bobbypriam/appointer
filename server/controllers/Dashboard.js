@@ -50,6 +50,7 @@ var DashboardController = {
       startDate: req.body.start,
       endDate: req.body.end,
       published: false,
+      closed: false,
       UserId: req.session.user.id
     };
     Calendar.create(calendar)

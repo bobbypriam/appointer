@@ -1,0 +1,24 @@
+ol.breadcrumb
+  li: a(href=baseurl+'dashboard') Dashboard
+  li.active Closed Calendars
+
+h1.page-header Closed Calendars
+
+.row
+  .col-md-12
+    table.table
+      thead
+        tr
+          th Title
+          th URL
+          th Status
+      tbody
+        tr(ng-repeat='calendar in calendars')
+          td: a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
+          td {{ calendar.url }}
+          td {{ calendar.published ? 'Published' : 'Not published' }}
+        tr(ng-if='isLoaded && !calendars.length')
+          td(colspan='3', class='text-center') No closed calendar. 
+        tr(ng-if='!isLoaded')
+          .loader-container.loader-container-small(ng-if='!isLoaded')
+            .loader.loader-small.text-center

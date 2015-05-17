@@ -8,7 +8,9 @@
   IndexController.$inject = ['$scope', 'CalendarService'];
 
   function IndexController($scope, CalendarService) {
-    $scope.calendars = CalendarService.calendars;
+    $scope.calendars = CalendarService.calendars.filter(function (calendar) {
+      return !calendar.closed;
+    });
     $scope.isLoaded = false;
     $scope.isLoadedAppointments = false;
     $scope.todaysAppointments = [];
