@@ -36,7 +36,7 @@ var DashboardController = {
     Calendar.find({
       where: { url: url }
     }).then(function (calendar) {
-      var ok = !calendar ? true : false;
+      var ok = !calendar;
       res.json({ ok: ok });
     });
   },
@@ -119,11 +119,12 @@ var DashboardController = {
   },
 
   getAppointmentList: function (req, res, next) {
+    var whereClause = { status: true };
+    if (req.params.id)
+      whereClause.CalendarId = req.params.id;
+
     Slot.findAll({
-      where: {
-        CalendarId: req.params.id,
-        status: true
-      },
+      where: whereClause,
       order: 'date',
       include: [ Appointment ]
     }).then(function (slots) {
@@ -139,7 +140,7 @@ var DashboardController = {
 
   postDeleteAppointment: function (req, res, next) {
     var appointmentToDelete = req.body.appointment;
-   Appointment.find({ where: { id: appointmentToDelete.id } })
+    Appointment.find({ where: { id: appointmentToDelete.id } })
       .then(function (appointment) {
         if (appointment)
           appointment.destroy().then(function () {
