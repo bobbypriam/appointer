@@ -28147,11 +28147,38 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   function IndexController($scope, CalendarService) {
     $scope.calendars = CalendarService.calendars;
     $scope.isLoaded = false;
-    while(true)
-      if ($scope.calendars) {
-        $scope.isLoaded = true;
-        break;
-      }
+    $scope.isLoadedAppointments = false;
+    $scope.todaysAppointments = [];
+
+    initialize();
+
+    function initialize() {
+      // Blocking! TODO: change to async call with timeout
+      while(true)
+        if ($scope.calendars) {
+          $scope.isLoaded = true;
+          break;
+        }
+
+      fetchTodaysAppointment();
+    }
+
+    function fetchTodaysAppointment() {
+      CalendarService.getTodaysAppointment(function (response) {
+        if (response.ok) {
+          var slots = response.slots;
+          $scope.todaysAppointments = [];
+          slots.forEach(function (slot) {
+            $scope.todaysAppointments.push({
+              date: slot.date.split('T')[0],
+              time: slot.time.split(':')[0] + ':' + slot.time.split(':')[1],
+              name: slot.Appointment.name
+            });
+          });
+          $scope.isLoadedAppointments = true;
+        }
+      });
+    }
   }
 
 })();
@@ -28423,6 +28450,10 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
     model.postAskForReschedule = function (data, callback) {
       $http.post('dashboard/appointments/reschedule', data).success(callback);
+    };
+
+    model.getTodaysAppointment = function (callback) {
+      $http.get('dashboard/appointments/get').success(callback);
     };
 
     return model;

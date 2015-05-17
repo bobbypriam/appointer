@@ -7,26 +7,50 @@ h1.page-header Dashboard
   .col-md-12
     p Welcome to your Appointer dashboard!
 
-h2.sub-header My Calendars 
-  button(type='button', class='btn btn-primary btn-xs', data-toggle='modal', data-target='#new-calendar-modal') Create New
-
 .row
-  .col-md-12
-    table.table
-      thead
-        tr
-          th Title
-          th URL
-          th Status
-      tbody
-        tr(ng-repeat='calendar in calendars')
-          td: a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
-          td {{ calendar.url }}
-          td {{ calendar.published ? 'Published' : 'Not published' }}
-        tr(ng-if='isLoaded && !calendars.length')
-          td(colspan='3', class='text-center') No calendars yet. 
-            a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create one now.
-        tr(ng-if='!isLoaded')
-          .loader-container.loader-container-small(ng-if='!isLoaded')
-            .loader.loader-small.text-center
-          
+  .col-md-6
+    h2.sub-header My Calendars 
+      button(type='button', class='btn btn-primary btn-xs', data-toggle='modal', data-target='#new-calendar-modal') Create New
+
+    .row
+      .col-md-12
+        table.table
+          thead
+            tr
+              th Title
+              th URL
+              th Status
+          tbody
+            tr(ng-repeat='calendar in calendars')
+              td: a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
+              td {{ calendar.url }}
+              td {{ calendar.published ? 'Published' : 'Not published' }}
+            tr(ng-if='isLoaded && !calendars.length')
+              td(colspan='3', class='text-center') No calendars yet. 
+                a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create one now.
+            tr(ng-if='!isLoaded')
+              .loader-container.loader-container-small(ng-if='!isLoaded')
+                .loader.loader-small.text-center
+
+  .col-md-6
+    h2.sub-header Today's Appointment
+
+    .row
+      .col-md-12
+        table.table
+          thead
+            tr
+              th Date
+              th Time
+              th Appointment Maker
+          tbody
+            tr(ng-repeat='appointment in todaysAppointments')
+              td {{ appointment.date | date: 'd MMM y' }}
+              td {{ appointment.time }}
+              td {{ appointment.name }}
+            tr(ng-if='isLoadedAppointments && !todaysAppointments.length')
+              td(colspan='3', class='text-center') No appointments for today. 
+            tr(ng-if='!isLoadedAppointments')
+              .loader-container.loader-container-small(ng-if='!isLoadedAppointments')
+                .loader.loader-small.text-center
+              

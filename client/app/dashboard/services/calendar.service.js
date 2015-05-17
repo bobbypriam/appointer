@@ -54,6 +54,10 @@
       $http.post('dashboard/appointments/reschedule', data).success(callback);
     };
 
+    model.getTodaysAppointment = function (callback) {
+      $http.get('dashboard/appointments/get').success(callback);
+    };
+
     return model;
   }
 
