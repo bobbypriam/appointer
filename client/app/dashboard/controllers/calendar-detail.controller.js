@@ -5,9 +5,9 @@
     .module('appointer')
     .controller('CalendarDetailController', CalendarDetailController);
 
-  CalendarDetailController.$inject = ['$scope', '$window', '$location', '$routeParams', 'CalendarService'];
+  CalendarDetailController.$inject = ['$rootScope', '$scope', '$window', '$location', '$routeParams', 'CalendarService'];
 
-  function CalendarDetailController($scope, $window, $location, $routeParams, CalendarService) {
+  function CalendarDetailController($rootScope, $scope, $window, $location, $routeParams, CalendarService) {
     
     // bindable variables
     $scope.calendar = {};
@@ -19,6 +19,7 @@
     $scope.delete = deleteCalendar;
     $scope.redirectToCalendar = redirectToCalendar;
     $scope.togglePublish = togglePublish;
+    $scope.toggleClose = toggleClose;
 
     var calendar = {};
 
@@ -63,17 +64,35 @@
     }
 
     function togglePublish($event) {
+      toggleCalendar($event, true);
+    }
+
+    function toggleClose($event) {
+      toggleCalendar($event, false);
+    }
+
+    function toggleCalendar($event, publish) {
       $event.preventDefault();
       var newCal = {
         id: calendar.id,
-        published: !calendar.published
+        published: publish ? !calendar.published : calendar.published,
+        closed: publish ? calendar.closed : !calendar.closed
       };
+
       CalendarService.updateCalendar(newCal, function (response) {
         if (response.ok) {
           CalendarService.getCalendars(function (calendar) {});
-          calendar.published = !calendar.published;
+          calendar.published = newCal.published;
+          calendar.closed = newCal.closed;
+          refreshMyCalendar();
         }
       });
+    }
+
+    function refreshMyCalendar() {
+      var globalControllerElement = document.querySelector('.body');
+      var globalControllerScope = angular.element(globalControllerElement).scope();
+      globalControllerScope.initiate();
     }
 
     function checkTitle() {

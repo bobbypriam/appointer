@@ -14,6 +14,8 @@ h1 {{ calendar.title }}
         a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/slots') Manage slots
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#publish-calendar-modal') {{ calendar.published ? 'Unpublish calendar' : 'Publish calendar' }}
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#close-calendar-modal') {{ calendar.closed ? 'Reopen calendar' : 'Close calendar' }}
       li.divider(role='presentation')
       li.dropdown-header(role='presentation') Appointments
       li(role='presentation')
@@ -86,6 +88,20 @@ h1 {{ calendar.title }}
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
         button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='togglePublish($event)') {{ calendar.published ? 'Unpublish' : 'Publish' }}
+
+#close-calendar-modal.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4 {{ calendar.closed ? 'Reopen Calendar' : 'Close Calendar' }}
+      .modal-body
+        p You are about to {{ calendar.closed ? 'reopen' : 'close' }} this calendar. Are you sure?
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+        button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='toggleClose($event)') {{ calendar.closed ? 'Reopen' : 'Close' }}
 
 #delete-calendar-modal.modal.fade
   .modal-dialog

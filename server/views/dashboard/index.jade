@@ -31,6 +31,7 @@ block content
                 li(ng-repeat='calendar in calendars')
                   a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
                 li.text-center: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create New...
+            li: a(href=baseurl+'dashboard/closed-calendars') Closed Calendars
             li: a(href=baseurl+'dashboard/settings') Settings
         
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main

@@ -21,6 +21,7 @@
     // bindable functions
     $scope.back = back;
     $scope.checkUrl = checkUrl;
+    $scope.initiate = initiate;
     $scope.next = next;
     $scope.restartForm = restartForm;
 
@@ -33,7 +34,9 @@
 
     function initiate() {
       CalendarService.getCalendars(function (calendars) {
-        $scope.calendars = calendars;
+        $scope.calendars = calendars.filter(function (calendar) {
+          return !calendar.closed;
+        });
       });
 
       restartForm();

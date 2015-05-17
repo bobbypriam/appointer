@@ -27645,6 +27645,10 @@ function ngViewFillContentFactory($compile, $controller, $route) {
         templateUrl: 'dashboard/partials/index',
         controller: 'IndexController'
       }).
+      when('/dashboard/closed-calendars', {
+        templateUrl: 'dashboard/partials/closed-calendars',
+        controller: 'ClosedCalendarsController'
+      }).
       when('/dashboard/settings', {
         templateUrl: 'dashboard/partials/settings',
         controller: 'SettingsController'
@@ -27801,9 +27805,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     .module('appointer')
     .controller('CalendarDetailController', CalendarDetailController);
 
-  CalendarDetailController.$inject = ['$scope', '$window', '$location', '$routeParams', 'CalendarService'];
+  CalendarDetailController.$inject = ['$rootScope', '$scope', '$window', '$location', '$routeParams', 'CalendarService'];
 
-  function CalendarDetailController($scope, $window, $location, $routeParams, CalendarService) {
+  function CalendarDetailController($rootScope, $scope, $window, $location, $routeParams, CalendarService) {
     
     // bindable variables
     $scope.calendar = {};
@@ -27815,6 +27819,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     $scope.delete = deleteCalendar;
     $scope.redirectToCalendar = redirectToCalendar;
     $scope.togglePublish = togglePublish;
+    $scope.toggleClose = toggleClose;
 
     var calendar = {};
 
@@ -27859,17 +27864,35 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     }
 
     function togglePublish($event) {
+      toggleCalendar($event, true);
+    }
+
+    function toggleClose($event) {
+      toggleCalendar($event, false);
+    }
+
+    function toggleCalendar($event, publish) {
       $event.preventDefault();
       var newCal = {
         id: calendar.id,
-        published: !calendar.published
+        published: publish ? !calendar.published : calendar.published,
+        closed: publish ? calendar.closed : !calendar.closed
       };
+
       CalendarService.updateCalendar(newCal, function (response) {
         if (response.ok) {
           CalendarService.getCalendars(function (calendar) {});
-          calendar.published = !calendar.published;
+          calendar.published = newCal.published;
+          calendar.closed = newCal.closed;
+          refreshMyCalendar();
         }
       });
+    }
+
+    function refreshMyCalendar() {
+      var globalControllerElement = document.querySelector('.body');
+      var globalControllerScope = angular.element(globalControllerElement).scope();
+      globalControllerScope.initiate();
     }
 
     function checkTitle() {
@@ -27901,6 +27924,23 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   
 })();
 
+(function () {
+  'use strict';
+
+  angular
+    .module('appointer')
+    .controller('ClosedCalendarsController', ClosedCalendarsController);
+
+  ClosedCalendarsController.$inject = ['$scope', 'CalendarService'];
+
+  function ClosedCalendarsController($scope, CalendarService) {
+    $scope.calendars = CalendarService.calendars.filter(function (calendar) {
+      return calendar.closed;
+    });
+    $scope.isLoaded = true;
+  }
+
+})();
 (function () {
   'use strict';
 
@@ -28030,6 +28070,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     // bindable functions
     $scope.back = back;
     $scope.checkUrl = checkUrl;
+    $scope.initiate = initiate;
     $scope.next = next;
     $scope.restartForm = restartForm;
 
@@ -28042,7 +28083,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
     function initiate() {
       CalendarService.getCalendars(function (calendars) {
-        $scope.calendars = calendars;
+        $scope.calendars = calendars.filter(function (calendar) {
+          return !calendar.closed;
+        });
       });
 
       restartForm();
@@ -28145,7 +28188,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   IndexController.$inject = ['$scope', 'CalendarService'];
 
   function IndexController($scope, CalendarService) {
-    $scope.calendars = CalendarService.calendars;
+    $scope.calendars = CalendarService.calendars.filter(function (calendar) {
+      return !calendar.closed;
+    });
     $scope.isLoaded = false;
     $scope.isLoadedAppointments = false;
     $scope.todaysAppointments = [];
