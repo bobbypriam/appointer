@@ -132,7 +132,13 @@ h1 {{ calendar.title }}
           span(aria-hidden='true') &times;
         h4 Set Custom Notification
       .modal-body
-        p Notif here
+        form.form-horizontal(name='notificationForm')
+          .form-group
+            label.col-md-2.control-label Content
+            .col-md-6
+              textarea.form-control(ng-model='notificationForm.content')
+            .col-md-4
+              p.text-muted This is a help text
 
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
