@@ -12,12 +12,16 @@
     // bindable variables
     $scope.calendar = {};
     $scope.isLoadedAppointments = false;
+    $scope.colors = ['#fff', '#777', '#77e'];
+    $scope.selectedColor = '';
 
     // bindable functions
     $scope.cancelDelete = cancelDelete;
+    $scope.changeBackground = changeBackground;
     $scope.checkTitle = checkTitle;
     $scope.delete = deleteCalendar;
     $scope.redirectToCalendar = redirectToCalendar;
+    $scope.selectColor = selectColor;
     $scope.togglePublish = togglePublish;
     $scope.toggleClose = toggleClose;
 
@@ -93,6 +97,14 @@
       var globalControllerElement = document.querySelector('.body');
       var globalControllerScope = angular.element(globalControllerElement).scope();
       globalControllerScope.initiate();
+    }
+
+    function selectColor(color) {
+      $scope.selectedColor = color;
+    }
+
+    function changeBackground($event) {
+
     }
 
     function checkTitle() {

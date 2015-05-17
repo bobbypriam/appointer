@@ -16,6 +16,8 @@ h1 {{ calendar.title }}
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#publish-calendar-modal') {{ calendar.published ? 'Unpublish calendar' : 'Publish calendar' }}
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#close-calendar-modal') {{ calendar.closed ? 'Reopen calendar' : 'Close calendar' }}
+      li(role='presentation')
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#background-modal') Change Calendar Background
       li.divider(role='presentation')
       li.dropdown-header(role='presentation') Appointments
       li(role='presentation')
@@ -102,6 +104,24 @@ h1 {{ calendar.title }}
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Cancel
         button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='toggleClose($event)') {{ calendar.closed ? 'Reopen' : 'Close' }}
+
+
+#background-modal.modal.fade
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') &times;
+        h4 Change Calendar Background
+      .modal-body
+        .row.text-center
+          .col-md-4(ng-repeat='color in colors')
+            .background-select.thumbnail.center-block(style="background:{{ color }};width:120px;height:120px;cursor:pointer;", ng-click="selectColor(color)")
+        .selected-color {{ selectedColor }}
+
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+        button.btn.btn-primary(type='button', data-dismiss='modal', ng-click='changeBackground($event)') Save
 
 #delete-calendar-modal.modal.fade
   .modal-dialog
