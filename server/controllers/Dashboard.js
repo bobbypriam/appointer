@@ -122,6 +122,10 @@ var DashboardController = {
     var whereClause = { status: true };
     if (req.params.id)
       whereClause.CalendarId = req.params.id;
+    else
+      whereClause.date = {
+        $like: (new Date()).toISOString().split('T')[0] + '%'
+      };
 
     Slot.findAll({
       where: whereClause,
