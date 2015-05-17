@@ -104,7 +104,15 @@
     }
 
     function changeBackground($event) {
-
+      var newCal = {
+        id: calendar.id,
+        background: $scope.selectedColor
+      };
+      CalendarService.updateCalendar(newCal, function (response) {
+        if (response.ok) {
+          // do nothing
+        }
+      });
     }
 
     function checkTitle() {
