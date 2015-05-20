@@ -46,7 +46,7 @@ var PublicCalendarController = {
               require('crypto').randomBytes(30).toString('hex');
           Appointment.create(appointment.appointment)
             .then(function(app) {
-              res.locals.mailer.sendNewBooking(app.email, s.Calendar.User.email, s, app);
+              res.locals.mailer.sendNewBooking(app.email, s.Calendar.User.email, s, app, s.Calendar);
               res.json({ ok: true, appointment: appointment });
             });
         });
