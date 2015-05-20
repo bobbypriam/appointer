@@ -28208,9 +28208,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
   IndexController.$inject = ['$scope', 'CalendarService'];
 
   function IndexController($scope, CalendarService) {
-    $scope.calendars = CalendarService.calendars.filter(function (calendar) {
-      return !calendar.closed;
-    });
+    $scope.calendars = [];
     $scope.isLoaded = false;
     $scope.isLoadedAppointments = false;
     $scope.todaysAppointments = [];
@@ -28218,14 +28216,17 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     initialize();
 
     function initialize() {
-      // Blocking! TODO: change to async call with timeout
-      while(true)
-        if ($scope.calendars) {
-          $scope.isLoaded = true;
-          break;
-        }
-
+      fetchCalendars();
       fetchTodaysAppointment();
+    }
+
+    function fetchCalendars() {
+      CalendarService.getCalendars(function (calendars) {
+        $scope.calendars = calendars.filter(function (calendar) {
+          return !calendar.closed;
+        });
+        $scope.isLoaded = true;
+      });
     }
 
     function fetchTodaysAppointment() {
