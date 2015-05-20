@@ -8,7 +8,9 @@ module.exports = function (sequelize, DataTypes) {
     endDate: { type: DataTypes.DATE, allowNull: false, field: 'end_date' },
     published: { type: DataTypes.BOOLEAN, allowNull: false},
     closed: { type: DataTypes.BOOLEAN, allowNull: false },
-    background: { type: DataTypes.STRING, allowNull: false }
+    background: { type: DataTypes.STRING, allowNull: false },
+    userNotification: { type: DataTypes.TEXT, allowNull: false },
+    appointeeNotification: { type: DataTypes.TEXT, allowNull: false }
   }, {
     classMethods: {
       associate: function(models) {
