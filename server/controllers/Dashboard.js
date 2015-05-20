@@ -51,6 +51,9 @@ var DashboardController = {
       endDate: req.body.end,
       published: false,
       closed: false,
+      background: '#fff',
+      userNotification: '',
+      appointeeNotification: '',
       UserId: req.session.user.id
     };
     Calendar.create(calendar)
