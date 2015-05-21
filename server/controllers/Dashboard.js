@@ -14,11 +14,10 @@ var DashboardController = {
   },
 
   getUser: function (req, res, next) {
-    var user = {};
-    user.id = req.session.user.id;
-    user.username = req.session.user.username;
-    user.email = req.session.user.email;
-    res.json(user);
+    User.find(req.session.user.id)
+      .then(function (user) {
+        res.json(user);
+      });
   },
 
   getAllCalendars: function (req, res, next) {

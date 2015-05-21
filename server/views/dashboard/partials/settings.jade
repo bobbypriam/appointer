@@ -10,6 +10,11 @@ h1.page-header User Settings
       label.col-sm-2.control-label Email Address
       .col-sm-4
         input.form-control(type='email', ng-model='form.email', name='email')
+    .form-group
+      label.col-sm-2.control-label Integrate google calendar
+      .col-sm-4
+        button.btn.btn-primary(ng-if='!integrated', ng-click='configureGoogleCalendar()') Integrate
+        button.btn.btn-primary(ng-if='integrated') Integrated!
 
 .row
   .col-md-6

@@ -1,5 +1,5 @@
 var cas = require('../configs/cas');
-var gcal = require('../configs/google-calendar')
+var gcal = require('../configs/google-calendar');
 var User = require('../models').User;
 var Feedback = require('../models').Feedback;
 
@@ -122,7 +122,8 @@ var HomeController = {
             user.update({
               accessToken: tokens.access_token
             }).then(function () {
-              res.json({ ok:true });
+              // res.json({ ok:true });
+              res.send('<script type="text/javascript">window.close()</script>');
             });
           });
       });
@@ -148,7 +149,7 @@ var HomeController = {
             timeMax: today,
             timeZone: 'Asia/Jakarta',
             items: calendarList
-          }
+          };
           gcal.getCalendarFreebusy(resource, user.accessToken, function (err, freebusy) {
             if (err) return res.json(err);
             var busy = [];
