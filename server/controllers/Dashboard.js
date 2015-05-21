@@ -1,3 +1,4 @@
+var gcal = require('../configs/google-calendar');
 var models = require('../models');
 var User = models.User;
 var Calendar = models.Calendar;
@@ -86,6 +87,45 @@ var DashboardController = {
       });
       res.json({ ok: true, slots: formattedSlots });
     });
+  },
+
+  getBusyTimes: function (req, res, next) {
+    var calendarId = req.params.id;
+    Calendar.find({
+      where: { id: calendarId },
+      include: [ User ]
+    }).then(function (calendar) {
+        var user = calendar.User;
+        if (user.accessToken) {
+          gcal.getCalendarList(user.accessToken, function (err, calendars) {
+            if (err) return res.json(err);
+
+            var calendarList = [];
+            calendars.items.forEach(function (calendar) {
+              calendarList.push({ id: calendar.id });
+            });
+
+            var start = calendar.startDate;
+            var end = calendar.endDate;
+            end.setDate(end.getDate() + 1);
+            var resource = {
+              timeMin: start,
+              timeMax: end,
+              timeZone: 'Asia/Jakarta',
+              items: calendarList
+            };
+            gcal.getCalendarFreebusy(resource, user.accessToken, function (err, freebusy) {
+              if (err) return res.json(err);
+              var busy = [];
+              for (var calendar in freebusy.calendars)
+                busy = busy.concat(freebusy.calendars[calendar].busy);
+              res.json({ ok: true, busy: busy });
+            });
+          });
+        } else {
+          res.json({ ok: false });
+        }
+      });
   },
 
   postManageSlots: function (req, res, next) {
