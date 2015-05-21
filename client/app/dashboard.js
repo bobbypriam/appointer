@@ -28454,6 +28454,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
     
     $scope.form = {};
     $scope.configureGoogleCalendar = configureGoogleCalendar;
+    $scope.revokeGoogleCalendar = revokeGoogleCalendar;
     $scope.submitPost = submitPost;
     $scope.integrated = false;
 
@@ -28480,6 +28481,15 @@ function ngViewFillContentFactory($compile, $controller, $route) {
         }
       }
       check = $interval(checkChildWindow, 500);
+    }
+
+    function revokeGoogleCalendar() {
+      UserService.editUserDetails({ accessToken: null }, function(response) {
+        if (response.ok) {
+          $scope.integrated = false;
+          alert('Access to google calendar revoked.');
+        }
+      });
     }
 
     function submitPost() {

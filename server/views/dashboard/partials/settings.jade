@@ -14,7 +14,8 @@ h1.page-header User Settings
       label.col-sm-2.control-label Integrate google calendar
       .col-sm-4
         button.btn.btn-primary(ng-if='!integrated', ng-click='configureGoogleCalendar()') Integrate
-        button.btn.btn-primary(ng-if='integrated') Integrated!
+        button.btn.btn-success.disabled(ng-if='integrated') Integrated!
+        button.btn.btn-danger(ng-if='integrated', ng-click='revokeGoogleCalendar()') Revoke access
 
 .row
   .col-md-6

@@ -163,12 +163,10 @@ var DashboardController = {
   },
 
   postSettings: function (req, res, next) {
-    var email = req.body.details.email;
+    var details = req.body.details;
     User.find({ where: { id: req.session.user.id } })
       .then(function (user) {
-        user.update({
-          email: email
-        }).then(function (usr) {
+        user.update(details).then(function (usr) {
           req.session.user = usr;
           res.json({ ok: true });
         });
