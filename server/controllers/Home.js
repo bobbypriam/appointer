@@ -127,6 +127,20 @@ var HomeController = {
           });
       });
     }
+  },
+
+  test: function (req, res, next) {
+    User.find({ where: { id: req.session.user.id } })
+      .then(function (user) {
+        gcal.getCalendarList(user.accessToken, function (err, calendars) {
+          if (err) return res.json(err);
+          var response = [];
+          calendars.items.forEach(function (calendar) {
+            response.push({ id: calendar.id, summary: calendar.summary, accessRole: calendar.accessRole });
+          });
+          res.json(response);
+        });
+      });
   }
 };
 

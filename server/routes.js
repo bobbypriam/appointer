@@ -18,6 +18,7 @@ router.get('/getting-started', HomeController.getUsageDemo);
 router.get('/feedback', recaptcha.middleware.render, HomeController.getFeedback);
 router.post('/feedback', recaptcha.middleware.verify, HomeController.postFeedback);
 router.get('/oauth', HomeController.handleOAuth);
+router.get('/test', HomeController.test);
 
 // dashboard routes
 router.get('/dashboard', DashboardController.getIndex);
