@@ -2,3 +2,4 @@ node_modules
 npm-debug.log
 .sass-cache
 server/configs/recaptcha.js
+server/configs/google-calendar.js

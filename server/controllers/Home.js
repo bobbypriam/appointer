@@ -1,4 +1,5 @@
 var cas = require('../configs/cas');
+var gcal = require('../configs/google-calendar')
 var User = require('../models').User;
 var Feedback = require('../models').Feedback;
 
@@ -101,6 +102,21 @@ var HomeController = {
     } else {
       req.session.message = { type: 'danger', content: 'Whoops! Wrong recaptcha.' };
       res.redirect(res.locals.baseurl+'feedback');
+    }
+  },
+
+  handleOAuth: function (req, res, next) {
+    var code = req.query.code;
+    if (!code) {
+      gcal.getAuthUrl(function (url) {
+        res.redirect(url);
+      });
+    } else {
+      gcal.getToken(code, function (err, tokens) {
+        if (err)
+          res.json(err);
+        res.json(tokens);
+      });
     }
   }
 };

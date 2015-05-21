@@ -17,6 +17,7 @@ router.post('/register', HomeController.postRegister);
 router.get('/getting-started', HomeController.getUsageDemo);
 router.get('/feedback', recaptcha.middleware.render, HomeController.getFeedback);
 router.post('/feedback', recaptcha.middleware.verify, HomeController.postFeedback);
+router.get('/oauth', HomeController.handleOAuth);
 
 // dashboard routes
 router.get('/dashboard', DashboardController.getIndex);
