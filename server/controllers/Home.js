@@ -134,11 +134,28 @@ var HomeController = {
       .then(function (user) {
         gcal.getCalendarList(user.accessToken, function (err, calendars) {
           if (err) return res.json(err);
-          var response = [];
+
+          var calendarList = [];
           calendars.items.forEach(function (calendar) {
-            response.push({ id: calendar.id, summary: calendar.summary, accessRole: calendar.accessRole });
+            calendarList.push({ id: calendar.id });
           });
-          res.json(response);
+
+          var today = new Date();
+          var yesterday = new Date();
+          yesterday.setDate(today.getDate() - 20);
+          var resource = {
+            timeMin: yesterday,
+            timeMax: today,
+            timeZone: 'Asia/Jakarta',
+            items: calendarList
+          }
+          gcal.getCalendarFreebusy(resource, user.accessToken, function (err, freebusy) {
+            if (err) return res.json(err);
+            var busy = [];
+            for (var calendar in freebusy.calendars)
+              busy = busy.concat(freebusy.calendars[calendar].busy);
+            res.json(busy);
+          });
         });
       });
   }
