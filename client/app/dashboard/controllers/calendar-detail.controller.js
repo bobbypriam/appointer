@@ -22,6 +22,7 @@
     $scope.delete = deleteCalendar;
     $scope.redirectToCalendar = redirectToCalendar;
     $scope.selectColor = selectColor;
+    $scope.setCustomNotification = setCustomNotification;
     $scope.togglePublish = togglePublish;
     $scope.toggleClose = toggleClose;
 
@@ -107,6 +108,19 @@
       var newCal = {
         id: calendar.id,
         background: $scope.selectedColor
+      };
+      CalendarService.updateCalendar(newCal, function (response) {
+        if (response.ok) {
+          // do nothing
+        }
+      });
+    }
+
+    function setCustomNotification() {
+      var newCal = {
+        id: calendar.id,
+        userNotification: $scope.notificationForm.userNotification,
+        appointeeNotification: $scope.notificationForm.appointeeNotification
       };
       CalendarService.updateCalendar(newCal, function (response) {
         if (response.ok) {
