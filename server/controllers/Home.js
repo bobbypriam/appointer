@@ -106,6 +106,9 @@ var HomeController = {
   },
 
   handleOAuth: function (req, res, next) {
+    if (!req.session.user)
+      return res.redirect(res.locals.baseurl+'login');
+
     var code = req.query.code;
     if (!code) {
       gcal.getAuthUrl(function (url) {
@@ -113,9 +116,15 @@ var HomeController = {
       });
     } else {
       gcal.getToken(code, function (err, tokens) {
-        if (err)
-          res.json(err);
-        res.json(tokens);
+        if (err) return res.json(err);
+        User.find({ where: { id: req.session.user.id } })
+          .then(function (user) {
+            user.update({
+              accessToken: tokens.access_token
+            }).then(function () {
+              res.json({ ok:true });
+            });
+          });
       });
     }
   }
