@@ -28324,7 +28324,6 @@ function ngViewFillContentFactory($compile, $controller, $route) {
       CalendarService.getBusyTimes(calendar.id, function (response) {
         if (response.ok) {
           busyTimes = response.busy;
-          alert('success!');
         } else {
           alert('failed retrieving data.');
         }
@@ -28352,6 +28351,9 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 
     function toggleSlot(day, time, $event) {
       var target = $($event.target);
+      if (target.hasClass('busy'))
+        return;
+      alert('toggle');
       target.toggleClass('selected');
       if (target.hasClass('selected')) {
         $scope.selected.push({

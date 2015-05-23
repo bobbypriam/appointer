@@ -87,6 +87,9 @@
 
     function toggleSlot(day, time, $event) {
       var target = $($event.target);
+      if (target.hasClass('busy'))
+        return;
+      alert('toggle');
       target.toggleClass('selected');
       if (target.hasClass('selected')) {
         $scope.selected.push({
