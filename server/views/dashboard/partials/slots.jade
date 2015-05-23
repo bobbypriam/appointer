@@ -15,6 +15,8 @@ h1.page-header {{ calendar.title }}
       
       .btn-toolbar.pull-right
         .btn-group
+          button.btn.btn-default(ng-click="checkBusy()", ng-class="{ disabled: isLoadingBusyTimes }") {{ isLoadingBusyTimes ? 'Loading...' : 'Fetch Busy Times' }}
+        .btn-group
           button.btn.btn-default(ng-click="save()") Save
         .btn-group
           button.btn.btn-primary(ng-click="saveAndPublish()") Save and Publish
@@ -28,6 +30,6 @@ h1.page-header {{ calendar.title }}
         tbody
             tr(ng-repeat='time in times')
               td {{ time }}
-              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='toggleSlot(day, time, $event)', ng-class='{ "selected": checkIfSelected(day, time) }')
+              td.slot(ng-repeat='day in days', data-day='{{ day }}', data-time='{{ time }}', ng-click='toggleSlot(day, time, $event)', ng-class='{ selected: checkIfSelected(day, time) }') 
     .loader-container(ng-if='processing')
       .loader.loader-big

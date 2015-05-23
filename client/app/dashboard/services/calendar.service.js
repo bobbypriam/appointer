@@ -58,6 +58,10 @@
       $http.get('dashboard/appointments/get').success(callback);
     };
 
+    model.getBusyTimes = function (id, callback) {
+      $http.get('dashboard/slots/busy/'+id).success(callback);
+    };
+
     return model;
   }
 

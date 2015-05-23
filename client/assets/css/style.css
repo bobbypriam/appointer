@@ -4916,6 +4916,8 @@ button.close {
     margin-bottom: 0; }
   #calendar .slot.selected {
     background: #5195ce; }
+  #calendar .slot.busy {
+    background: #888; }
 
 table.floatThead-table {
   background-color: #fff; }

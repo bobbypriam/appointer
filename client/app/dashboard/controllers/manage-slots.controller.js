@@ -15,6 +15,8 @@
     $scope.processing = false;
 
     // bindable functions
+    $scope.checkBusy = checkBusy;
+    $scope.checkIfBusy = checkIfBusy;
     $scope.checkIfSelected = checkIfSelected;
     $scope.next = next;
     $scope.prev = prev;
@@ -28,6 +30,8 @@
     var duration;
     var startIdx;
     var endIdx;
+
+    var busyTimes = [];
 
     initiate();
 
@@ -51,7 +55,21 @@
       endIdx = 6;
     }
 
-    function populateCalendar() {
+    function fetchBusyTimes(callback) {
+      $scope.isLoadingBusyTimes = true;
+      CalendarService.getBusyTimes(calendar.id, function (response) {
+        if (response.ok) {
+          busyTimes = response.busy;
+        } else {
+          alert('failed retrieving data.');
+        }
+
+        $scope.isLoadingBusyTimes = false;
+        callback();
+      });
+    }
+
+    function populateCalendar(callback) {
       populateSelected();
       populateDays();
       populateTimes();
@@ -81,6 +99,31 @@
           return slot.date !== day || slot.time !== time;
         });
       }
+    }
+
+    function checkBusy() {
+      fetchBusyTimes(function () {
+        $('.slot').each(function() {
+          var $this = $(this);
+          var day = $this.data('day');
+          var time = $this.data('time');
+          var busy = checkIfBusy(day, time);
+          console.log(busy);
+          if (busy)
+            $this.addClass('busy');
+        });
+      });
+    }
+
+    function checkIfBusy(day, time) {
+      var concatenatedDateTime = day + 'T' + time + ':01+07:00';
+      for (var i = 0; i < busyTimes.length; i++) {
+        if (busyTimes[i].start < concatenatedDateTime &&
+            busyTimes[i].end > concatenatedDateTime) {
+          return true;
+        }
+      }
+      return false;
     }
 
     function checkIfSelected(day, time) {
