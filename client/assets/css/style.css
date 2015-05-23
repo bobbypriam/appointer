@@ -4914,10 +4914,15 @@ button.close {
     text-align: center !important; }
   #calendar table {
     margin-bottom: 0; }
-  #calendar .slot.selected {
-    background: #5195ce; }
-  #calendar .slot.busy {
-    background: #888; }
+  #calendar .slot {
+    cursor: pointer; }
+    #calendar .slot.selected {
+      background: #5195ce; }
+    #calendar .slot.busy {
+      background: #ddd;
+      cursor: initial; }
+      #calendar .slot.busy:hover {
+        background: #ddd !important; }
 
 table.floatThead-table {
   background-color: #fff; }

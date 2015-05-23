@@ -12,11 +12,18 @@
   table
     margin-bottom: 0
   
-  .slot.selected
-    background: $brand-primary
+  .slot
+    cursor: pointer
 
-  .slot.busy
-    background: #888
+    &.selected
+      background: $brand-primary
+
+    &.busy
+      background: #ddd
+      cursor: initial;
+
+      &:hover
+        background: #ddd !important
 
 table.floatThead-table
   background-color: #fff
