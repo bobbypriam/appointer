@@ -5068,12 +5068,17 @@ footer {
 
 body.home {
   padding-top: 50px; }
-  @media screen and (min-width: 768px) {
-    body.home .home-banner {
-      padding: 150px 0; }
-      .container body.home .home-banner, .container-fluid body.home .home-banner {
-        padding-left: 60px;
-        padding-right: 60px; } }
+  body.home .home-banner {
+    background-image: url(../img/intro3.jpg);
+    background-size: cover;
+    background-position: center center;
+    color: #fff; }
+    @media screen and (min-width: 768px) {
+      body.home .home-banner {
+        padding: 150px 0; }
+        .container body.home .home-banner, .container-fluid body.home .home-banner {
+          padding-left: 60px;
+          padding-right: 60px; } }
   body.home section {
     padding-top: 40px;
     padding-bottom: 40px; }
