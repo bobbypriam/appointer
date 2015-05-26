@@ -1,7 +1,3 @@
-ol.breadcrumb
-  li: a(href=baseurl+'dashboard') Dashboard
-  li.active {{ calendar.title }}
-
 h1.calendar-title {{ calendar.title }} 
   span.status(ng-class='{"published": calendar.published, "not-published": !calendar.published}')
     i.glyphicon.glyphicon-star(ng-if='calendar.published') &nbsp;
@@ -26,8 +22,11 @@ h1.calendar-title {{ calendar.title }}
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#custom-notification-modal') Set custom notification
   .dropdown.calendar-menu
     button.btn.btn-default(type='button', data-toggle='modal', data-target='#delete-calendar-modal') 
-      i.glyphicon.glyphicon-trash &nbsp;
-      | Delete Calendar
+      i.glyphicon.glyphicon-trash
+
+ol.breadcrumb
+  li: a(href=baseurl+'dashboard') Dashboard
+  li.active {{ calendar.title }}
 
 .row
   .col-md-4
@@ -114,7 +113,7 @@ h1.calendar-title {{ calendar.title }}
       .modal-body
         .row.text-center
           .col-md-4(ng-repeat='color in colors')
-            .background-select.thumbnail.center-block(style="background:{{ color }};width:120px;height:120px;cursor:pointer;", ng-click="selectColor(color)")
+            .background-select.thumbnail.center-block(style="background:{{ color }};width:120px;height:120px;cursor:pointer;", ng-click="selectColor(color, $event)")
         .hidden.selected-color {{ selectedColor }}
 
       .modal-footer

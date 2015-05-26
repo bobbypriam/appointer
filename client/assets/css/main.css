@@ -5020,9 +5020,6 @@ body.dashboard {
 .main .page-header {
   margin-top: 0; }
 
-.calendar-title {
-  font-size: 2em; }
-
 code.url:hover {
   cursor: pointer; }
 
@@ -5037,7 +5034,7 @@ code.url:hover {
 .status {
   display: inline-block;
   padding: 8px 23px 8px 9px;
-  font-size: .4em;
+  font-size: .45em;
   vertical-align: middle;
   color: #fff; }
   .status.published {
