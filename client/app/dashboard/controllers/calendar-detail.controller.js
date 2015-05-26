@@ -100,7 +100,10 @@
       globalControllerScope.initiate();
     }
 
-    function selectColor(color) {
+    function selectColor(color, $event) {
+      var self = angular.element($event.target);
+      angular.element('.color-selected').removeClass('color-selected');
+      self.addClass('color-selected');
       $scope.selectedColor = color;
     }
 
@@ -111,6 +114,7 @@
       };
       CalendarService.updateCalendar(newCal, function (response) {
         if (response.ok) {
+          alert('Success!');
           // do nothing
         }
       });

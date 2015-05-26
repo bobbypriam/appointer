@@ -79,6 +79,7 @@
           $scope.processing = false;
           CalendarService.getCalendars(function (calendar) {});
           alert('Success!');
+          $location.path('dashboard/' + newCal.url);
         }
       });
     }

@@ -44,10 +44,10 @@ gulp.task('concat-uglify-js', ['lint'], function () {
                             'client/app/dashboard/**/*.module.js',
                             'client/app/dashboard/**/*.js'])
                       .pipe(concat('dashboard.js'))
-                      .pipe(gulp.dest('client/app'))
-                      .pipe(rename('dashboard.min.js'))
-                      .pipe(uglify())
                       .pipe(gulp.dest('client/app'));
+                      // .pipe(rename('dashboard.min.js'))
+                      // .pipe(uglify())
+                      // .pipe(gulp.dest('client/app'));
 
   var publicCalendar = gulp.src(['client/assets/vendor/jquery/jquery.min.js',
                                  'client/assets/vendor/bootstrap/js/bootstrap.min.js',
@@ -58,10 +58,10 @@ gulp.task('concat-uglify-js', ['lint'], function () {
                                  'client/app/public/**/*.module.js',
                                  'client/app/public/**/*.js'])
                       .pipe(concat('public.js'))
-                      .pipe(gulp.dest('client/app'))
-                      .pipe(rename('public.min.js'))
-                      .pipe(uglify())
                       .pipe(gulp.dest('client/app'));
+                      // .pipe(rename('public.min.js'))
+                      // .pipe(uglify())
+                      // .pipe(gulp.dest('client/app'));
 
   return [dashboard, publicCalendar];
 });

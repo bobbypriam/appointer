@@ -113,7 +113,7 @@ ol.breadcrumb
       .modal-body
         .row.text-center
           .col-md-4(ng-repeat='color in colors')
-            .background-select.thumbnail.center-block(style="background:{{ color }};width:120px;height:120px;cursor:pointer;", ng-click="selectColor(color, $event)")
+            .background-select.thumbnail.center-block(style="background:{{ color }};width:120px;height:120px;cursor:pointer;", ng-click="selectColor(color, $event)", ng-class='{"color-selected": color == calendar.background}')
         .hidden.selected-color {{ selectedColor }}
 
       .modal-footer

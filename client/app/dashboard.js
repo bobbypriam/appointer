@@ -27900,7 +27900,10 @@ function ngViewFillContentFactory($compile, $controller, $route) {
       globalControllerScope.initiate();
     }
 
-    function selectColor(color) {
+    function selectColor(color, $event) {
+      var self = angular.element($event.target);
+      angular.element('.color-selected').removeClass('color-selected');
+      self.addClass('color-selected');
       $scope.selectedColor = color;
     }
 
@@ -27911,6 +27914,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
       };
       CalendarService.updateCalendar(newCal, function (response) {
         if (response.ok) {
+          alert('Success!');
           // do nothing
         }
       });
@@ -28056,6 +28060,7 @@ function ngViewFillContentFactory($compile, $controller, $route) {
           $scope.processing = false;
           CalendarService.getCalendars(function (calendar) {});
           alert('Success!');
+          $location.path('dashboard/' + newCal.url);
         }
       });
     }

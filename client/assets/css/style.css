@@ -5037,6 +5037,9 @@ code.url:hover {
 .navbar-brand {
   padding: 8px 15px; }
 
+.color-selected {
+  border: 10px solid #5cb85c; }
+
 #calendar {
   height: 440px; }
 
