@@ -2,12 +2,15 @@ ol.breadcrumb
   li: a(href=baseurl+'dashboard') Dashboard
   li.active {{ calendar.title }}
 
-h1 {{ calendar.title }} 
+h1.calendar-title {{ calendar.title }} 
+  span.status(ng-class='{"published": calendar.published, "not-published": !calendar.published}')
+    i.glyphicon.glyphicon-star(ng-if='calendar.published') &nbsp;
+    i.glyphicon.glyphicon-star-empty(ng-if='!calendar.published') &nbsp;
+    | {{ calendar.published ? 'Published' : 'Not published' }} 
   .dropdown.calendar-menu
-    button.btn.btn-default.dropdown-toggle#calendar-menu(type='button', data-toggle='dropdown', aria-expanded='true') Menu 
-      span.caret
-    ul.dropdown-menu(role='menu', aria-labelledby='calendar-menu')
-      li.dropdown-header(role='presentation') Calendar Details
+    button.btn.btn-default.dropdown-toggle#calendar-details(type='button', data-toggle='dropdown', aria-expanded='true')
+      i.glyphicon.glyphicon-cog
+    ul.dropdown-menu(role='menu', aria-labelledby='calendar-details')
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/edit') Edit details
       li(role='presentation')
@@ -17,32 +20,27 @@ h1 {{ calendar.title }}
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#close-calendar-modal') {{ calendar.closed ? 'Reopen calendar' : 'Close calendar' }}
       li(role='presentation')
-        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#background-modal') Change calendar background
+        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#background-modal') Customize skin
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#custom-notification-modal') Set custom notification
-      li.divider(role='presentation')
-      li.dropdown-header(role='presentation') Appointments
-      li(role='presentation')
-        a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/appointments') See appointments
-      li.divider(role='presentation')
-      li.dropdown-header(role='presentation') Danger Zone
-      li(role='presentation')
-        a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#delete-calendar-modal') Delete calendar
+  .dropdown.calendar-menu
+    button.btn.btn-default(type='button', data-toggle='modal', data-target='#delete-calendar-modal') 
+      i.glyphicon.glyphicon-trash
 
 .row
   .col-md-4
     h3.sub-header Description
     p {{ calendar.description }}
   .col-md-8
-    h3.sub-header Public URL
+    h3.sub-header Share
     p Share this URL to your audience for booking.
     p
       code.url(ng-click="redirectToCalendar(calendar.url)") http://ppl-b02.cs.ui.ac.id#{baseurl}{{ calendar.url }}
     p
-      | Share via 
-      a.btn.btn-primary.btn-xs(socialshare, socialshare-provider='twitter', socialshare-text='{{ calendar.title }}', socialshare-url='http://ppl-b02.cs.ui.ac.id'+baseurl+'{{ calendar.url }}') Twitter
-      |  
-      a.btn.btn-primary.btn-xs(socialshare, socialshare-provider='facebook', socialshare-url='http://ppl-b02.cs.ui.ac.id'+baseurl+'{{ calendar.url }}') Facebook
+      a.social-link(href='#', socialshare, socialshare-provider='facebook', socialshare-url='http://ppl-b02.cs.ui.ac.id'+baseurl+'{{ calendar.url }}')
+        img(src=baseurl+'assets/img/facebook.png')
+      a.social-link(href='#', socialshare, socialshare-provider='twitter', socialshare-text='{{ calendar.title }}', socialshare-url='http://ppl-b02.cs.ui.ac.id'+baseurl+'{{ calendar.url }}')
+        img(src=baseurl+'assets/img/twitter.png')
 
 .row
   .col-md-4.details
@@ -56,9 +54,6 @@ h1 {{ calendar.title }}
     .row
       p.col-xs-3.col-sm-4: strong End Date
       p.col-xs-9.col-sm-8 {{ calendar.endDate | date: 'd MMM y' }}
-    .row
-      p.col-xs-3.col-sm-4: strong Status
-      p.col-xs-9.col-sm-8 {{ calendar.published ? 'Published' : 'Not published' }}
 
   .col-md-8.appointments
     h3.sub-header Upcoming Appointments

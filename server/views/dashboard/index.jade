@@ -2,7 +2,7 @@ extends layout
 
 block content
   //- Navbar
-  nav.navbar.navbar-default.navbar-fixed-top
+  nav.navbar.navbar-inverse.navbar-fixed-top
     .container-fluid
       .navbar-header
         button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar' aria-expanded='false', aria-controls='navbar')
@@ -10,7 +10,7 @@ block content
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        .navbar-brand Appointer
+        img.navbar-brand(src=baseurl+'assets/img/logo-white.png')
       #navbar.navbar-collapse.collapse
         ul.nav.navbar-nav.navbar-right
           li.visible-md-block.visible-lg-block.dropdown
@@ -26,6 +26,7 @@ block content
       .row
         .col-sm-3.col-md-2.sidebar
           ul.nav.nav-sidebar
+            li: a(href=baseurl+'dashboard') Dashboard
             li#nav-my-calendars My Calendars
               ul.nav-calendars-list
                 li(ng-repeat='calendar in calendars')

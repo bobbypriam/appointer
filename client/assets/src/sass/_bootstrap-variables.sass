@@ -54,10 +54,10 @@ $font-size-base:          16px
 // $font-size-large:         ceil(($font-size-base * 1.25)) // ~18px
 // $font-size-small:         ceil(($font-size-base * 0.85)) // ~12px
 
-// $font-size-h1:            floor(($font-size-base * 2.6)) // ~36px
-// $font-size-h2:            floor(($font-size-base * 2.15)) // ~30px
-// $font-size-h3:            ceil(($font-size-base * 1.7)) // ~24px
-// $font-size-h4:            ceil(($font-size-base * 1.25)) // ~18px
+$font-size-h1:            floor(($font-size-base * 1.7)) // ~36px
+$font-size-h2:            floor(($font-size-base * 1.25)) // ~30px
+$font-size-h3:            ceil(($font-size-base * 1.10)) // ~24px
+$font-size-h4:            ceil(($font-size-base * 1.02)) // ~18px
 // $font-size-h5:            $font-size-base
 // $font-size-h6:            ceil(($font-size-base * 0.85)) // ~12px
 
@@ -391,12 +391,12 @@ $navbar-default-border:            darken($navbar-default-bg, 6.5%)
 
 // Inverted navbar
 // Reset inverted navbar basics
-// $navbar-inverse-color:                      lighten($gray-light, 15%)
-// $navbar-inverse-bg:                         #222
-// $navbar-inverse-border:                     darken($navbar-inverse-bg, 10%)
+$navbar-inverse-color:                      #fff//lighten($gray-light, 15%)
+$navbar-inverse-bg:                         $brand-primary//#222
+$navbar-inverse-border:                     transparent//darken($navbar-inverse-bg, 10%)
 
 // Inverted navbar links
-// $navbar-inverse-link-color:                 lighten($gray-light, 15%)
+$navbar-inverse-link-color:                 #fff//lighten($gray-light, 15%)
 // $navbar-inverse-link-hover-color:           #fff
 // $navbar-inverse-link-hover-bg:              transparent
 // $navbar-inverse-link-active-color:          $navbar-inverse-link-hover-color
