@@ -7,17 +7,23 @@ ol.breadcrumb
 .row
   form.form-horizontal(name='form', novalidate)
     .form-group
-      label.col-sm-2.control-label Email Address
+      label.col-sm-3.control-label Email Address
       .col-sm-4
         input.form-control(type='email', ng-model='form.email', name='email')
     .form-group
-      label.col-sm-2.control-label Integrate google calendar
+      .col-md-7
+        p
+          button(ng-click='submitPost()', class='btn btn-primary pull-right') Save
+    .row: .col-md-7
+      hr
+    .form-group
+      label.col-sm-3.control-label Integrate google calendar
       .col-sm-4
         button.btn.btn-primary(ng-if='!integrated', ng-click='configureGoogleCalendar()') Integrate
         button.btn.btn-success.disabled(ng-if='integrated') Integrated!
         button.btn.btn-danger(ng-if='integrated', ng-click='revokeGoogleCalendar()') Revoke access
 
-.row
-  .col-md-6
-    p
-      button(ng-click='submitPost()', class='btn btn-primary pull-right') Save
+//- .row
+//-   .col-md-6
+//-     p
+//-       button(ng-click='submitPost()', class='btn btn-primary pull-right') Save
