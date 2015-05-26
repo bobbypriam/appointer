@@ -24,16 +24,35 @@ block content
   .body(ng-app='appointer', ng-controller='GlobalController')
     .container-fluid
       .row
-        .col-sm-3.col-md-2.sidebar
-          ul.nav.nav-sidebar
-            li: a(href=baseurl+'dashboard') Dashboard
-            li#nav-my-calendars My Calendars
-              ul.nav-calendars-list
-                li(ng-repeat='calendar in calendars')
-                  a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
-                li.text-center: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create New...
-            li: a(href=baseurl+'dashboard/closed-calendars') Closed Calendars
-            li: a(href=baseurl+'dashboard/settings') Settings
+        .col-sm-3.col-md-2.sidebar.visible-sm-block.visible-md-block.visible-lg-block
+          .row
+            .col-md-12
+              .list-group.main-menu
+                a.list-group-item(href=baseurl+'dashboard')
+                  i.glyphicon.glyphicon-home &nbsp;
+                  | Dashboard
+                a.list-group-item(href='#my-calendar', data-toggle='collapse', onclick='return false') 
+                  i.glyphicon.glyphicon-calendar &nbsp;
+                  | My Calendars
+                #my-calendar.submenu.collapse.in(aria-expanded='true')
+                  a.list-group-item(ng-repeat='calendar in calendars', href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
+                  a.list-group-item.new-calendar(href='#', data-toggle='modal', data-target='#new-calendar-modal') + New
+                a.list-group-item(href=baseurl+'dashboard/closed-calendars') 
+                  i.glyphicon.glyphicon-calendar &nbsp;
+                  | Closed Calendars
+                a.list-group-item(href=baseurl+'dashboard/settings') 
+                  i.glyphicon.glyphicon-cog &nbsp;
+                  | Settings
+                
+          //- ul.nav.nav-sidebar
+          //-   li: a(href=baseurl+'dashboard') Dashboard
+          //-   li#nav-my-calendars My Calendars
+          //-     ul.nav-calendars-list
+          //-       li(ng-repeat='calendar in calendars')
+          //-         a(href=baseurl+'dashboard/{{ calendar.url }}') {{ calendar.title }}
+          //-       li.text-center: a(href='#', data-toggle='modal', data-target='#new-calendar-modal') Create New...
+          //-   li: a(href=baseurl+'dashboard/closed-calendars') Closed Calendars
+          //-   li: a(href=baseurl+'dashboard/settings') Settings
         
         .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
           div(ng-view)

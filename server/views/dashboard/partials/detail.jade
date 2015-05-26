@@ -9,7 +9,8 @@ h1.calendar-title {{ calendar.title }}
     | {{ calendar.published ? 'Published' : 'Not published' }} 
   .dropdown.calendar-menu
     button.btn.btn-default.dropdown-toggle#calendar-details(type='button', data-toggle='dropdown', aria-expanded='true')
-      i.glyphicon.glyphicon-cog
+      i.glyphicon.glyphicon-cog &nbsp;
+      | Calendar Details
     ul.dropdown-menu(role='menu', aria-labelledby='calendar-details')
       li(role='presentation')
         a(role='menuitem', tabindex='-1', href=baseurl+'dashboard/{{ calendar.url }}/edit') Edit details
@@ -25,7 +26,8 @@ h1.calendar-title {{ calendar.title }}
         a(role='menuitem', tabindex='-1', href='#', data-toggle='modal', data-target='#custom-notification-modal') Set custom notification
   .dropdown.calendar-menu
     button.btn.btn-default(type='button', data-toggle='modal', data-target='#delete-calendar-modal') 
-      i.glyphicon.glyphicon-trash
+      i.glyphicon.glyphicon-trash &nbsp;
+      | Delete Calendar
 
 .row
   .col-md-4

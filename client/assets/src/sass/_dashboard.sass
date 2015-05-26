@@ -23,7 +23,8 @@ body.dashboard
     left: 0
     z-index: 1000
     display: block
-    padding: 20px
+    padding-left: 0
+    padding-right: 0
     overflow-x: hidden
     overflow-y: auto /* Scrollable contents if viewport is shorter than content. */
     background-color: $sidebar-bg
@@ -32,28 +33,39 @@ body.dashboard
 
 
 /* Sidebar navigation */
-.nav-sidebar
-  margin-right: -21px /* 20px padding + 1px border */
-  margin-bottom: 20px
-  margin-left: -20px
+.list-group
+  .list-group-item
+    &, &:active, &:focus
+      color: #333
+      background: #fff//$appointer-primary//$gray-dark
+      border: 1px solid darken(#fff, 5%)//lighten($appointer-primary, 10%)//$gray
+      border-left: 0
+      border-right: 0
 
-// .nav-sidebar > li
-//   padding-right: 20px
-//   padding-left: 20px
+    &:hover
+      color: #666
+      background: darken(#fff, 5%)//darken($appointer-primary, 10%)//$gray-darker
 
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus
-  color: #fff
-  background-color: #428bca
+    &:last-child
+      border-bottom: 0
+  
+  .submenu
+    border-top: 4px solid #ddd
+    .list-group-item
+      padding-left: 30px
+      background: darken(#fff, 5%)//darken($appointer-primary, 10%)//$gray-darker
+      &:not(:first-child)
+        padding-top: 5px
+        border: 0
+      
+      &:not(:last-child)
+        padding-bottom: 5px
 
-#nav-my-calendars
-  padding: 10px 15px
+      &.new-calendar
+        color: rgba(0,0,0,0.3)
 
-.nav-calendars-list
-  list-style-type: none
-  padding: 5px 20px
-  font-size: $font-size-small
+        &:hover
+          color: #aaa
 
 /*
  * Main content

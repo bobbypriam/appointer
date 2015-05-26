@@ -4963,7 +4963,8 @@ body.dashboard {
     left: 0;
     z-index: 1000;
     display: block;
-    padding: 20px;
+    padding-left: 0;
+    padding-right: 0;
     overflow-x: hidden;
     overflow-y: auto;
     /* Scrollable contents if viewport is shorter than content. */
@@ -4971,23 +4972,31 @@ body.dashboard {
     border-right: 1px solid #eeeeee; } }
 
 /* Sidebar navigation */
-.nav-sidebar {
-  margin-right: -21px;
-  /* 20px padding + 1px border */
-  margin-bottom: 20px;
-  margin-left: -20px; }
-
-.nav-sidebar > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
-  color: #fff;
-  background-color: #428bca; }
-
-#nav-my-calendars {
-  padding: 10px 15px; }
-
-.nav-calendars-list {
-  list-style-type: none;
-  padding: 5px 20px;
-  font-size: 14px; }
+.list-group .list-group-item, .list-group .list-group-item:active, .list-group .list-group-item:focus {
+  color: #333;
+  background: #fff;
+  border: 1px solid #f2f2f2;
+  border-left: 0;
+  border-right: 0; }
+.list-group .list-group-item:hover {
+  color: #666;
+  background: #f2f2f2; }
+.list-group .list-group-item:last-child {
+  border-bottom: 0; }
+.list-group .submenu {
+  border-top: 4px solid #ddd; }
+  .list-group .submenu .list-group-item {
+    padding-left: 30px;
+    background: #f2f2f2; }
+    .list-group .submenu .list-group-item:not(:first-child) {
+      padding-top: 5px;
+      border: 0; }
+    .list-group .submenu .list-group-item:not(:last-child) {
+      padding-bottom: 5px; }
+    .list-group .submenu .list-group-item.new-calendar {
+      color: rgba(0, 0, 0, 0.3); }
+      .list-group .submenu .list-group-item.new-calendar:hover {
+        color: #aaa; }
 
 /*
  * Main content
