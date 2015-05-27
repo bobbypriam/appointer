@@ -1,5 +1,5 @@
 h1.calendar-title {{ calendar.title }} 
-  span.status(ng-class='{"published": calendar.published, "not-published": !calendar.published}')
+  span.status(ng-class='{"published": calendar.published, "not-published": !calendar.published}', ng-click='togglePublish($event)',  data-toggle="tooltip", data-placement="bottom", title="{{ calendar.published ? 'Unpublish calendar' : 'Publish calendar' }}")
     i.glyphicon.glyphicon-star(ng-if='calendar.published') &nbsp;
     i.glyphicon.glyphicon-star-empty(ng-if='!calendar.published') &nbsp;
     | {{ calendar.published ? 'Published' : 'Not published' }} 

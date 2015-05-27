@@ -5036,7 +5036,8 @@ code.url:hover {
   padding: 8px 23px 8px 9px;
   font-size: .45em;
   vertical-align: middle;
-  color: #fff; }
+  color: #fff;
+  cursor: pointer; }
   .status.published {
     background: #5cb85c; }
   .status.not-published {
