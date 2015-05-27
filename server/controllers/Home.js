@@ -96,6 +96,7 @@ var HomeController = {
       var feedback = req.body;
       Feedback.create(feedback)
         .then(function () {
+          res.locals.mailer.sendFeedback(feedback);
           req.session.message = { type: 'success', content: 'Response recorded! Thank you.' };
           res.redirect(res.locals.baseurl+'feedback');
         });

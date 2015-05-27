@@ -154,6 +154,24 @@ var mailer = {
       if (err) console.log(err);
       else console.log('Message sent:', info.response);
     });
+  },
+
+  sendFeedback: function (feedback) {
+    this._transporter.sendMail({
+      from: this._sender,
+      to: 'bobby.priambodo@gmail.com',
+      subject: '[Appointer] New feedback!',
+      html: '<h1>Somebody posted a new feedback!</h1>' +
+            '<p>Here are the details</p>' +
+            '<ul>' +
+             '<li><strong>Name:</strong> ' + feedback.name + '</li>' +
+             '<li><strong>Email:</strong> ' + feedback.email + '</li>' +
+             '<li><strong>Content:</strong> ' + feedback.content + '</li>' +
+            '</ul>'
+    }, function(err, info) {
+      if (err) console.log(err);
+      else console.log('Message sent:', info.response);
+    });
   }
 };
 
