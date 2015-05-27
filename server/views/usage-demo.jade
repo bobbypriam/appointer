@@ -1,11 +1,92 @@
 extends layout
 
 block content
-  .container
+  .jumbotron.getting-started
+    .container
+      .row
+        .col-md-12
+          h1.text-center Getting Started
+          .center-block
+            .center-div
+              iframe(width="560", height="315", src="https://www.youtube.com/embed/Ucpv9SVn-cY", frameborder="0", allowfullscreen)
+  .container    
     .row
       .col-md-12
-        h1 Getting Started
+        .tabs#menu-tabs
+          ul.nav.nav-tabs
+            li.active
+              a.tab(href='#create-calendar') Create Calendar
+            li
+              a.tab(href='#book-a-slot') Book a Slot
+          .tab-content
+            .tab-pane.active#create-calendar
+              h1.text-center Create Calendar
+              .row
+                .col-md-1.col-xs-2
+                  big 1.
+                .col-md-5.col-xs-10
+                  h2 One event, one calendar
+                  p Create one calendar for each of your events.
+                .col-md-6
+              .row
+                .col-md-6
+                .col-md-1.col-xs-2
+                  big 2.
+                .col-md-5.col-xs-10
+                  h2 Choose your available time
+                  p Choose your desired available time for each of your events.
+              .row
+                .col-md-1.col-xs-2
+                  big 3.
+                .col-md-5.col-xs-10
+                  h2 Save and publish your calendar
+                  p Copy the link or share via Facebook and Twitter.
+                .col-md-6
+              .row
+                .col-md-6
+                .col-md-1.col-xs-2
+                  big 4.
+                .col-md-5.col-xs-10
+                  h2 Get notified!
+                  p Appointer will do the rest for you.
+
+            .tab-pane#book-a-slot
+              h1.text-center Book a Slot
+              .row
+                .col-md-1.col-xs-2
+                  big 1.
+                .col-md-5.col-xs-10
+                  h2 Open the link
+                  p Access the calendar using the public link.
+                .col-md-6
+              .row
+                .col-md-6
+                .col-md-1.col-xs-2
+                  big 2.
+                .col-md-5.col-xs-10
+                  h2 Choose available slot
+                  p Pick a time that suits you.
+              .row
+                .col-md-1.col-xs-2
+                  big 3.
+                .col-md-5.col-xs-10
+                  h2 Fill in the details
+                  p Tell them who you are.
+                .col-md-6
+              .row
+                .col-md-6
+                .col-md-1.col-xs-2
+                  big 4.
+                .col-md-5.col-xs-10
+                  h2 You're booked!
+                  p Simple, right?
 
 block js
-
+  script(src=baseurl+'assets/vendor/jquery/jquery.min.js')
+  script(src=baseurl+'assets/vendor/bootstrap/js/bootstrap.min.js')
+  script.
+    $('.tab').click(function (event) {
+      event.preventDefault();
+      $(this).tab('show');
+    });
 
